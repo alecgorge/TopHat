@@ -25,7 +25,10 @@ class Plugins {
 	 * It finds the list of active plugins from the database and compares them to the available plugins.
 	 */
 	public static function bootstrap () {
-		
+		$db = DB::select('plugins', '*', array('active = ?', 1));
+		$activePlugins = $db->fetchAll(PDO::FETCH_ASSOC);
+
+		var_dump($activePlugins);
 	}
 
 }
