@@ -26,12 +26,12 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Ramblingwood, LLC.
 
-*/
-
-/*  +-----------------------------------------+
-	|  CanyonCMS v0.1.0a - 4/28/2010          |
+    +-----------------------------------------+
+	|  CanyonCMS v0.1.0a - 5/2/2010           |
 	|  http://canyoncms.com                   |
-	+-----------------------------------------+   */
+	+-----------------------------------------+
+
+*/
 
 error_reporting(E_ALL - E_NOTICE);
 setlocale(LC_ALL,'en_US.UTF8');
