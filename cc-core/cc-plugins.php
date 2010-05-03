@@ -13,7 +13,7 @@ class Plugins {
 	 * 
 	 * Will overwrite previous registrations. 
 	 *
-	 * @param object &$plugin An instance of the Plugin object.
+	 * @param object &$plugin An instance of the RegisteredPlugin object.
 	 */
 	public static function register(&$plugin) {
 		self::$registered[$plugin->makeSlug()] = $plugin;
@@ -28,11 +28,131 @@ class Plugins {
 		$db = DB::select('plugins', '*', array('active = ?', 1));
 		$activePlugins = $db->fetchAll(PDO::FETCH_ASSOC);
 
-		var_dump($activePlugins);
+		$possiblePlugins = self::getPluginList();
+
+		foreach($activePlugins as $row) {
+			if(array_search($row['name'], $possiblePlugins) !== false) {
+				$plugin = new RegisteredPlugin($row['name'], unserialize($row['info']), true);
+				self::register($plugin);
+				$plugins[] = $plugin->makeSlug();
+			}
+		}
+
+		self::runAll();
+	}
+
+	/**
+	 * Includes all the plugins!
+	 */
+	private static function runAll () {
+		if(empty(self::$registered)) return;
+
+		foreach(self::$registered as $plugin) {
+			$plugin->run();
+		}
+	}
+
+	/**
+	 * Returns the list of active plugins.
+	 *
+	 * @return array The array of active plugins.
+	 */
+	public static function getAll () {
+		return self::$registered;
+	}
+
+	/**
+	 * Returns an array of all the possible plugins.
+	 *
+	 * @return array The array of plugins, one name per line.
+	 */
+	public static function getPluginList () {
+		$glob = glob(CC_PLUGINS.'*/plugin.php');
+		foreach($glob as $plugin) {
+			// $plugin is a full path, we don't want that.
+			$plugin = explode(CC_PLUGINS, $plugin, 2);
+			$plugin = explode('/plugin.php', $plugin[1]);
+			$r[] = $plugin[0];
+		}
+		return $r;
+	}
+
+	/**
+	 * Makes sure a given plugin slug (the folder name) is valid.
+	 *
+	 * @param string $name The folder name of the plugin.
+	 * @return bool Is the plugin valid?
+	 */
+	public static function validate($name) {
+		return file_exists(CC_PLUGINS.$name.'/plugin.php');
 	}
 
 }
 Hooks::bind('system_ready', 'Plugins::bootstrap');
+
+/**
+ * A class for each registered plugin
+ */
+class RegisteredPlugin {
+	/**
+	 * @var bool Is plugin active?
+	 */
+	private $active;
+
+	/**
+	 * @var string The name of the folder.
+	 */
+	private $name;
+
+	/**
+	 * @var string The path to the include file.
+	 */
+	private $pluginFile;
+
+	/**
+	 * @var string Options for the plugin. Not used yet.
+	 */
+	private $options;
+
+	/**
+	 *
+	 * @param string $folder_name The foldername of the plugin.
+	 * @param array $options The array of options from the DB.
+	 * @param bool $active Whether to make the plugin active or not.
+	 */
+	public function __construct ($folder_name, $options, $active = false) {
+		$this->name = $folder_name;
+		$this->active = $active;
+		$this->options = $options;
+		$this->pluginFile = CC_PLUGINS.$this->name.'/plugin.php';
+	}
+
+	/**
+	 * Is the plugin valid?
+	 *
+	 * @return bool Is the plugin valid?
+	 */
+	public function validate () {
+		return file_exists($this->pluginFile);
+	}
+
+	/**
+	 * This function includes the plugins plugin.php file.
+	 */
+	public function run () {
+		require_once $this->pluginFile;
+	}
+	
+	/**
+	 * Creates a URL safe slug of the plugin's name
+	 *
+	 * @return string A URL-safe slug.
+	 */
+	public function makeSlug () {
+		return UTF8::slugify($this->name);
+	}
+
+}
 
 /**
  * A class used to make plugins!
@@ -55,9 +175,13 @@ class Plugin {
 	 */
 	private $link = '';
 	/**
-	 * @var bool Is the plugin active in the users settings?
+	 * @var array An array of the binds made.
 	 */
-	private $active = false;
+	private $binds;
+	/**
+	 * @var string A url safe version of the plugin name.
+	 */
+	private $slug;
 
 	/**
 	 * Create a new Plugin!
@@ -85,7 +209,43 @@ class Plugin {
 	 * @return string A URL-safe slug.
 	 */
 	public function makeSlug () {
-		return UTF8::slugify($this->name);
+		if(empty($this->slug)) {
+			$this->slug = UTF8::slugify($this->name);
+		}
+		return $this->slug;
+	}
+
+	/**
+	 * Returns the plugin's name.
+	 *
+	 * @return string The plugin's name.
+	 */
+	public function getName () {
+		return $this->name;
+	}
+
+	/**
+	 * A wrapper for Hooks::bind();
+	 */
+	public function bind($hook, $callback, $priority) {
+		self::$binds[] = array($hook, $callback);
+		Hooks::bind($hook, $callback, $priority);
+	}
+
+	/**
+	 * A wrapper for Settings::set();
+	 */
+	public function set($key, $value) {
+		Settings::set($this->getName(), $key, $value);
+	}
+
+	/**
+	 * A wrapper for Settings::get() {
+	 *
+	 * @returns mixed The value for $key.
+	 */
+	public function get($key) {
+		return Settings::get($this->getName(), $key);
 	}
 }
 ?>
