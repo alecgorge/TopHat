@@ -179,6 +179,10 @@ class Plugin {
 	 */
 	private $binds;
 	/**
+	 * @var array An array of the filters made.
+	 */
+	private $filters;
+	/**
 	 * @var string A url safe version of the plugin name.
 	 */
 	private $slug;
@@ -227,9 +231,17 @@ class Plugin {
 	/**
 	 * A wrapper for Hooks::bind();
 	 */
-	public function bind($hook, $callback, $priority) {
-		self::$binds[] = array($hook, $callback);
+	public function bind($hook, $callback, $priority = 0) {
+		$this->binds[] = array($hook, $callback);
 		Hooks::bind($hook, $callback, $priority);
+	}
+
+	/**
+	 * A wrapper for Filters::bind();
+	 */
+	public function filter($hook, $callback, $priority = 0) {
+		$this->filters[] = array($hook, $callback);
+		Filters::bind($hook, $callback, $priority);
 	}
 
 	/**
