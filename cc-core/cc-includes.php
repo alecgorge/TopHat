@@ -20,6 +20,9 @@ function cc_core_include ($file) {
 function cc_theme_include ($theme) {
 	plugin('core_theme_include', array($theme));
 	$file = filter('core_theme_include', CC_ROOT.CC_THEMES.$theme.'/index.tpl.php');
-	require_once $file;
+
+	if(file_exists($file)) {
+		require_once $file;
+	}
 }
 ?>

@@ -41,7 +41,7 @@ class Content {
 				if($continue) {
 					$thisref['id'] = (int) $data['id'];
 					$thisref['menutitle'] = $data['menutitle'];
-					$thisref['slug'] = UTF8::slugify($data['menutitle']);
+					$thisref['slug'] = $data['slug'];
 					if(!empty($options['external'])) {
 						$external[$thisref['id']] = $options['external'];
 					}
@@ -55,7 +55,7 @@ class Content {
 				plugin('content_parsenavigation_after', array($thisref, $data, $options));
 				
 				$list2[$thisref['id']] = $thisref['menutitle'];
-				$list3[$thisref['id']] = UTF8::slugify($thisref['menutitle']);
+				$list3[$thisref['id']] = $thisref['slug'];
 				$list4[$thisref['id']] = (int) $data['parent_id'];
 			}
 
@@ -524,11 +524,13 @@ class Page {
 				$this->info['menutitle'] = $row['menutitle'];
 				$this->info['parent_id'] = $row['parent_id'];
 				$this->info['type'] = $row['type'];
-				$this->info['slug'] = UTF8::slugify($this->info['menutitle']);
+				$this->info['slug'] = $row['slug'];
 			}
 		}
 	}
 }
 
-Content::bootstrap();
+// admin has its own way of doing things
+if(!IS_ADMIN)
+	Content::bootstrap();
 

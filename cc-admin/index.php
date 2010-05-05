@@ -33,23 +33,56 @@ or implied, of Ramblingwood, LLC.
 
 
 */
-define('CC_START', microtime(true));
+define('IS_ADMIN', true);
 
-error_reporting(E_ALL - E_NOTICE);
-setlocale(LC_ALL,'en_US.UTF8');
-header('Content-Type: text/html; charset=utf-8');
+require_once '../cc-config.php';
 
-if(!defined('IS_ADMIN')) {
-	define('IS_ADMIN', false);
+require_once 'cc-admin-include.php';
+
+// include hooking capabilites
+require_once CC_CORE.'cc-hooks.php';
+
+// include include manager
+require_once CC_CORE.'cc-includes.php';
+
+// fix the $_GET variable
+cc_core_include('cc-functions.php');
+
+// utf-8 utils
+cc_core_include('cc-utf8.php');
+
+// loggin utils
+cc_core_include('cc-log.php');
+
+// include redirection utils
+cc_core_include('cc-redirect.php');
+
+// have we installed yet? this checks if $database and $timezone are set in the CC_CONFIG file.
+define('INSTALLED', (isset($database) && isset($timezone)));
+if(!INSTALLED) {
+	cc_redirect('cc-admin/install/', true);
 }
 
-/**
- * This is the location of the CanyonCMS configuration file. It can be relative or absolute. It can be above the word viewable directory. Default: './config.php'
- */
-define('CC_CONFIG', 'cc-config.php');
+// the all important db abstraction layer
+cc_core_include('cc-database.php');
 
-/* load config */
-require CC_CONFIG;
+// get the validation methods
+cc_core_include('cc-validate.php');
 
-/* Off we go! */
-require CC_ADMIN.'cc-admin.php';
+// setup settings manager
+cc_core_include('cc-settings.php');
+
+// setup plugin architecture
+cc_core_include('cc-plugins.php');
+
+// content is important?
+cc_core_include('cc-content.php');
+
+// this is where the awesome is
+cc_include_admin('cc-admin.php');
+
+
+// let some things run (pulling settings, etc) before we go on to pull the page info
+plugin('system_ready');
+
+?>
