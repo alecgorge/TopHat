@@ -2,9 +2,9 @@
 // configuration file for CanyonCMS
 
 /**
- * The database to use. Should be a PDO Compatible DSN: {@link:http://php.net/manual/en/pdo.construct.php}. Default: 'sqlite://content/canyoncms.sqlite'
+ * The database to use. Should be a PDO Compatible DSN: {@link:http://php.net/manual/en/pdo.construct.php}. Default: 'sqlite:'.dirname(__FILE__).'/content/canyoncms.sqlite'
  */
-$database = 'sqlite:content/canyoncms.sqlite';
+$database = 'sqlite:'.dirname(__FILE__).'/content/canyoncms.sqlite';
 
 /**
  * Database username (if applicable). Default: null

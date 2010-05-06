@@ -120,7 +120,7 @@ class Settings {
 		self::$db_load = $results->fetchAll(PDO::FETCH_ASSOC);
 		
 		foreach(self::$db_load as $key => $value) {
-			self::addToList('core', array(
+			self::addToList($value['package'], array(
 				$value['name'] => array(
 					'id' => $value['id'],
 					'last_modified' => $value['last_modified'],
@@ -156,5 +156,5 @@ class Settings {
 		}
 	}
 }
-Hooks::bind('system_ready', 'Settings::bootstrap');
+Hooks::bind('system_ready', 'Settings::bootstrap', -100);
 ?>

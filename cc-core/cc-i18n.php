@@ -44,9 +44,9 @@ class i18n {
 	 * This will take the locale and attempt to load a translation from CC_TRANSLATIONS with the same name. If none is found en_US is loaded.
 	 */
 	private function loadValid () {
-		$include = CC_TRANSLATIONS.$this->getLocale().'.php';
+		$include = CC_ROOT.CC_TRANSLATIONS.$this->getLocale().'.php';
 		if(!file_exists($include)) {
-			$include = CC_TRANSLATIONS.'en_US.php';
+			$include = CC_ROOT.CC_TRANSLATIONS.'en_US.php';
 		}
 		require_once $include;
 	}

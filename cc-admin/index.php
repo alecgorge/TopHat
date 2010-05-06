@@ -72,15 +72,14 @@ cc_core_include('cc-validate.php');
 // setup settings manager
 cc_core_include('cc-settings.php');
 
+// i18n is important!
+cc_core_include('cc-i18n.php');
+
 // setup plugin architecture
 cc_core_include('cc-plugins.php');
 
-// content is important?
-cc_core_include('cc-content.php');
-
 // this is where the awesome is
 cc_include_admin('cc-admin.php');
-
 
 // let some things run (pulling settings, etc) before we go on to pull the page info
 plugin('system_ready');
