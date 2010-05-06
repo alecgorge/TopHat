@@ -1,4 +1,4 @@
-<title><?php echo breadcrumbs(' < '); ?> | Site</title>
+<title><?php echo breadcrumbs(' < '); ?> | <?php _e('core', 'site-name'); ?></title>
 <h1><?php echo title(); ?></h1>
 <?php echo nav(); ?>
 <div>

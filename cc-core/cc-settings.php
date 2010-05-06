@@ -91,12 +91,13 @@ class Settings {
 			$r = self::$settings[$package][$k];
 		}
 
-		plugin('cc_settings_get', array($package, $k, $ret));
+		plugin('cc_settings_get', array($package, $k, &$ret));
 		$r = filter('cc_settings_get', $r);
 
 		if($ret) {
 			$r = $r['value'];
 		}
+		
 		return $r;
 	}
 	

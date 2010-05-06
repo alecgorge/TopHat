@@ -5,7 +5,7 @@ require CC_CORE.'cc-hooks.php';
 // include include manager
 require CC_CORE.'cc-includes.php';
 
-// fix the $_GET variable
+// some helper functions
 cc_core_include('cc-functions.php');
 
 // utf-8 utils
@@ -31,6 +31,9 @@ cc_core_include('cc-validate.php');
 
 // setup settings manager
 cc_core_include('cc-settings.php');
+
+// i18n is important!
+cc_core_include('cc-i18n.php');
 
 // setup plugin architecture
 cc_core_include('cc-plugins.php');

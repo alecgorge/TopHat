@@ -36,7 +36,6 @@ or implied, of Ramblingwood, LLC.
 define('CC_START', microtime(true));
 
 error_reporting(E_ALL - E_NOTICE);
-setlocale(LC_ALL,'en_US.UTF8');
 header('Content-Type: text/html; charset=utf-8');
 
 if(!defined('IS_ADMIN')) {
@@ -52,4 +51,4 @@ define('CC_CONFIG', 'cc-config.php');
 require CC_CONFIG;
 
 /* Off we go! */
-require CC_ADMIN.'cc-admin.php';
+require CC_CORE.'cc-bootstrap.php';
