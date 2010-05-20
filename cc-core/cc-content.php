@@ -178,7 +178,7 @@ class Content {
 				$mt = UTF8::htmlentities($item['menutitle']);
 				plugin('nav_haschild_before', array($item));
 
-				$page = new Page($item['id']);
+				$page = Node::fetchHandler($item['id']);
 				$url = $page->url();
 
 				// get the children's html
@@ -204,7 +204,7 @@ class Content {
 				$mt = UTF8::htmlentities($item['menutitle']);
 				plugin('nav_nochild_before', array($item));
 
-				$page = new Page($item['id']);
+				$page = Node::fetchHandler($item['id']);
 				$url = $page->url();
 
 				// current page
@@ -326,7 +326,7 @@ class Content {
 
 	public static function setCurrent ($id) {
 		self::$currentId = $id;
-		self::$current = new Page($id);
+		self::$current = Node::fetchHandler($id);
 
 		self::setContent(self::$current->getContent());
 		self::setTitle(self::$current->getTitle());
@@ -408,20 +408,71 @@ class Content {
 	}
 }
 
-class Page {
+class Node {
+	private static $registration = array();
+
+	public static function fetchHandler ($id) {
+		$query = Database::select('content', '*', array('id = ?', $id));
+		$row = $query->fetch();
+
+		$type = $row['type'];
+
+
+		if(!array_key_exists($type, self::$registration)) {
+			$type = 'page';
+		}
+
+		$class = self::$registration[$type];
+
+		// bootstrap the content type
+		$class = call_user_func($class.'::cc_setup', $row);
+
+		return $class;
+   	}
+
+	/**
+	 * Registers a custom content type. All overwrite a previous bind.
+	 *
+	 * @param string $type The node type to associate $callback with.
+	 * @param string $callback Name of the NodeType class.
+	 */
+	public static function register ($type, $callback) {
+		self::$registration[$type] = $callback;
+	}
+}
+
+/**
+ * The default implementation of NodeType
+ */
+class PageNode extends NodeType {
+	public function __construct($row) {
+		$this->checkRow($row);
+    }
+
+  	public static function cc_setup ($row) {
+		$class = new PageNode($row);
+		return $class;
+   	}
+}
+function cc_register_default_NodeType () {
+	//$page = new Page();
+	Node::register('page', 'PageNode');
+} cc_register_default_NodeType();
+
+abstract class NodeType {
 	private $settings = array();
 	private $id;
 	private $info = array();
 	private $db_row;
 
-	public function __construct ($id) {
-		$this->id = $id;
+	public static function cc_setup() {
+
 	}
 
 	public function getId () {
 		return $this->id;
 	}
-	
+
 	public function getContent () {
 		$this->checkRow();
 		return $this->info['content'];
@@ -477,7 +528,7 @@ class Page {
 			$r .= "?q=";
 		}
 		$r .= Content::url($this->id);
-		
+
 		return CC_PUB_ROOT.$r;
 	}
 
@@ -504,28 +555,26 @@ class Page {
 		}
 		return $this->info['theme'];
 	}
-	
-	private function checkRow () {
-		if(empty($this->db_row)) {
-			$smt = DB::select('content', '*', array('id = ?', $this->getId()));
-			$res = $smt->fetchAll(PDO::FETCH_ASSOC);
 
-			foreach($res as $row) {
-				$row = filter('page_checkrow', $row);
-				$this->db_row = $row;
-				
-				$this->info['content'] = $row['content'];
-				$this->info['name'] = $row['name'];
-				$this->info['settings'] = unserialize($row['settings']);
-				$this->info['title'] = $row['title'];
-				$this->info['created'] = $row['created'];
-				$this->info['last_modified'] = $row['last_modified'];
-				$this->info['weight'] = $row['weight'];
-				$this->info['menutitle'] = $row['menutitle'];
-				$this->info['parent_id'] = $row['parent_id'];
-				$this->info['type'] = $row['type'];
-				$this->info['slug'] = $row['slug'];
-			}
+	protected function checkRow ($raw_row = null) {
+		if(empty($this->db_row)) {
+			$row = $raw_row;
+			$this->id = $row['id'];
+
+			$row = filter('page_checkrow', $row);
+			$this->db_row = $row;
+
+			$this->info['content'] = $row['content'];
+			$this->info['name'] = $row['name'];
+			$this->info['settings'] = unserialize($row['settings']);
+			$this->info['title'] = $row['title'];
+			$this->info['created'] = $row['created'];
+			$this->info['last_modified'] = $row['last_modified'];
+			$this->info['weight'] = $row['weight'];
+			$this->info['menutitle'] = $row['menutitle'];
+			$this->info['parent_id'] = $row['parent_id'];
+			$this->info['type'] = $row['type'];
+			$this->info['slug'] = $row['slug'];
 		}
 	}
 }
