@@ -36,7 +36,7 @@ define('CC_ROOT', dirname(__FILE__).'/');
 /**
  * This is the root PUBLIC directory of the CanyonCMS installation. Contains trailing slash.
  */
-define('CC_PUB_ROOT', dirname($_SERVER['PHP_SELF']));
+define('CC_PUB_ROOT', dirname($_SERVER['PHP_SELF']).'/');
 
 /**
  * The location of required CanyonCMS files like the bootstrapper. Should contain trailing slash. Default: CC_ROOT.'core/'
@@ -47,6 +47,11 @@ define('CC_CORE', CC_ROOT.'cc-core/');
  * The location of the admin panel. If this is changed then the url needed to access the admin panel changes. Should contain trailing slash. Default: CC_ROOT.'admin/'
  */
 define('CC_ADMIN', CC_ROOT.'cc-admin/');
+
+/**
+ * The public location of the admin panel. If this is changed then the url needed to access the admin panel changes. Should contain trailing slash. Default: CC_PUB_ROOT.'admin/'
+ */
+define('CC_PUB_ADMIN', CC_PUB_ROOT);
 
 /**
  * The location of the folder that contains the uploads and themes directory. Should contain trailing slash. Default: CC_ROOT.'content/'

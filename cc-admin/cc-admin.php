@@ -16,6 +16,11 @@ class Admin {
 	private $current;
 
 	/**
+	 * @var The part of the array where current menu item resides.
+	 */
+	private $currentItem;
+
+	/**
 	 * @var Menu items added by plugins.
 	 */
 	private $plugin_menu = array();
@@ -24,16 +29,109 @@ class Admin {
 		$this->parseUrl();
 	}
 
+	private function sortMenu ($arr1, $arr2) {
+		if($arr1['weight'] == $arr2['weight']) {
+			return 0;
+		}
+
+		return ($arr1['weight'] < $arr2['weight']) ? -1 : 1;
+	}
+
+	/**
+	 * Static wrapper for buildMenu();
+	 *
+	 * @return string The menu.
+	 */
+	public static function menu () {
+		return self::$handle->buildMenu();
+	}
+
+	public static function content () {
+		return self::$handle->getContent();
+	}
+
+	public static function title () {
+		$current = self::$handle->getCurrentItem();
+		return $current['title'];
+	}
+
+	/**
+	 * Get a part of an array that has the slug, title and callback for a particular admin page
+	 *
+	 * @return array The part of the array for the current admin page.
+	 */
+	public function getCurrentItem () {
+		if(!empty($this->currentItem)) {
+			return $this->currentItem;
+		}
+
+		if(empty($_GET['page'])) {
+			$_GET['page'] = 'dashboard';
+		}
+		$parts = (array) explode('/', $_GET['page'], 2);
+
+		// sub menu
+		if(count($parts) > 1) {
+			$this->currentItem = $this->plugin_menu[$parts[0]]['children'][$parts[1]];
+		}
+		// main level
+		else {
+			$this->currentItem = $this->plugin_menu[$parts[0]];
+		}
+		return $this->currentItem;
+	}
+
+	public function getContent () {
+		$current = $this->getCurrentItem();
+		call_user_func($current['callback']);
+   	}
+	
 	/**
 	 * Generates a multilevel array of the nav items.
 	 */
 	private function buildMenu () {
-		print_r($this->plugin_menu);
+		// make sure menu is in order.
+		$menu = $this->plugin_menu;
+		uasort($menu, array($this, 'sortMenu'));
+
+		$html = "";
+
+		// first level menu items
+		foreach($menu as $slug => $contents) {
+			$title = $contents['title'];
+			$callback = $contents['callback'];
+			$children = $contents['children'];
+			uasort($children, array($this, 'sortMenu'));
+
+			// deal with children
+			if(!empty($children)) {
+				$sub_html = "\n\t\t<ul>\n";
+				foreach($children as $sub_slug => $sub_content) {
+					$sub_title = $sub_content['title'];
+					$sub_callback = $sub_content['callback'];
+
+					$sub_html .= sprintf("\t\t\t<li class='admin-submenu'><a href='%s' title='Admin Page: %s'>%2\$s</a></li>\n", $this->makeUrl($slug.'/'.$sub_slug), $sub_title);
+				}
+				$sub_html .= "\t\t</ul>";
+			}
+
+			$html .= sprintf("\n\t<li><a href='%s' title='Admin Page: %s'>%s</a>%s\n\t</li>", $this->makeUrl($slug), $title, $title, $sub_html);
+			unset($sub_html);
+
+       	}
+
+		$html = "<ul>".$html."\n</ul>\n";
+
+		return $html;
 	}
+
+	public function makeUrl ($slug) {
+		return filter('admin-makeurl', CC_PUB_ADMIN.'?page='.$slug);
+   	}
 
 	public function includeDesign () {
-
-	}
+		require CC_ADMIN.'design/index.tpl.php';
+   	}
 
 	private function includeBasePages () {
 		$pages = glob(CC_ADMIN.'pages/*.php');
@@ -103,7 +201,8 @@ class Admin {
 
 		plugin('admin_menu');
 
-		self::$handle->buildMenu();
+		//self::$handle->buildMenu();
+		self::$handle->includeDesign();
 	}
 
 	/**
