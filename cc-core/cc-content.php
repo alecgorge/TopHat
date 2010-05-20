@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * You can access info about the current page with the static methods in this class.
+ *
+ * @todo Document private methods.
+ * @todo change page references to node
+ */
 class Content {
 	private static $current;
 	private static $currentId;
@@ -129,6 +135,11 @@ class Content {
 		return $r;
 	}
 
+	/**
+	 * Get the id of the current node.
+	 *
+	 * @return int The current node id.
+	 */
 	public static function currentId () {
 		return self::$currentId;
 	}
@@ -271,7 +282,7 @@ class Content {
 		$parts = array_remove_empty(explode('/', $_GET['q']));
 
 		if(count($parts) == 1) {
-			if(self::isPage('/'.$parts[0])) {
+			if(self::isNode('/'.$parts[0])) {
 				self::setCurrent(self::nameToId('/'.$parts[0]));
 			}
 			else {
@@ -280,7 +291,7 @@ class Content {
 		}
 		elseif(count($parts) > 1) {
 			$page = '/'.implode('/', $parts);
-			if(self::isPage($page)) {
+			if(self::isNode($page)) {
 				self::setCurrent(self::nameToId($page));
 			}
 			else {
@@ -292,15 +303,30 @@ class Content {
 		}
 	}
 
+	/**
+	 * Given a slug path like menu-test-1/menu-test-2/menu-title-1, the node id is returned.
+	 *
+	 * @param string $name The slug path.
+	 * @return int The node id.
+	 */
 	public static function nameToId($name) {
 		$id = array_search($name, self::$urlLookup);
 		return $id;
 	}
 
+	/**
+	 * Given an id like 3 it will return menu-test-1/menu-test-2/menu-title-1 .
+	 *
+	 * @param int $id The id of the node.
+	 * @return string The url like menu-test-1/menu-test-2/menu-title-1 to the node with the id $id.
+	 */
 	public static function url ($id) {
 		return self::$urlLookup[$id];
 	}
 
+	/**
+	 * This is called when the node is not found.
+	 */
 	public static function trigger404 () {
 		header('HTTP/1.0 404 Not Found');
 
@@ -317,9 +343,15 @@ class Content {
 		self::$breadcrumbs[-1] = array($e404mt);
 	}
 
-	public static function isPage ($page) {
-		$page = filter('content_ispage', $page);
-		plugin('content_ispage', array($page));
+	/**
+	 * Tests if a node exists.
+	 *
+	 * @param string $page A url slug like menu-test-1/menu-test-2/menu-title-1 .
+	 * @return boolean True if the node exists, false otherwise.
+	 */
+	public static function isNode ($page) {
+		$page = filter('content_isnode', $page);
+		plugin('content_isnode', array($page));
 		
 		return (array_search($page, self::$urlLookup) === false ? false : true);
 	}
@@ -336,58 +368,105 @@ class Content {
 		self::setSlug(self::$current->getSlug());
 	}
 
+	/**
+	 * Gets the raw instance of a decendant of NodeType.
+	 *
+	 * @return Object An instance of a decendant of NodeType
+	 */
 	public static function getCurrent () {
 		return self::$current;
 	}
 
+	/**
+	 * Gets the content of the current node.
+	 *
+	 * @return string The requested item.
+	 */
 	public static function get () {
 		plugin('content_get');
 		return filter('content_get', UTF8::htmlentities(self::$content['content']));
 	}
 
+	/**
+	 * Gets the title of the current node.
+	 *
+	 * @return string The requested item.
+	 */
 	public static function getTitle () {
 		plugin('content_gettitle');
 		return filter('content_gettitle', UTF8::htmlentities(self::$content['title']));
 	}
 
+	/**
+	 * Gets the menutitle of the current node.
+	 *
+	 * @return string The requested item.
+	 */
 	public static function getMenutitle () {
 		plugin('content_getmenutitle');
 		return filter('content_getmenutitle', UTF8::htmlentities(self::$content['menutitle']));
 	}
 
+	/**
+	 * Gets the slug of the current node.
+	 *
+	 * @return string The requested item.
+	 */
 	public static function getSlug () {
 		plugin('content_getslug');
 		return filter('content_getslug', self::$content['slug']);
 	}
 
+	/**
+	 * Gets the selected theme of the current node.
+	 *
+	 * @return string The requested item.
+	 */
 	public static function getTheme () {
 		plugin('content_gettheme');
 		return filter('content_gettheme', self::$content['theme']);
 	}
 
+	/**
+	 * Gets the breadcrumbs of the current node.
+	 *
+	 * @return string The requested item.
+	 */
 	public static function getBreadcrumbs () {
 		plugin('content_getbreadcrumbs');
 		return self::$breadcrumbs[self::$currentId];
 	}
 
+	/**
+	 * Overrides the content of the current node.
+	 */
 	public static function setContent ($x) {
 		plugin('content_setcontent', array($x));
 		$x = filter('content_setcontent', $x);
 		self::$content['content'] = $x;
 	}
 
+	/**
+	 * Overrides the title of the current node.
+	 */
 	public static function setTitle ($x) {
 		plugin('content_settitle', array($x));
 		$x = filter('content_settitle', $x);
 		self::$content['title'] = $x;
 	}
 
+	/**
+	 * Overrides the menutitle of the current node.
+	 */
 	public static function setMenutitle ($x) {
 		plugin('content_setmenutitle', array($x));
 		$x = filter('content_setmenutitle', $x);
 		self::$content['menutitle'] = $x;
 	}
 
+	/**
+	 * Overrides the theme of the current node.
+	 */
 	public static function setTheme ($x) {
 		plugin('content_setthemet', array($x));
 		$x = filter('content_settheme', $x);
@@ -395,12 +474,18 @@ class Content {
 		self::$content['theme'] = $x;
 	}
 
+	/**
+	 * Overrides the settings array of the current node.
+	 */
 	public static function setSettings ($x) {
 		plugin('content_setsettings', array($x));
 		$x = filter('content_setsettings', $x);
 		self::$content['settings'] = $x;
 	}
 
+	/**
+	 * Overrides the slug of the current node.
+	 */
 	public static function setSlug ($x) {
 		plugin('content_setslug', array($x));
 		$x = filter('content_setslug', $x);
@@ -455,7 +540,6 @@ class PageNode extends NodeType {
    	}
 }
 function cc_register_default_NodeType () {
-	//$page = new Page();
 	Node::register('page', 'PageNode');
 } cc_register_default_NodeType();
 
