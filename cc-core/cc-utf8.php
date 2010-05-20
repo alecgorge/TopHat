@@ -1,9 +1,15 @@
 <?php
 
 /**
- * @todo Document UTF8 Class
+ * A few utilites to work with UTF-8 strings. Very useful for localization/internationalization/compatibility
  */
 class UTF8 {
+	/**
+	 * Converts a non UTF-8 string into a UTF-8 string.
+	 *
+	 * @param string $str A non UTF-8 String
+	 * @return string The UTF-8 string.
+	 */
 	public static function convertToUTF8($str) {
 		if( mb_detect_encoding($str,"UTF-8, ISO-8859-1, GBK")!="UTF-8" ) {
 			return  iconv("gbk","utf-8",$str);
@@ -12,11 +18,24 @@ class UTF8 {
 			return $str;
 		}
 	}
+
+	/**
+	 * Transliterates as many non-ascii chars as possible, then removes the rest. Makes a nice slug.
+	 *
+	 * For example: baño baño baño becomes bano-bano-bano
+	 *
+	 * @param string $string The "unclean" input.
+	 * @return string The nice slug!
+	 */
 	public static function slugify ($string) {
+		// make sure it is UTF-8
 		$string = self::convertToUTF8($string);
+
+		// backups are good
 		$orig_string = $string;
 
 		$string = filter('utf8_slugify_before', $string);
+
 		// Cyrillic Letters
 		$iso = array(
 		   "Є"=>"YE","І"=>"I","Ѓ"=>"G","і"=>"i","№"=>"#","є"=>"ye","ѓ"=>"g",
@@ -35,6 +54,7 @@ class UTF8 {
 		   "ц"=>"c","ч"=>"ch","ш"=>"sh","щ"=>"shh","ъ"=>"",
 		   "ы"=>"y","ь"=>"","э"=>"e","ю"=>"yu","я"=>"ya","đ"=>"dz","Đ"=>"DZ"
 		);
+
 		// More Cyrillic Letters
 		$iso2_k = array(
 		"Щ", "Ш", "Ч", "Ц","Ю", "Я", "Ж", "А","Б","В","Г","Д","Е","Ё","З","И","Й","К","Л","М","Н",
@@ -47,14 +67,21 @@ class UTF8 {
 		"shh","sh","ch","c","ju","ja","zh","a","b","v","g","d","je","jo","z","i","j","k","l","m",
 		"n","o","p","r","s","t","u","f","kh","","y", "","e","je","ji","i","g"
 		);
+
+		// Greek letters
 		$greekTranslit = array(
 			"α"=>"a","β"=>"b","γ"=>"g","δ"=>"d","ε"=>"e","ζ"=>"z","η"=>"h","θ"=>"h",
 			"ι"=>"i","κ"=>"k","λ"=>"l","μ"=>"m","ν"=>"n","ξ"=>"s","ο"=>"o","π"=>"p",
 			"ρ"=>"r","σ"=>"s","τ"=>"t","υ"=>"y","φ"=>"f","χ"=>"h","ψ"=>"s","ω"=>"w"
 		);
+
+		// put the Cyrillic together
 		foreach($iso2_k as $key => $value) {
 			$iso2[$value] = $iso2_v[$key];
 		}
+
+		// some iconv installations suck so we have to help with the most
+		// simple ones
 		$german_and_french = array(
 			"ä" => "ae", "Ä" => "Ae",
 			"ö" => "oe", "Ö" => "Oe",
@@ -66,19 +93,53 @@ class UTF8 {
 			"á" => "a", "Á" => "A", "à" => "a", "À" => "A",
 			"ò" => "o", "Ò" => "O", "ô" => "o", "Ô" => "O", "ó" => "o", "Ó" => "O"
 		);
+
+		// transliterate some Cyrillic
 		$string = strtr($string, $iso);
+
+		// transliterate the rest of the Cyrillic
 		$string = strtr($string, $iso2);
+
+		// transliterate the Greek
 		$string = strtr($string, $greekTranslit);
+
+		// transliterate the "common" accents.
 		$string = strtr($string, $german_and_french);
+
+		// try to transliterate anything else with the iconv installation.
 		$string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+
+		// slugs are always lowercase
 		$string = strtolower($string);
+
+		// iconv can add some random chars to denote accents.
 		$string = str_replace(array('"',"'","^","~",'`'), "", $string);
+
+		// strip all remaning non slug-safe chars (A-z 0-9 - _)
 		$string = preg_replace("/[^a-zA-Z0-9-_]/", "-", $string);
+
+		// remove 2 or more -'s in a row.
 		$string = preg_replace('/[-]+/', '-', $string);
+
+		// trim leading and trailing -'s
 		$string = trim($string, '-');
+
+		// whoa, we don't want an empty slug!
+		if(empty($string)) {
+			// we will just base64_encode the slug and remove the '=' I guess. Any better ideas?
+			$string = trim(base64_encode($orig_string), '=');
+       	}
+
+		// done!
 		return filter('utf8_slugify_after', $string);
 	}
 
+	/**
+	 * A UTF-8 compliant htmlentities replacement. This encodes everything correctly, meaning even chinese content
+	 *
+	 * @param <type> $content
+	 * @return <type>
+	 */
 	public static function htmlentities($content) {
 		$oUnicodeReplace = new unicode_replace_entities();
 		$content = $oUnicodeReplace->UTF8entities($content);
