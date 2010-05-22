@@ -79,7 +79,7 @@ class i18n {
 			$locale = $this->getLocale();
 		}
 
-		if(!array_key_exists($key, $this->translations[$locale][$section])) {
+		if(!array_key_exists($key, (array)$this->translations[$locale][$section])) {
 			trigger_error("'$key' doesn't exist in the translation for '$locale' in the section '$section'.");
 			return null;
 		}

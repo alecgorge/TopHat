@@ -321,7 +321,7 @@ class Content {
 	 * @return string The url like menu-test-1/menu-test-2/menu-title-1 to the node with the id $id.
 	 */
 	public static function url ($id) {
-		return self::$urlLookup[$id];
+		return filter('content-url', ltrim(self::$urlLookup[$id], '/'));
 	}
 
 	/**
