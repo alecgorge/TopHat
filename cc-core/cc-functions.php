@@ -7,3 +7,15 @@ function array_remove_empty($arr) {
 	}
 	return $r;
 }
+
+/**
+ * Gets the path to a CSS stylesheet at (by default) content/css/*.css
+ *
+ * @param string $what_css
+ * @return string
+ */
+function get_css ($what_css) {
+	if(file_exists(CC_CONTENT.'css/'.$what_css.'.css')) {
+		return CC_CONTENT.'css/'.$what_css.'.css';
+	}
+}
