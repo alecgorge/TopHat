@@ -15,7 +15,7 @@ function array_remove_empty($arr) {
  * @return string
  */
 function get_css ($what_css) {
-	if(file_exists(CC_CONTENT.'css/'.$what_css.'.css')) {
-		return CC_CONTENT.'css/'.$what_css.'.css';
+	if(file_exists(CC_ROOT.CC_CONTENT.'css/'.$what_css.'.css')) {
+		return CC_PUB_ROOT.CC_CONTENT.'css/'.$what_css.'.css';
 	}
 }

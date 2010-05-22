@@ -26,6 +26,9 @@ $db_prefix = 'cc_';
  */
 $timezone = "America/New_York";
 
+
+$admin_path = "cc-admin/";
+
 /* The definitions for directories. All paths are relative to this (index.php) file and CONTAIN THE TRAILING FORWARD SLASH */
 
 /**
@@ -36,7 +39,16 @@ define('CC_ROOT', dirname(__FILE__).'/');
 /**
  * This is the root PUBLIC directory of the CanyonCMS installation. Contains trailing slash.
  */
-define('CC_PUB_ROOT', dirname($_SERVER['PHP_SELF']).'/');
+function cc_find_cc_pub_root () {
+	global $admin_path;
+	
+	$path = dirname($_SERVER['PHP_SELF']).'/';
+	if(substr($path, '-'.strlen($admin_path)) == $admin_path) {
+		return preg_replace('/[^\/]+\/\.\.\//', '', $path.'../');
+	}
+	return $path;
+}
+define('CC_PUB_ROOT', cc_find_cc_pub_root());
 
 /**
  * This is the public path to the current file
@@ -49,15 +61,14 @@ define('CC_PUB', rtrim($_SERVER['REQUEST_URI'], '/').'/');
 define('CC_CORE', CC_ROOT.'cc-core/');
 
 /**
- * The location of the admin panel. If this is changed then the url needed to access the admin panel changes. Should contain trailing slash. Default: CC_ROOT.'admin/'
- */
-define('CC_ADMIN', CC_ROOT.'cc-admin/');
-
-/**
  * The public location of the admin panel. If this is changed then the url needed to access the admin panel changes. Should contain trailing slash. Default: CC_PUB_ROOT.'admin/'
  */
-define('CC_PUB_ADMIN', CC_PUB_ROOT);
+define('CC_PUB_ADMIN', CC_PUB_ROOT.$admin_path);
 
+/**
+ * The location of the admin panel relative to CC_ROOT. If this is changed then the url needed to access the admin panel changes. Should contain trailing slash. Default: CC_ROOT.'admin/'.
+ */
+define('CC_ADMIN', CC_ROOT.$admin_path);
 /**
  * The location of the folder that contains the uploads and themes directory. Should contain trailing slash. Default: CC_ROOT.'content/'
  */
