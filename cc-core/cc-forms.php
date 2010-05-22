@@ -97,6 +97,14 @@ class Form {
 	 */
     public function addInput($label, $type, $name, $value = '', $attr_ar = array() ) {
 		$this->addLabelFor($name, $label);
+
+		if(array_key_exists('class', $attr_ar)) {
+			$attr_ar['class'] .= ",input-$type";
+		}
+		else {
+			$attr_ar['class'] .= "input-$type";
+		}
+
         $str = "\n<span><input type=\"$type\" name=\"$name\" value=\"$value\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
@@ -118,7 +126,13 @@ class Form {
 	 * @return boolean True.
 	 */
 	public function addSubmit ($label, $name, $value = '', $attr_ar = array()) {
-        $str = "\n<div class='form-row form-row-last'>\n<label for=\"$name\">$label</label>"."\n<span><input type=\"$type\" name=\"$name\" value=\"$value\"";
+		$type = 'submit';
+
+		if(empty($value)) {
+			$value = $label;
+		}
+
+        $str = "\n<div class='form-row form-row-last'>\n<label for=\"$name\">$label</label>"."\n<span><input type=\"$type\" name=\"$name\" class='input-submit' value=\"$value\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
