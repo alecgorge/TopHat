@@ -1,12 +1,38 @@
 <?php
 
 /**
- * A class that allows you to easily generate HTML forms.
+ * Create a HTML from using a object-oriented interface.
  *
- * Based on http://www.dyn-web.com/code/form_builder/
+ * Contains methods for generating common form elements such as text boxes, text areas, select lists, radio buttons, check boxes, and submit buttons.
+ *
+ * Each of the form class methods return a string which you can assign to a variable or echo/print.
+ * The methods for adding form elements have named arguments for the required and most common attributes. You can use an optional associative array to add any other attributes you wish.
+ * An addAttributes method is used to add the optional attributes passed in the associative array. It can be used to add class, JavaScript event handler attributes, or other attributes. In keeping with the requirements for xhtml validity, it does not output minimized boolean attributes, but instead writes out the full attribute-value pair.
+ * Descriptions of the individual methods below demonstrate the addition of extra attributes.
+ *
+ * @param string $action Destination URL to which form is submitted
+ * @param string $method Form method - get or post (default is post)
+ * @param string $id Unique id to be assigned to the form element's id attribute (optional)
+ * @param array $attr_ar Associative array of additional attributes (optional)
  */
 class Form {
 	public $form = "";
+
+	/**
+	 * Starts a field set.
+	 *
+	 * @param string $name The legend for the fieldset.
+	 */
+	public function startFieldset($name) {
+		$this->form .= "\n<fieldset>\n\t<legend>$name</legend>\n";
+	}
+
+	/**
+	 * Closes a field set.
+	 */
+	public function endFieldset() {
+		$this->form .= "\n</fieldset>";
+	}
 
 	/**
 	 * Create a HTML from using a object-oriented interface.
@@ -24,7 +50,7 @@ class Form {
 	 * @param array $attr_ar Associative array of additional attributes (optional)
 	 */
 	public function __construct ($action = '#', $method = 'post', $id = NULL, $attr_ar = array()) {
-        $str = "<form action=\"$action\" method=\"$method\"";
+        $str = "\n<form action=\"$action\" method=\"$method\"";
 
 		// only add non-null attributes
         if ( !is_null($id) ) {
@@ -34,7 +60,7 @@ class Form {
 		// only add attributes if needed
         $str .= ( $attr_ar ? $this->addAttributes( $attr_ar ) . '>': '>');
 
-		$this->form = $form;
+		$this->form = $str;
 	}
 
 	/**
@@ -69,20 +95,44 @@ class Form {
 	 * @param array $attr_ar Associative array of additional attributes (optional)
 	 * @return boolean True.
 	 */
-    public function addInput($type, $name, $value, $attr_ar = array() ) {
-        $str = "<input type=\"$type\" name=\"$name\" value=\"$value\"";
+    public function addInput($label, $type, $name, $value = '', $attr_ar = array() ) {
+		$this->addLabelFor($name, $label);
+        $str = "\n<span><input type=\"$type\" name=\"$name\" value=\"$value\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
-        $str .= ' />';
+        $str .= " /></span>\n</div>";
 
 		$this->form .= $str;
 		return true;
 	}
 
 	/**
+	 * @todo Document $label
+	 *
+	 * Similar to addInput except it is for submit rows, the final row in a form.
+	 *
+	 * @param string $name Value you specify is assigned to name attribute of the input element.
+	 * @param string $value Value assigned to input element.
+	 * @param array $attr_ar Associative array of additional attributes (optional)
+	 * @return boolean True.
+	 */
+	public function addSubmit ($label, $name, $value = '', $attr_ar = array()) {
+        $str = "\n<div class='form-row form-row-last'>\n<label for=\"$name\">$label</label>"."\n<span><input type=\"$type\" name=\"$name\" value=\"$value\"";
+        if ($attr_ar) {
+            $str .= $this->addAttributes( $attr_ar );
+        }
+        $str .= " /></span>\n</div>";
+
+		$this->form .= $str;
+		return true;
+
+	}
+
+	/**
 	 * To add a text area use the addTextArea method. Default values are provided for rows (4) and columns (30) or you can specify your own.
 	 *
+	 * @param string $label The label text.
 	 * @param string $name Assigned to name attribute of text area
 	 * @param integer $rows Number of rows, controlling height of text area
 	 * @param integer $cols Number of columns, controlling width of text area
@@ -90,12 +140,13 @@ class Form {
 	 * @param array $attr_ar Associative array of additional attributes (optional)
 	 * @return boolean True
 	 */
-    public function addTextarea($name, $rows = 4, $cols = 30, $value = '', $attr_ar = array() ) {
-        $str = "<textarea name=\"$name\" rows=\"$rows\" cols=\"$cols\"";
+    public function addTextarea($label, $name, $rows = 4, $cols = 30, $value = '', $attr_ar = array() ) {
+		$this->addLabelFor($name, $label);
+        $str = "\n<span><textarea name=\"$name\" rows=\"$rows\" cols=\"$cols\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
-        $str .= ">$value</textarea>";
+        $str .= ">$value</textarea></span>\n</div>";
 
 		$this->form .= $str;
 		return true;
@@ -103,7 +154,7 @@ class Form {
 
     // for attribute refers to id of associated form element
     public function addLabelFor($forID, $text, $attr_ar = array() ) {
-        $str = "<label for=\"$forID\"";
+        $str = "\n<div class='form-row'>\n<label for=\"$forID\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
@@ -124,8 +175,10 @@ class Form {
 
     // option values and text come from one array (can be assoc)
     // $bVal false if text serves as value (no value attr)
-    public function addSelectList($name, $option_list, $bVal = true, $selected_value = NULL, $header = NULL, $attr_ar = array() ) {
-        $str = "<select name=\"$name\"";
+    public function addSelectList($label, $name, $option_list, $bVal = true, $selected_value = NULL, $header = NULL, $attr_ar = array() ) {
+		$this->addLabelFor($name, $label);
+
+        $str = "\n<span><select name=\"$name\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
@@ -140,14 +193,14 @@ class Form {
             }
             $str .= ">$text</option>\n";
         }
-        $str .= "</select>";
+        $str .= "</select></span>\n</div>";
 
 		$this->form .= $str;
 		return true;
     }
 
     public function endForm() {
-		$this->form .= "</form>";
+		$this->form .= "\n</form>";
 		return true;
     }
 

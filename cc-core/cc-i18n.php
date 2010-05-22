@@ -12,12 +12,18 @@ class i18n {
 	/**
 	 * @var The current locale setting.
 	 */
-	private $locale = 'en_US';
+	public $locale = 'en_US';
+	public $old_locale = null;
 
 	/**
 	 * @var The handle to this class for the static methods.
 	 */
 	private static $handle = null;
+
+	/**
+	 * @var string The section to make translate calls relative to.
+	 */
+	private static $rel = null;
 
 	/**
 	 * Constructor for i18n.
@@ -74,9 +80,14 @@ class i18n {
 	 * @param string $section The section the key is in. Default should be 'core'.
 	 * @param string $key The translation key.
 	 */
-	public function translateFromKey ($section, $key, $locale = 'DEFAULT') {
+	public function translateFromKey ($section, $key = null, $locale = 'DEFAULT') {
 		if($locale === 'DEFAULT') {
 			$locale = $this->getLocale();
+		}
+
+		if(is_null($key)) {
+			$key = $section;
+			$section = self::$rel;
 		}
 
 		if(!array_key_exists($key, (array)$this->translations[$locale][$section])) {
@@ -93,7 +104,7 @@ class i18n {
 	 * @param string $section The section the key is in. Default should be 'core'.
 	 * @param string $key The translation key.
 	 */
-	public static function translate ($section, $key, $locale = 'DEFAULT') {
+	public static function translate ($section, $key = null, $locale = 'DEFAULT') {
 		return self::$handle->translateFromKey($section, $key, $locale = 'DEFAULT');
 	}
 
@@ -114,6 +125,36 @@ class i18n {
 	public static function register ($locale, $section, $translations) {
 		self::$handle->registerTranslation($locale, $section, $translations);
 	}
+
+	/**
+	 * This is used to simply translating. You can use i18n::set($section) to make all calls to _e() and __() and i18n::translate() in the section $section instead of defining the setting. Don't forget to call i18n::restore() when you are done.
+	 *
+	 * @param string $section The section to set all _e and __ calls relative to.
+	 * @param string $locale The locale to use.
+	 * @return boolean True on success, false on failure.
+	 */
+	public static function set ($section, $locale = 'DEFAULT') {
+		if($locale === 'DEFAULT') {
+			$locale = self::$handle->getLocale();
+		}
+		if(!array_key_exists($section, (array)self::$handle->translations[$locale])) {
+			trigger_error("'$section' doesn't exist in the translation for '$locale'.");
+			return false;
+		}
+		self::$handle->old_locale = self::$handle->locale;
+		self::$handle->locale = $locale;
+		self::$rel = $section;
+		return true;
+	}
+
+	/**
+	 * Undoes what i18n::set() did.
+	 */
+	public static function restore () {
+		self::$rel = null;
+		self::$handle->locale = null;
+		return true;
+	}
 }
 Hooks::bind('system_ready', 'i18n::boostrap');
 
@@ -123,14 +164,14 @@ Hooks::bind('system_ready', 'i18n::boostrap');
  * @todo sprintf support
  * A wrapper for i18n::translate();
  */
-function __($section, $key, $locale = 'DEFAULT') {
+function __($section, $key = null, $locale = 'DEFAULT') {
 	return i18n::translate($section, $key, $locale);
 }
 
 /**
  * Like __() but echos the output.
  */
-function _e($section, $key, $locale = 'DEFAULT') {
+function _e($section, $key = null, $locale = 'DEFAULT') {
 	echo __($section,$key,$locale);
 }
 

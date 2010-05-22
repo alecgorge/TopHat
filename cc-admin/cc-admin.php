@@ -38,6 +38,13 @@ class Admin {
 	}
 
 	/**
+	 * Returns a boolean whether user is logged in.
+	 */
+	public function isLoggedIn () {
+		return false;
+	}
+
+	/**
 	 * Static wrapper for buildMenu();
 	 *
 	 * @return string The menu.
@@ -133,6 +140,10 @@ class Admin {
 		require CC_ADMIN.'design/index.tpl.php';
    	}
 
+	public function includeLogin () {
+		require CC_ADMIN.'design/login.tpl.php';
+   	}
+
 	private function includeBasePages () {
 		$pages = glob(CC_ADMIN.'pages/*.php');
 		foreach($pages as $page) {
@@ -186,6 +197,11 @@ class Admin {
 	 * Looks at the url and determins what needs to be included.
 	 */
 	private function parseUrl () {
+		if(!$this->isLoggedIn()) {
+			$this->includeLogin();
+			exit();
+		}
+
 		$page = $_GET['page'];
 
 		if(empty($page)) {

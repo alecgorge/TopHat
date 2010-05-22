@@ -8,6 +8,9 @@ require CC_CORE.'cc-includes.php';
 // some helper functions
 cc_core_include('cc-functions.php');
 
+// forms
+cc_core_include('cc-forms.php');
+
 // utf-8 utils
 cc_core_include('cc-utf8.php');
 

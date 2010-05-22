@@ -4,6 +4,8 @@ i18n::register('en_US', 'core', array(
 ));
 
 i18n::register('en_US', 'admin', array(
-	'CanyonCMS Admin' => 'Admin'
+	'CanyonCMS Admin' => 'Admin',
+	'login' => 'Login to CanyonCMS',
+	
 ));
 ?>

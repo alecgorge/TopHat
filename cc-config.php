@@ -39,6 +39,11 @@ define('CC_ROOT', dirname(__FILE__).'/');
 define('CC_PUB_ROOT', dirname($_SERVER['PHP_SELF']).'/');
 
 /**
+ * This is the public path to the current file
+ */
+define('CC_PUB', rtrim($_SERVER['REQUEST_URI'], '/').'/');
+
+/**
  * The location of required CanyonCMS files like the bootstrapper. Should contain trailing slash. Default: CC_ROOT.'core/'
  */
 define('CC_CORE', CC_ROOT.'cc-core/');
