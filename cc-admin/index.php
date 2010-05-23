@@ -48,6 +48,8 @@ require_once CC_CORE.'cc-includes.php';
 // fix the $_GET variable
 cc_core_include('cc-functions.php');
 
+cc_core_include('cc-message.php');
+
 // forms
 cc_core_include('cc-forms.php');
 

@@ -8,7 +8,7 @@
 	<body>
 		<h2><?php _e('login_cc'); ?></h2>
 		<?php
-		$form = new Form('self', 'post', 'cc_form_login');
+		$form = new Form('self', 'post', 'login');
 			$form->startFieldset(__('Login'));
 				$form->addInput(__("Username"), 'text', 'cc_login_uname');
 				$form->addInput(__("Password"), 'password', 'cc_login_passwd');
