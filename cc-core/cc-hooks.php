@@ -127,10 +127,8 @@ class Hooks {
 	 * Sets up hooks for form submission.
 	 */
 	public static function setupPostHandles () {
-		foreach($_POST as $key => $value) {
-			if(substr($key, 0, 8) == 'cc_form_') {
-				Hooks::execute('post_'.substr($key, 8));
-			}
+		if(!empty($_POST['cc_form'])) {
+			Hooks::execute('post_'.$_POST['cc_form']);
 		}
 	}
 }
