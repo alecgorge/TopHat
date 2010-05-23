@@ -9,5 +9,6 @@ i18n::register('en_US', 'admin', array(
 	'Login'	=> 'Login',
 	'Username' => 'Username',
 	'Password' => 'Password',
+	'bad-uname-pass' => 'Incorrect username or password.'
 ));
 ?>
