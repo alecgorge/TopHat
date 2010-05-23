@@ -122,8 +122,19 @@ class Hooks {
 	protected static function getAllHooks () {
 		return self::$hooks;
 	}
-	
+
+	/**
+	 * Sets up hooks for form submission.
+	 */
+	public static function setupPostHandles () {
+		foreach($_POST as $key => $value) {
+			if(substr($key, 0, 8) == 'cc_form_') {
+				Hooks::execute('post_'.substr($key, 8));
+			}
+		}
+	}
 }
+Hooks::register('system_ready', 'Hooks::setupPostHandles', 100);
 
 /**
  * Wrapper for Hooks::execute().
