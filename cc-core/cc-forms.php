@@ -50,6 +50,10 @@ class Form {
 	 * @param array $attr_ar Associative array of additional attributes (optional)
 	 */
 	public function __construct ($action = '#', $method = 'post', $id = NULL, $attr_ar = array()) {
+		if($action === 'self') {
+			$action = $_SERVER['REQUEST_URI'];
+		}
+
         $str = "\n<form action=\"$action\" method=\"$method\"";
 
 		// only add non-null attributes
@@ -61,6 +65,10 @@ class Form {
         $str .= ( $attr_ar ? $this->addAttributes( $attr_ar ) . '>': '>');
 
 		$this->form = $str;
+
+		if(!is_null($id)) {
+			$this->form .= sprintf("\n\t<input type='hidden' name='%s' value='%s' />\n", 'cc_form', $id);
+		}
 	}
 
 	/**
