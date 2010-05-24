@@ -26,8 +26,8 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Ramblingwood, LLC.
 
-    +-----------------------------------------+
-	|  CanyonCMS v0.1.0a - 5/2/2010           |
+        +-----------------------------------------+
+	|  CanyonCMS v0.1.0a - 5/24/2010          |
 	|  http://canyoncms.com                   |
 	+-----------------------------------------+
 
