@@ -70,8 +70,11 @@ class Form {
 			$this->form .= sprintf("\n\t<input type='hidden' name='%s' value='%s' />\n", 'cc_form', $id);
 		}
 
+
 		if($_POST['cc_form'] === $id) {
-			$this->form .= filter('post_output_'.$id, '');
+			$temp = '';
+			$temp = filter('post_output_'.$id, $temp);
+			$this->form .= $temp;
        	}
 	}
 

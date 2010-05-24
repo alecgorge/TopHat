@@ -132,7 +132,7 @@ class Hooks {
 		}
 	}
 }
-Hooks::register('system_ready', 'Hooks::setupPostHandles', 100);
+Hooks::bind('system_complete', 'Hooks::setupPostHandles');
 
 /**
  * Wrapper for Hooks::execute().

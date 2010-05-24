@@ -204,7 +204,7 @@ class Database {
 		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $set, $where));
 		Log::add('DB Query: '.$sql);
 		$smt = self::getHandle()->prepare($sql);
-		var_dump($binds+$prepare);
+		
 		if(!$smt) {
 			print_r(self::getHandle()->errorInfo());
 			debug_print_backtrace();

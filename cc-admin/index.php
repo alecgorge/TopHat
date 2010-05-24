@@ -83,10 +83,14 @@ cc_core_include('cc-i18n.php');
 // setup plugin architecture
 cc_core_include('cc-plugins.php');
 
+cc_include_admin('cc-users.php');
+
+plugin('system_ready');
+
 // this is where the awesome is
 cc_include_admin('cc-admin.php');
 
 // let some things run (pulling settings, etc) before we go on to pull the page info
-plugin('system_ready');
+plugin('system_complete');
 
 ?>

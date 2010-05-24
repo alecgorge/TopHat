@@ -18,7 +18,7 @@ function cc_redirect ($url, $relative = false) {
 	if($continue === false) return;
 
 	if($relative) {
-		header(sprintf('location: %s', $url));
+		header(sprintf('location: %s', CC_PUB_ROOT.$url));
 	}
 	
 	header(sprintf('location: %s', $url));

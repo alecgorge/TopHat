@@ -17,22 +17,27 @@ class Users {
 	public static $phash;
 
 	public static function isValid () {
-
+		return self::$isValid;
 	}
 
 	public static function loginHandle () {
 		if(check_post('cc_login_uname', 'cc_login_passwd', 'cc_login_login')) {
-			$_SESSION['uname'] = $_POST['cc_login_name'];
-			$_SESSION['pword'] = $_POST['cc_login_passwd'];
+			$_SESSION['uname'] = $_POST['cc_login_uname'];
+			$_SESSION['pword'] = hash('whirlpool', $_POST['cc_login_passwd']);
 			$_SESSION['last_ip'] = $_SERVER['REMOTE_ADDR'];
 
 			if(self::checkSession()) {
-				cc_redirect('cc-admin/?first=true', true);
+				//var_dump(CC_PUB_ADMIN);exit();
+				cc_redirect(CC_PUB_ADMIN.'index.php?page=dashboard&first=true', true);
            	}
 			else {
-				echo Message::error(__('admin', 'bad-uname-pass'));
+				Filters::bind('post_output_login', 'Users::outputError');
 			}
        	}
+	}
+
+	public static function outputError () {
+		return Message::error(__('admin', 'bad-uname-pass'));
 	}
 
 	/**
@@ -97,11 +102,11 @@ class Users {
 		}
 		$_SESSION['last_ip'] = $current_ip;
 
-		$smt = Database::select('users', array('pword_hash'), array('name = ? AND type = ?', $uname, 'user'));
+		$smt = Database::select('users', array('value'), array('name = ? AND type = ?', $uname, 'user'));
 		$row = $smt->fetch(PDO::FETCH_ASSOC);
 
 		// correct password
-		if($pword === $row['pword_hash']) {
+		if($pword === $row['value']) {
 			return true;
 		}
 
@@ -112,7 +117,7 @@ class Users {
 	public static function bootstrap () {
 		session_start();
 
-		Hooks::register('post_output_login', 'Users::loginHandle');
+		Hooks::bind('post_login', 'Users::loginHandle');
 		self::$isValid = Users::checkSession();
 		if(!self::$isValid) {
 			Users::checkCookie();
@@ -120,7 +125,7 @@ class Users {
 		}
 	}
 }
-Hooks::register('system-ready', 'Users::bootstrap');
+Hooks::bind('system_ready', 'Users::bootstrap');
 
 class User {
 

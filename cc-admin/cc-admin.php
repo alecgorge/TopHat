@@ -41,8 +41,8 @@ class Admin {
 	 * Returns a boolean whether user is logged in.
 	 */
 	public function isLoggedIn () {
-		return false;
-	}
+		return Users::isValid();
+   	}
 
 	/**
 	 * Static wrapper for buildMenu();
@@ -236,6 +236,6 @@ class Admin {
 	}
 }
 
-Hooks::bind('system_ready', 'Admin::bootstrap', 10);
+Hooks::bind('system_complete', 'Admin::bootstrap', 10);
 
 ?>
