@@ -219,6 +219,7 @@ class Admin {
 		self::$handle->includeBasePages();
 
 		plugin('admin_menu');
+		plugin('admin_sidebar');
 
 		//self::$handle->buildMenu();
 		self::$handle->includeDesign();
@@ -246,6 +247,10 @@ class Admin {
 		cc_redirect(CC_PUB_ROOT);
 		exit();
    	}
+
+	public static function isPage ($page) {
+		return $_GET['page'] == $page;
+	}
 }
 Hooks::bind('admin_logout', 'Admin::logout', 100);
 Hooks::bind('system_complete', 'Admin::bootstrap', 10);
