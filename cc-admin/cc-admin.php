@@ -203,6 +203,9 @@ class Admin {
 		}
 
 		$page = $_GET['page'];
+		if($page == 'logout') {
+			plugin('admin_logout');
+		}
 
 		if(empty($page)) {
 			$page = Settings::get('admin', 'homepage');
@@ -234,8 +237,15 @@ class Admin {
 	public static function registerSubpage () {
 		return call_user_func_array(array(self::$handle, '_registerSubpage'), func_get_args());
 	}
-}
 
+	/**
+	 * Logs the user out.
+	 */
+	public static function logout () {
+		Users::logout();
+   	}
+}
+Hooks::bind('admin_logout', 'Admin::logout', 100);
 Hooks::bind('system_complete', 'Admin::bootstrap', 10);
 
 ?>
