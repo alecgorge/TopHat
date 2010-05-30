@@ -243,6 +243,8 @@ class Admin {
 	 */
 	public static function logout () {
 		Users::logout();
+		cc_redirect(CC_PUB_ROOT);
+		exit();
    	}
 }
 Hooks::bind('admin_logout', 'Admin::logout', 100);
