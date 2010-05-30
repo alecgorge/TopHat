@@ -79,8 +79,12 @@ class i18n {
 	 *
 	 * @param string $section The section the key is in. Default should be 'core'.
 	 * @param string $key The translation key.
+	 * @param string $local The locale to use when looking for translatations. Default is 'DEFAULT'.
+	 * @param mixed ... Any more arguments passed will be passed to sprintf when translating.
+	 * @return string The translated value.
 	 */
 	public function translateFromKey ($section, $key = null, $locale = 'DEFAULT') {
+		plugin('translate', array($section, $key, $locale));
 		if($locale === 'DEFAULT') {
 			$locale = $this->getLocale();
 		}
@@ -95,7 +99,11 @@ class i18n {
 			return null;
 		}
 
-		return $this->translations[$locale][$section][$key];
+		if(func_num_args() > 3) {
+			return filter('translated_value', sprintf($this->translations[$locale][$section][$key], array_slice(func_get_args(), 3)));
+		}
+
+		return filter('translated_value', $this->translations[$locale][$section][$key]);
 	}
 
 	/**
@@ -105,6 +113,10 @@ class i18n {
 	 * @param string $key The translation key.
 	 */
 	public static function translate ($section, $key = null, $locale = 'DEFAULT') {
+		if(func_num_args() > 3) {
+			return call_user_func_array(array(self::$handle, 'translateFromKey'), func_get_args());
+		}
+
 		return self::$handle->translateFromKey($section, $key, $locale = 'DEFAULT');
 	}
 
@@ -161,10 +173,16 @@ Hooks::bind('system_ready', 'i18n::boostrap');
 
 
 /**
- * @todo sprintf support
  * A wrapper for i18n::translate();
+ *
+ * You can use it as if it has 2 arguments and then pass the rest of the arguments as arguments to go to sprintf.
  */
 function __($section, $key = null, $locale = 'DEFAULT') {
+	if(func_num_args() > 3 || func_num_args() > 2 && $locale === 'DEFAULT') {
+		$args = func_get_args();
+		$args = array_slice($args, 0, 2, false) + array('DEFAULT') + array_slice($args, 2);
+		return call_user_func_array('i18n::translate', array($args));
+	}
 	return i18n::translate($section, $key, $locale);
 }
 
@@ -174,5 +192,6 @@ function __($section, $key = null, $locale = 'DEFAULT') {
 function _e($section, $key = null, $locale = 'DEFAULT') {
 	echo __($section,$key,$locale);
 }
+
 
 ?>
