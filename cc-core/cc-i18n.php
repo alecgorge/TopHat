@@ -94,13 +94,15 @@ class i18n {
 			$section = self::$rel;
 		}
 
+		//var_dump(func_get_args());
 		if(!array_key_exists($key, (array)$this->translations[$locale][$section])) {
 			trigger_error("'$key' doesn't exist in the translation for '$locale' in the section '$section'.");
 			return null;
 		}
 
-		if(func_num_args() > 3) {
-			return filter('translated_value', sprintf($this->translations[$locale][$section][$key], array_slice(func_get_args(), 3)));
+		
+		if(func_num_args() > 3 || (func_num_args() > 2 && $locale === 'DEFAULT')) {
+			return filter('translated_value', call_user_func_array('sprintf', array_merge(array($this->translations[$locale][$section][$key]), array_slice(func_get_args(), 3))));
 		}
 
 		return filter('translated_value', $this->translations[$locale][$section][$key]);
@@ -113,8 +115,12 @@ class i18n {
 	 * @param string $key The translation key.
 	 */
 	public static function translate ($section, $key = null, $locale = 'DEFAULT') {
-		if(func_num_args() > 3) {
-			return call_user_func_array(array(self::$handle, 'translateFromKey'), func_get_args());
+		//var_dump(func_get_args(), $locale, func_num_args(), (func_num_args() > 2 && $locale !== 'DEFAULT'));
+		if(func_num_args() > 3 || (func_num_args() > 2 && $locale !== 'DEFAULT')) {
+			$args = func_get_args();
+			$args = array_merge(array_slice($args, 0, 2, false), array('DEFAULT'), array_slice($args, 2));
+
+			return call_user_func_array(array(self::$handle, 'translateFromKey'), $args);
 		}
 
 		return self::$handle->translateFromKey($section, $key, $locale = 'DEFAULT');
@@ -178,10 +184,9 @@ Hooks::bind('system_ready', 'i18n::boostrap');
  * You can use it as if it has 2 arguments and then pass the rest of the arguments as arguments to go to sprintf.
  */
 function __($section, $key, $locale = 'DEFAULT') {
-	if(func_num_args() > 3 || func_num_args() > 2 && $locale === 'DEFAULT') {
+	if(func_num_args() > 3 || (func_num_args() > 2 && $locale !== 'DEFAULT')) {
 		$args = func_get_args();
-		$args = array_slice($args, 0, 2, false) + array('DEFAULT') + array_slice($args, 2);
-		return call_user_func_array('i18n::translate', array($args));
+		return call_user_func_array('i18n::translate', $args);
 	}
 	return i18n::translate($section, $key, $locale);
 }
@@ -190,10 +195,10 @@ function __($section, $key, $locale = 'DEFAULT') {
  * Like __() but echos the output.
  */
 function _e($section, $key, $locale = 'DEFAULT') {
-	if(func_num_args() > 3 || func_num_args() > 2 && $locale === 'DEFAULT') {
+	if(func_num_args() > 3 || (func_num_args() > 2 && $locale !== 'DEFAULT')) {
 		$args = func_get_args();
-		$args = array_slice($args, 0, 2, false) + array('DEFAULT') + array_slice($args, 2);
-		echo call_user_func_array('i18n::translate', array($args));
+		echo call_user_func_array('i18n::translate', $args);
+		return;
 	}
 	echo __($section,$key,$locale);
 }
