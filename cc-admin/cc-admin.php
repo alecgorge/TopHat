@@ -112,17 +112,16 @@ class Admin {
 
 			// deal with children
 			if(!empty($children)) {
-				$sub_html = "\n\t\t<ul>\n";
+				$sub_html = "\n\t\t<ul class='admin-submenu'>\n";
 				foreach($children as $sub_slug => $sub_content) {
 					$sub_title = $sub_content['title'];
 					$sub_callback = $sub_content['callback'];
 
-					$sub_html .= sprintf("\t\t\t<li class='admin-submenu'><a href='%s' title='Admin Page: %s'>%2\$s</a></li>\n", $this->makeUrl($slug.'/'.$sub_slug), $sub_title);
+					$sub_html .= sprintf("\t\t\t<li class='%s'><a href='%s' title='Admin Page: %s'>%3\$s</a></li>\n", (self::isPage($slug.'/'.$sub_slug) ? ' current' : ''), $this->makeUrl($slug.'/'.$sub_slug), $sub_title);
 				}
 				$sub_html .= "\t\t</ul>";
 			}
-
-			$html .= sprintf("\n\t<li><a href='%s' title='Admin Page: %s'>%s</a>%s\n\t</li>", $this->makeUrl($slug), $title, $title, $sub_html);
+			$html .= sprintf("\n\t<li%s><a href='%s' title='Admin Page: %s'>%s</a>%s\n\t</li>", (self::isPage($slug) ? ' class="current"' : ''), $this->makeUrl($slug), $title, $title, $sub_html);
 			unset($sub_html);
 
        	}
@@ -147,6 +146,11 @@ class Admin {
 	private function includeBasePages () {
 		$pages = glob(CC_ADMIN.'pages/*.php');
 		foreach($pages as $page) {
+			include $page;
+		}
+
+		$subPages = glob(CC_ADMIN.'pages/*/*.php');
+		foreach($subPages as $page) {
 			include $page;
 		}
 	}

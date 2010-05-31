@@ -4,8 +4,10 @@ i18n::register('en_US', 'core', array(
 ));
 
 i18n::register('en_US', 'admin', array(
-	'CanyonCMS Admin' => 'Admin',
+	'CanyonCMS Admin' => 'CanyonCMS Admin',
 	'login_cc' => 'Login to CanyonCMS',
+	'powered-by' => 'powered by %s',
+	'edit-page' => 'Edit Page',
 	'Login'	=> 'Login',
 	'Username' => 'Username',
 	'Password' => 'Password',

@@ -114,7 +114,7 @@ class Form {
 		$this->addLabelFor($name, $label);
 
 		if(array_key_exists('class', $attr_ar)) {
-			$attr_ar['class'] .= ",input-$type";
+			$attr_ar['class'] .= " input-$type";
 		}
 		else {
 			$attr_ar['class'] .= "input-$type";
@@ -170,7 +170,7 @@ class Form {
 	 * @return boolean True
 	 */
     public function addTextarea($label, $name, $rows = 4, $cols = 30, $value = '', $attr_ar = array() ) {
-		$this->addLabelFor($name, $label);
+		$this->addLabelFor($name, $label, array('class' => 'textarea'));
         $str = "\n<span><textarea name=\"$name\" rows=\"$rows\" cols=\"$cols\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
@@ -183,7 +183,14 @@ class Form {
 
     // for attribute refers to id of associated form element
     public function addLabelFor($forID, $text, $attr_ar = array() ) {
-        $str = "\n<div class='form-row'>\n<label for=\"$forID\"";
+		$attr_ar['class'] .= ' form-row';
+
+        $str = "\n<div ";
+        if ($attr_ar) {
+            $str .= $this->addAttributes( $attr_ar) ;
+        }
+
+		$str .= ">\n<label for=\"{$forID}\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }

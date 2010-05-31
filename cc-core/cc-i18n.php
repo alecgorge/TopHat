@@ -183,7 +183,7 @@ Hooks::bind('system_ready', 'i18n::boostrap');
  *
  * You can use it as if it has 2 arguments and then pass the rest of the arguments as arguments to go to sprintf.
  */
-function __($section, $key, $locale = 'DEFAULT') {
+function __($section, $key = null, $locale = 'DEFAULT') {
 	if(func_num_args() > 3 || (func_num_args() > 2 && $locale !== 'DEFAULT')) {
 		$args = func_get_args();
 		return call_user_func_array('i18n::translate', $args);
@@ -194,7 +194,7 @@ function __($section, $key, $locale = 'DEFAULT') {
 /**
  * Like __() but echos the output.
  */
-function _e($section, $key, $locale = 'DEFAULT') {
+function _e($section, $key = null, $locale = 'DEFAULT') {
 	if(func_num_args() > 3 || (func_num_args() > 2 && $locale !== 'DEFAULT')) {
 		$args = func_get_args();
 		echo call_user_func_array('i18n::translate', $args);

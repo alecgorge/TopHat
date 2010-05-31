@@ -85,6 +85,8 @@ cc_core_include('cc-plugins.php');
 
 cc_include_admin('cc-users.php');
 
+cc_include_admin('cc-admin-sidebar.php');
+
 plugin('system_ready');
 
 // this is where the awesome is

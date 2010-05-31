@@ -7,7 +7,7 @@ class AdminSidebar {
 	/**
 	 * @var array An array of all of the sidebar blocks registered.
 	 */
-	private static $registered;
+	private static $registered = array();
 
 	/**
 	 * This adds a callback to when the admin sidebar for each page is generated.
