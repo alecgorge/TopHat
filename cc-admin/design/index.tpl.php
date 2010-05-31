@@ -4,11 +4,14 @@
 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 		<title><?php echo Admin::title(); ?> &lsaquo; <?php _e('admin', 'CanyonCMS Admin'); ?></title>
 
-		<link rel="stylesheet" type="text/css" href="<?php echo get_css('form-layout'); ?>" />
-		<link rel="stylesheet" type="text/css" href="design/styles.css" />
-
-		<script type="text/javascript" src="<?php echo CC_PUB_ROOT.CC_CONTENT; ?>libraries/js/jquery-1.4.2.min.js"></script>
-		<script type="text/javascript" src="design/admin.js"></script>
+		<?php
+		load_library(array('form-layout', 'jquery'));
+		queue_css(CC_PUB_ADMIN.'design/styles.css', 10);
+		queue_js(CC_PUB_ADMIN.'design/admin.js', 10);
+		
+		load_css();
+		load_js();
+		?>
 	</head>
 
 	<body>

@@ -1,5 +1,5 @@
 RewriteEngine On
-RewriteBase /drives/h/php/canyoncms/
+RewriteBase /php/CanyonCMS/
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

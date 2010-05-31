@@ -6,7 +6,7 @@ body {
 }
 
 #header {
-	background: #4C90DB;
+	background: #333;
 	color:white;
 	padding: 35px 10px 0;
 	border-bottom:3px solid #266FBF;
@@ -202,17 +202,17 @@ input.large {
 	font-size: 1.2em;
 }
 
-input.input-submit {
-	padding: 6px;
+input.input-submit, input.input-password {
+	padding: 2px;
 }
 
-input.input-text, select, textarea {
+input.input-text, input.input-password, select, textarea {
 	background: white;
 	border: 1px #bbb solid;
 	-moz-border-radius: 3px;
 }
 
-input.text:hover, select:hover {
+input.input-text:hover, input.input-password:hover, select:hover, input.input-text:focus, input.input-password:focus, select:focus {
 	background:white;
 	border-color: #999;
 }

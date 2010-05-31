@@ -12,7 +12,7 @@ label {
 	color:#777;
 	font-style:italic; }
 
-input.input-text, select, button {
+input.input-text, select, button, input.input-password {
 	padding:3px;
 	border:1px #aaa solid;
 	color:#333;
@@ -30,7 +30,7 @@ textarea {
 	width:100%;
 	margin:0 0 0 1px; }
 
-input.text.hover, select.hover, button.hover, input.text:hover, select:hover, button:hover {
+input.input-text.hover, select.hover, button.hover, input.input-text:hover, select:hover, button:hover, input.input-password:hover {
 	border-color:#999;
 	background:#e5e5e5; }
 
