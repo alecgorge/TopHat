@@ -127,7 +127,7 @@ class i18n {
 	}
 
 	public static function boostrap () {
-		$locale = Settings::get('core', 'locale');
+		$locale = Settings::get('core', 'locale', true);
 
 		if(empty($locale)) {
 			$locale = 'en_US';
@@ -155,6 +155,7 @@ class i18n {
 		if($locale === 'DEFAULT') {
 			$locale = self::$handle->getLocale();
 		}
+
 		if(!array_key_exists($section, (array)self::$handle->translations[$locale])) {
 			trigger_error("'$section' doesn't exist in the translation for '$locale'.");
 			return false;
@@ -170,7 +171,7 @@ class i18n {
 	 */
 	public static function restore () {
 		self::$rel = null;
-		self::$handle->locale = null;
+		self::$handle->locale = self::$handle->old_locale;
 		return true;
 	}
 }
