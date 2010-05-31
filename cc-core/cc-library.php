@@ -24,7 +24,16 @@ class Library {
 			if(!self::isLoaded($library)) {
 				plugin('library_load', array($library));
 				self::$loadedLibraries[] = $library;
-				call_user_func_array('Library::queueFile', self::$shelf[$library]);
+				if( is_array(self::$shelf[$library]['file']) ) {
+					foreach(self::$shelf[$library]['file'] as $type => $files) {
+						if(!empty($files)) {
+							foreach($files as $file) {
+								call_user_func_array('Library::queueFile', array($type, $file, self::$shelf[$library]['importance']));
+							}
+						}
+					}
+				}
+				else call_user_func_array('Library::queueFile', self::$shelf[$library]);
 			}
 		}
 	}
@@ -50,7 +59,9 @@ class Library {
 			trigger_error("Library $name already exists!");
 			return;
 		}
-		plugin('library_register', array($type, $name, $file, $importance));
+		$arr = filter('library_register', array($type, $name, $file, $importance));
+		list($type, $name, $file, $importance) = $arr;
+
 		self::$shelf[$name] = array($type, $file, $importance);
 	}
 	
@@ -60,6 +71,12 @@ class Library {
 			$info = parse_ini_file($ini);
 			$dir = explode('/', dirname($ini));
 			$dir = end($dir).'/';
+
+			$info = filter('library_library_info', $info);
+
+			if(array_key_exists('js_file', $info) || array_key_exists('css_file', $info) || array_key_exists('php_file', $info)) {
+				$info['file'] = array('js' => (array) $info['js_file'], 'css' => (array)$info['css_file'], 'php' => (array)$finfo['php_file']);
+			}
 			self::register($info['type'], $info['name'], CC_PUB_ROOT.CC_CONTENT.'libraries/'.$dir.$info['file'], $info['importance']);
 		}
 	}
