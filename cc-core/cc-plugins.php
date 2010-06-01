@@ -67,7 +67,7 @@ class Plugins {
 	 * @return array The array of plugins, one name per line.
 	 */
 	public static function getPluginList () {
-		$glob = glob(CC_PLUGINS.'*/plugin.php');
+		$glob = glob(CC_ROOT.CC_PLUGINS.'*/plugin.php');
 		foreach($glob as $plugin) {
 			// $plugin is a full path, we don't want that.
 			$plugin = explode(CC_PLUGINS, $plugin, 2);
@@ -186,6 +186,10 @@ class Plugin {
 	 * @var string A url safe version of the plugin name.
 	 */
 	private $slug;
+	/**
+	 * @var string The folder the plugin is in under CC_PLUGINS
+	 */
+	private $dir;
 
 	/**
 	 * Create a new Plugin!
@@ -196,6 +200,13 @@ class Plugin {
 	 * @param string $link Optional. The path to the homepage of the plugin.
 	 */
 	public function  __construct($name, $author, $description, $link = '') {
+		$backtrace = debug_backtrace();
+		$caller = dirname($backtrace[0]['file']);
+		$caller = str_replace('\\', '/', $caller);
+		$caller = explode('/', rtrim($caller,'/\\'));
+		$folderName = end($caller).'/';
+
+		$this->dir = $folderName;
 		$this->name = $name;
 		$this->author = $author;
 		$this->description = $description;
@@ -258,6 +269,20 @@ class Plugin {
 	 */
 	public function get($key) {
 		return Settings::get($this->getName(), $key);
+	}
+
+	/**
+	 * @return string The publicly accessible absolute path to the plugin's directory.
+	 */
+	public function pluginPublicDir () {
+		return CC_PUB_ROOT.CC_PLUGINS.$this->dir;
+	}
+
+	/**
+	 * @return string The absolute path to the plugin's directory in the filesystem.
+	 */
+	public function pluginDir () {
+		return CC_ROOT.CC_PLUGINS.$this->dir;
 	}
 }
 ?>
