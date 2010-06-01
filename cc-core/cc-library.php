@@ -62,7 +62,7 @@ class Library {
 		$arr = filter('library_register', array($type, $name, $file, $importance));
 		list($type, $name, $file, $importance) = $arr;
 
-		self::$shelf[$name] = array($type, $file, $importance);
+		self::$shelf[$name] = array('type' => $type, 'file' => $file, 'importance' => $importance);
 	}
 	
 	public static function bootstrap () {
@@ -74,11 +74,28 @@ class Library {
 
 			$info = filter('library_library_info', $info);
 
-			if(array_key_exists('js_file', $info) || array_key_exists('css_file', $info) || array_key_exists('php_file', $info)) {
-				$info['file'] = array('js' => (array) $info['js_file'], 'css' => (array)$info['css_file'], 'php' => (array)$finfo['php_file']);
-			}
-			self::register($info['type'], $info['name'], CC_PUB_ROOT.CC_CONTENT.'libraries/'.$dir.$info['file'], $info['importance']);
+			$info['js_file'] = (array)$info['js_file'];
+			array_walk($info['js_file'], 'Library::prependPATH', $dir);
+
+			$info['css_file'] = (array)$info['css_file'];
+			array_walk($info['css_file'], 'Library::prependPATH', $dir);
+
+			$info['php_file'] = (array)$info['php_file'];
+			array_walk($info['php_file'], 'Library::prependPATH', $dir);
+
+
+			$info['file'] = array(
+				'js' => $info['js_file'],
+				'css' => $info['css_file'],
+				'php' => $info['php_file']
+			);
+
+			self::register($info['type'], $info['name'], $info['file'], $info['importance']);
 		}
+	}
+
+	public static function prependPATH (&$x, $key, $dir) {
+		$x = CC_PUB_ROOT.CC_CONTENT.'libraries/'.$dir.$x;
 	}
 }
 class JS extends Library {
