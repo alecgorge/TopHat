@@ -85,9 +85,9 @@ define('CC_THEMES', CC_CONTENT.'themes/');
 define('CC_UPLOADS', CC_CONTENT.'uploads/');
 
 /**
- * The location of the folder that contains the site's plugins. Should contain trailing slash. Default: <code>CC_ROOT.'plugins/'</code>
+ * The location of the folder that contains the site's plugins. Should contain trailing slash. Default: <code>'plugins/'</code>
  */
-define('CC_PLUGINS', CC_ROOT.'plugins/');
+define('CC_PLUGINS', 'plugins/');
 
 /**
  * The location of the folder that contains the site's translations. Should contain trailing slash. Default: <code>CC_CONTENT.'translations/'</code>

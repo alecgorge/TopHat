@@ -2,8 +2,14 @@
 <html>
 	<head>
 		<title><?php _e('login_cc'); ?></title>
-		<link type="text/css" rel="stylesheet" href="<?php echo get_css('form-layout'); ?>" />
-		<link type="text/css" rel="stylesheet" href="<?php echo CC_PUB_ADMIN.'design/styles.css'; ?>" />
+
+		<?php
+		load_library(array('form-layout', 'messages'));
+		queue_css(CC_PUB_ADMIN.'design/styles.css');
+
+		load_css();
+		load_js();
+		?>
 	</head>
 	<body>
 		<h2><?php _e('login_cc'); ?></h2>

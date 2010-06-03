@@ -59,6 +59,9 @@ cc_core_include('cc-utf8.php');
 // loggin utils
 cc_core_include('cc-log.php');
 
+// editors
+cc_core_include('cc-editors.php');
+
 // some libraries
 cc_core_include('cc-library.php');
 

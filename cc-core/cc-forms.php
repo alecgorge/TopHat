@@ -180,7 +180,18 @@ class Form {
 		$this->form .= $str;
 		return true;
     }
-
+	
+	public function addEditor($label, $name, $initalContents = '') {
+		$r = <<<EOT
+	<div class="form-row-struct editor">
+		<label for="%s">%s</label>
+		%s
+	</div>
+EOT;
+		$r = sprintf($r, $name, $label, Editors::create($name, $initalContents));
+		$this->form .= $r;
+		return true;
+	}
     // for attribute refers to id of associated form element
     public function addLabelFor($forID, $text, $attr_ar = array() ) {
 		$attr_ar['class'] .= ' form-row';

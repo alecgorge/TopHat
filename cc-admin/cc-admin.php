@@ -3,7 +3,7 @@ class Admin {
 	/**
 	 * @var Contains the handle to class for static access.
 	 */
-	static private $handle;
+	public static $handle;
 
 	/**
 	 * @var Contains registered menu items.
@@ -73,7 +73,7 @@ class Admin {
 		}
 
 		if(empty($_GET['page'])) {
-			$_GET['page'] = 'dashboard';
+			$_GET['page'] = 'content';
 		}
 		$parts = (array) explode('/', $_GET['page'], 2);
 
@@ -134,6 +134,10 @@ class Admin {
 	public function makeUrl ($slug) {
 		return filter('admin-makeurl', CC_PUB_ADMIN.'?page='.$slug);
    	}
+
+	public static function link ($slug) {
+		return self::$handle->makeUrl($slug);
+	}
 
 	public function includeDesign () {
 		require CC_ADMIN.'design/index.tpl.php';
@@ -212,7 +216,8 @@ class Admin {
 		}
 
 		if(empty($page)) {
-			$page = Settings::get('admin', 'homepage');
+			$page = Settings::get('admin', 'homepage', true);
+			$_GET['page'] = $page;
 		}
 
 		$this->current = $page;
@@ -255,6 +260,7 @@ class Admin {
 	public static function isPage ($page) {
 		return $_GET['page'] == $page;
 	}
+
 }
 Hooks::bind('admin_logout', 'Admin::logout', 100);
 Hooks::bind('system_complete', 'Admin::bootstrap', 10);

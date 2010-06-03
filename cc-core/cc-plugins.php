@@ -70,7 +70,7 @@ class Plugins {
 		$glob = glob(CC_ROOT.CC_PLUGINS.'*/plugin.php');
 		foreach($glob as $plugin) {
 			// $plugin is a full path, we don't want that.
-			$plugin = explode(CC_PLUGINS, $plugin, 2);
+			$plugin = explode(CC_ROOT.CC_PLUGINS, $plugin, 2);
 			$plugin = explode('/plugin.php', $plugin[1]);
 			$r[] = $plugin[0];
 		}
@@ -124,7 +124,7 @@ class RegisteredPlugin {
 		$this->name = $folder_name;
 		$this->active = $active;
 		$this->options = $options;
-		$this->pluginFile = CC_PLUGINS.$this->name.'/plugin.php';
+		$this->pluginFile = CC_ROOT.CC_PLUGINS.$this->name.'/plugin.php';
 	}
 
 	/**
