@@ -39,7 +39,7 @@ class Library {
 	}
 	
 	public static function isLoaded ($library) {
-		return array_key_exists($library, self::$loadedLibraries);
+		return array_search($library, self::$loadedLibraries) !== false;
 	}
 	
 	public static function queueFile ($type, $file, $importance = 0) {
@@ -102,18 +102,35 @@ class JS extends Library {
 	public static function queue ($file, $importance = 0){
 		self::queueFile('js', $file, $importance);
 	}
+	public static function queueString ($string, $importance = 0) {
+		self::queueFile('js-string', $string, $importance);
+	}
 	public static function load () {
 		$sortedFiles = (array)Library::$queue['js'];
 		if(empty($sortedFiles)) {
 			return;
 		}
 		ksort($sortedFiles);
-		
+
+		$sortedStrings = (array)Library::$queue['js-string'];
+		if(empty($sortedFiles)) {
+			return;
+		}
+		ksort($sortedStrings);
+
 		foreach($sortedFiles as $imp => $files) {
 			foreach($files as $file) {
 				$r .= sprintf("\n".'<script type="text/javascript" src="%s"></script>', $file);
 			}
 		}
+		
+		foreach($sortedStrings as $imp => $files) {
+			foreach($files as $file) {
+				$r .= sprintf("\n".'<script type="text/javascript">%s</script>', $file);				
+			}
+		}
+
+
 		
 		echo $r,"\n";
 	}
@@ -146,6 +163,9 @@ function queue_js ($file, $importance = 0) {
 }
 function queue_css ($file, $importance = 0) {
 	CSS::queue($file, $importance);
+}
+function queue_js_string ($string, $importance = 0) {
+	JS::queueString($string, $impotance);
 }
 function load_css() {
 	CSS::load();

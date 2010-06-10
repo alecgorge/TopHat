@@ -25,6 +25,8 @@ class Admin {
 	 */
 	private $plugin_menu = array();
 
+	public static $content;
+
 	public function __construct () {
 		$this->parseUrl();
 	}
@@ -54,7 +56,7 @@ class Admin {
 	}
 
 	public static function content () {
-		return self::$handle->getContent();
+		return self::$content;
 	}
 
 	public static function title () {
@@ -90,7 +92,7 @@ class Admin {
 
 	public function getContent () {
 		$current = $this->getCurrentItem();
-		call_user_func($current['callback']);
+		self::$content = call_user_func($current['callback']);
    	}
 	
 	/**
@@ -229,6 +231,8 @@ class Admin {
 
 		plugin('admin_menu');
 		plugin('admin_sidebar');
+
+		self::$handle->getContent();
 
 		//self::$handle->buildMenu();
 		self::$handle->includeDesign();

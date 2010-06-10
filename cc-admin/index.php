@@ -89,6 +89,8 @@ cc_core_include('cc-i18n.php');
 // setup plugin architecture
 cc_core_include('cc-plugins.php');
 
+cc_core_include('cc-content.php');
+
 cc_include_admin('cc-users.php');
 
 cc_include_admin('cc-admin-sidebar.php');

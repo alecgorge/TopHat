@@ -147,12 +147,12 @@ class Content {
 	/**
 	 * This function returns HTML from the site's navigation.
 	 *
-	 * @param array $options The options for the nav generation. It is an associative array. Any items not named will use the default: <code>array('root' => "\n<ul id='ul-navigation'>\n%s\n</ul>\n",
-	 *	'child' => "\n<ul class='ul-sub-navigation'>\n%s\n</ul>\n",
-	 *	'item' => "\n\t<li><a href='%2\$s' title='%1\$s'>%1\$s</a></li>",
-	 *	'itemSelected' => "\n\t<li class='selected'><a href='%2\$s' title='%1\$s'>%1\$s</a></li>",
-	 *	'itemHasChild' => "\n\t<li><a href='%2\$s' title='%1\$s'>%1\$s</a>%3\$s</li>",
-	 *	'itemHasChildSelected' => "\n\t<li class='selected'><a href='%2\$s' title='%1\$s'>%1\$s</a>%3\$s</li>");</code>
+	 * @param array $options The options for the nav generation. It is an associative array. Any items not named will use the default: <code>array('root' =&gt; &quot;\n&lt;ul id='ul-navigation'&gt;\n%s\n&lt;/ul&gt;\n&quot;,
+	 *	'child' =&gt; &quot;\n&lt;ul class='ul-sub-navigation'&gt;\n%s\n&lt;/ul&gt;\n&quot;,
+	 *	'item' =&gt; &quot;\n\t&lt;li&gt;&lt;a href='%2\$s' title='%1\$s'&gt;%1\$s&lt;/a&gt;&lt;/li&gt;&quot;,
+	 *	'itemSelected' =&gt; &quot;\n\t&lt;li class='selected'&gt;&lt;a href='%2\$s' title='%1\$s'&gt;%1\$s&lt;/a&gt;&lt;/li&gt;&quot;,
+	 *	'itemHasChild' =&gt; &quot;\n\t&lt;li&gt;&lt;a href='%2\$s' title='%1\$s'&gt;%1\$s&lt;/a&gt;%3\$s&lt;/li&gt;&quot;,
+	 *	'itemHasChildSelected' =&gt; &quot;\n\t&lt;li class='selected'&gt;&lt;a href='%2\$s' title='%1\$s'&gt;%1\$s&lt;/a&gt;%3\$s&lt;/li&gt;&quot;);</code>
 	 * @param bool $isChild Ignore. For internal use only.
 	 * @param bool $inputArray Ignore. For internal use only.
 	 * @return string The nav.

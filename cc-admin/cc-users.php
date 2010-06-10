@@ -28,7 +28,7 @@ class Users {
 
 			if(self::checkSession()) {
 				//var_dump(CC_PUB_ADMIN);exit();
-				cc_redirect(CC_PUB_ADMIN.'index.php?page=dashboard&first=true', true);
+				cc_redirect(CC_PUB_ADMIN.'index.php?page=content&first=true', true);
            	}
 			else {
 				Filters::bind('post_output_login', 'Users::outputError');
