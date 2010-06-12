@@ -137,8 +137,13 @@ class Admin {
 		return filter('admin-makeurl', CC_PUB_ADMIN.'?page='.$slug);
    	}
 
-	public static function link ($slug) {
-		return self::$handle->makeUrl($slug);
+	public static function link ($slug, $args = array()) {
+		if(!empty($args)) {
+		    foreach($args as $key => $value) {
+			$append .= "&$key=$value";
+		    }
+		}
+		return self::$handle->makeUrl($slug).$append;
 	}
 
 	public function includeDesign () {
