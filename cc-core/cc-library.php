@@ -20,10 +20,24 @@ class Library {
 			}
 		}
 		else {
+                        if(!array_key_exists($library, self::$shelf)) {
+			    trigger_error("$library is not a loaded library.", E_USER_ERROR);
+			    return;
+                        }
+
 			plugin('library_load_call', array($library));
 			if(!self::isLoaded($library)) {
+				// load the dependiences
+				$deps = self::$shelf[$library]['depends_on'];
+				if(!empty($deps)) {
+				    foreach($deps as $dep) {
+					self::load($dep);
+				    }
+				}
+
 				plugin('library_load', array($library));
 				self::$loadedLibraries[] = $library;
+
 				if( is_array(self::$shelf[$library]['file']) ) {
 					foreach(self::$shelf[$library]['file'] as $type => $files) {
 						if(!empty($files)) {
@@ -54,15 +68,15 @@ class Library {
 		self::$queue[$type][$importance][]  = $file;
 	}
 	
-	public static function register ($type, $name, $file, $importance = 0) {
+	public static function register ($type, $name, $file, $importance = 0, $depends_on = array()) {
 		if(is_array(self::$shelf[$name])) {
 			trigger_error("Library $name already exists!");
 			return;
 		}
-		$arr = filter('library_register', array($type, $name, $file, $importance));
-		list($type, $name, $file, $importance) = $arr;
+		$arr = filter('library_register', array($type, $name, $file, $importance, $depends_on));
+		list($type, $name, $file, $importance, $depends_on) = $arr;
 
-		self::$shelf[$name] = array('type' => $type, 'file' => $file, 'importance' => $importance);
+		self::$shelf[$name] = array('type' => $type, 'file' => $file, 'importance' => $importance, 'depends_on' => $depends_on);
 	}
 	
 	public static function bootstrap () {
@@ -90,7 +104,9 @@ class Library {
 				'php' => $info['php_file']
 			);
 
-			self::register($info['type'], $info['name'], $info['file'], $info['importance']);
+			$info['depends_on'] = (array) $info['depends_on'];
+
+			self::register($info['type'], $info['name'], $info['file'], $info['importance'], $info['depends_on']);
 		}
 	}
 
