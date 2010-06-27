@@ -83,6 +83,9 @@ cc_core_include('cc-validate.php');
 // setup settings manager
 cc_core_include('cc-settings.php');
 
+// themes
+cc_core_include('cc-themes.php');
+
 // i18n is important!
 cc_core_include('cc-i18n.php');
 

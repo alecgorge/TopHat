@@ -148,7 +148,7 @@ body {
 	padding:10px 16px;
 }
 
-#content {
+div#content {
 	float:left;
 	width:700px;
 	background: white;
@@ -157,7 +157,7 @@ body {
 	border:1px #ccc solid;
 }
 
-#content .gutter {
+div#content .gutter {
 	padding: 10px 16px;
 	font-size: 1.1em;
 }
@@ -267,3 +267,23 @@ input.input-text:focus, input.input-password:focus, select:focus {
 #admin-sidebar > li a.action:hover {
 	background: #488fdf;
 }
+
+.left {
+    float:left;
+}
+
+.right {
+    float:right;
+}
+
+/*.edit-page-link {
+    width:16px;
+    height:16px;
+    display:block;
+    padding:0px 30px 0 0;
+    background: transparent url('icons/page_edit.png') no-repeat left center;
+    text-indent: -999em;
+}
+.nsw-item-row {
+    min-height:16px;
+}*/

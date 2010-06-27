@@ -6,29 +6,99 @@ AdminSidebar::registerForPage('content', 'ContentPage::createContent');
 
 class ContentPage {
 	public static $navArray;
+	public static $reorderingTemp;
+
+	public static function updateFromPOST() {
+			$conn = Database::getHandle();
+
+			$statement = $conn->prepare("UPDATE `".CC_DB_PREFIX."content` SET weight = ? AND parent_id = ? WHERE id = ?");
+			$conn->beginTransaction();
+
+			$order = explode('|', trim($_POST['order'], '|'));
+			foreach($order as $part) {
+			    $parts = explode(',', $part);
+			    $newOrder[$parts[0]] = $parts[1];
+			}
+			$order = $newOrder;
+			$weight = 0;
+			foreach($order as $id => $parent_id) {
+			    Database::update('content', array('weight', 'parent_id'), array($weight, $parent_id), array('id' => $id));
+			    if(!$statement->execute(array($weight, $parent_id, $id))) {
+				print_r(self::getHandle()->errorInfo());
+			    }
+			    //$sql = "UPDATE `".CC_DB_PREFIX."content` SET weight = $weight, parent_id = $parent_id WHERE id = $id";
+			    //$conn->exec($sql);
+			    $weight++;
+			}
+
+			$conn->commit();
+	    echo "ok";
+	    exit();
+	}
 
 	public static function display () {
+		if($_GET['do'] == 'reorder') {
+		    self::updateFromPOST();
+		}
 		load_library(array('jquery', 'jstree'));
 
+		$edit_link = '"<a href=\"'.Admin::link('content/edit-page').'&id=%3$s\" class=\"edit-page-link\">'.__('admin', 'edit-page').'</a>"';
+		$edit_link2 = '"<a href=\"'.Admin::link('content/edit-page').'&id=%4$s\" class=\"edit-page-link\">'.__('admin', 'edit-page').'</a>"';
+
+		$delete_link = '"<a href=\"'.Admin::link('content/delete-page').'&id=%3$s\" class=\"delete-page-link\">'.__('admin', 'delete-page').'</a>"';
+		$delete_link2 = '"<a href=\"'.Admin::link('content/delete-page').'&id=%4$s\" class=\"delete-page-link\">'.__('admin', 'delete-page').'</a>"';
+
 		$r .= "<h2>".__("admin", "content-management")."</h2>";
-		$r .= "<div id='tree'></div>";
+		$r .= "<p class='page-intro'>".__('admin', 'content-intro')."</p>\n<div id='tree'></div>";
+
+		$count = Content::countNavItems();
+
 		$json_nav = html_entity_decode(str_replace('},]', '}]', Content::generateNavHTML(array(
-			'root' =>					'{"data":[%s],state: "open"}',
-			'child' =>					'[%s]',
-			'item' =>					'{"data":{"title":"%1$s","attr":{"href":"%2$s"},icon:"file"},state: "open",icon:"file"},',
-			'itemSelected' =>			'{"data":{"title":"%1$s","attr":{"href":"%2$s"}},state: "open"},',
-			'itemHasChild' =>			'{"data":{"title":"%1$s","attr":{"href":"%2$s"}},state: "open","children":%3$s},',
-			'itemHasChildSelected' =>	'{"data":{"title":"%1$s","attr":{"href":"%2$s"}},state: "open","children":%3$s},',
+			'root' =>			'{"requestFirstIndex": 0,"firstIndex": 0,"count": '.$count.',"totalCount": '.$count.',
+			    "columns":[	"'.__("admin", 'page-name').'",
+					"'.__('admin', 'edit-page').'",
+					"'.__('admin', 'delete-page').'",
+					],"items":[%s]}',
+			'child' =>			'[%s]',
+			'item' =>			'{"id":%3$s,"info":["%1$s",'.$edit_link.', '.$delete_link.']},',
+			'itemSelected' =>		'{"id":%3$s,"info":["%1$s",'.$edit_link.', '.$delete_link.']},',
+			'itemHasChild' =>		'{"id":%4$s,"info":["%1$s",'.$edit_link2.', '.$delete_link2.'],"children":%3$s},',
+			'itemHasChildSelected' =>	'{"id":%4$s,"info":["%1$s",'.$edit_link2.', '.$delete_link2.'],"children":%3$s},',
 		))), ENT_QUOTES, "utf-8" );
 
+		$save_url = Admin::link('content', array('do' => 'reorder'));
+
+		$local_success = __('admin', 'page-reorder-success');
 
 		queue_js_string(<<<EOT
 	$(function () {
-		$('#tree').jstree({"json_data":$json_nav, "plugins" : [ "themes", "json_data", "dnd" ]});
+		$('#tree').NestedSortableWidget({"jsonData":$json_nav,doSave: function (dom) {
+			var jdom = $(dom);
+			var string = "";
+			jdom.find('.nsw-item').each(function (i) {
+			    var grandparent = $(this).parent().parent();
+			    var isChild = (grandparent[0].tagName == 'LI' ? grandparent.attr('id').match(/nsw\-item\-([0-9]+)/)[1] : false);
+
+			    if(isChild !== false){
+				    string += "|" + $(this).attr('id').match(/nsw\-item\-([0-9]+)/)[1] + "," + isChild;
+			    }
+			    else {
+				    string += "|" +  $(this).attr('id').match(/nsw\-item\-([0-9]+)/)[1] + ",0" ;
+			    }
+			});
+			$.ajax({
+				url : "$save_url",
+				type : "post",
+				data : "order="+string,
+				success: function(e, returnText) {
+				    $('<div class="message message-success">$local_success</div>').hide().prependTo(jdom).slideDown();
+				}
+			});
+		}});
 	});
 EOT
 );
-       	//print_r(json_decode($json_nav));
+	   	//print_r(json_decode($json_nav));
 		//echo("<pre>".."</pre>");
 
 		return $r;

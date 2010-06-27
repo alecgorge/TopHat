@@ -15,6 +15,7 @@ class Content {
 	private static $idLookup;
 	private static $idLookupClean;
 	private static $childLookup;
+	private static $count;
 	private static $urlLookup;
 	private static $breadcrumbs;
 
@@ -34,7 +35,7 @@ class Content {
 			$options = false;
 			$list = array();
 			
-			$pages = DB::select('content', '*', array('type = ?', 'page'), array('weight', 'desc'));
+			$pages = DB::select('content', '*', array('type = ?', 'page'), array('weight', 'asc'));
 
 			while($data = $pages->fetch(PDO::FETCH_ASSOC)) {
 				$data = filter('content_parsenavigation_data', $data);
@@ -48,6 +49,7 @@ class Content {
 					$thisref['id'] = (int) $data['id'];
 					$thisref['menutitle'] = $data['menutitle'];
 					$thisref['slug'] = $data['slug'];
+					$count++;
 					if(!empty($options['external'])) {
 						$external[$thisref['id']] = $options['external'];
 					}
@@ -70,12 +72,15 @@ class Content {
 			$list2 = filter('content_parsenavigation_idlookup', $list2);
 			$list3 = filter('content_parsenavigation_idlookupclean', $list3);
 			$list4 = filter('content_parsenavigation_childlookup', $list4);
+			$count = filter('content_parsenavigation_count', $count);
 
 
 			self::$navArray = $list;
 			self::$idLookup  = $list2;
+			self::$count = $count;
 			self::$idLookupClean = $list3;
 			self::$childLookup = $list4;
+			self::$count = $count;
 			
 			self::$urlLookup = self::generateIdLookups();
 			self::$breadcrumbs = self::generateBreadcrumbs();
@@ -87,6 +92,11 @@ class Content {
 		else {
 			return self::$navArray;
 		}		
+	}
+
+	public static function countNavItems () {
+	    self::parseNavigation();
+	    return self::$count;
 	}
 
 	private static function generateIdLookups ($path = null, $children = array()) {
@@ -198,14 +208,14 @@ class Content {
 				// current page
 				if(Content::currentId() == $item['id']) {
 					// add the html on
-					$thisOutput = sprintf($options['itemHasChildSelected'], $mt, $url, $childrenHtml);
+					$thisOutput = sprintf($options['itemHasChildSelected'], $mt, $url, $childrenHtml, $item['id']);
 				}
 				else {
 					// add the html on
-					$thisOutput = sprintf($options['itemHasChild'], $mt, $url, $childrenHtml);
+					$thisOutput = sprintf($options['itemHasChild'], $mt, $url, $childrenHtml, $item['id']);
 				}
 
-				plugin('nav_haschild_after', array($item, $thisOutput, $output));
+				plugin('nav_haschild_after', array($item, $thisOutput, $output, $item['id']));
 				$thisOutput = filter('nav_haschild_after', $thisOutput);
 
 				$output .= $thisOutput;
@@ -221,11 +231,11 @@ class Content {
 				// current page
 				if(Content::currentId() == $item['id']) {
 					// add the html on
-					$thisOutput = sprintf($options['itemSelected'], $mt, $url);
+					$thisOutput = sprintf($options['itemSelected'], $mt, $url, $item['id']);
 				}
 				else {
 					// add the html on
-					$thisOutput = sprintf($options['item'], $mt, $url);
+					$thisOutput = sprintf($options['item'], $mt, $url, $item['id']);
 				}
 
 				plugin('nav_nochild_after', array($item, $thisOutput, $output));

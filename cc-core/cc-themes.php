@@ -10,6 +10,13 @@ class Themes {
 	private static $curr_theme;
 
 	public static function bootstrap () {
+		$g = glob(CC_ROOT.CC_THEMES.'*/index.tpl.php');
+		foreach($g as $v) {
+		    $parts = explode('/', str_replace('\\', '/', $v));
+		    $themes[] = $parts[count($parts)-2];
+		}
+		self::$themes = $themes;
+
 		self::$set_theme = Settings::get('core', 'theme', true);
 
 		self::setCurrentTheme(self::$set_theme);
@@ -26,6 +33,10 @@ class Themes {
 		if($theme->validate()) {
 			self::$curr_theme = $theme;
 		}
+	}
+
+	public static function getThemeList () {
+	    return self::$themes;
 	}
 }
 

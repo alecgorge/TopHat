@@ -13,7 +13,7 @@ class Library {
 	
 	public static $shelf;
 	
-	public static function load ($library) {
+	public static function load ($library, $overload_importance = null) {
 		if(is_array($library)) {
 			foreach($library as $v) {
 				self::load($v);
@@ -31,7 +31,7 @@ class Library {
 				$deps = self::$shelf[$library]['depends_on'];
 				if(!empty($deps)) {
 				    foreach($deps as $dep) {
-					self::load($dep);
+					self::load($dep, self::$shelf[$library]['importance']);
 				    }
 				}
 
@@ -42,12 +42,16 @@ class Library {
 					foreach(self::$shelf[$library]['file'] as $type => $files) {
 						if(!empty($files)) {
 							foreach($files as $file) {
-								call_user_func_array('Library::queueFile', array($type, $file, self::$shelf[$library]['importance']));
+								$importance = self::$shelf[$library]['importance'];
+								if(!is_null($overload_importance) && $overload_importance < $importance) {
+								    $importance = $overload_importance;
+								}
+								Library::queueFile($type, $file, $importance);
 							}
 						}
 					}
 				}
-				else call_user_func_array('Library::queueFile', self::$shelf[$library]);
+				else Library::queueFile(self::$shelf[$library]);
 			}
 		}
 	}
