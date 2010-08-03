@@ -87,8 +87,17 @@ class Settings {
 	 */
 	public static function get($package, $k, $ret = false) {
 		$r = null;
-		if(array_key_exists($k, self::$settings[$package])) {
-			$r = self::$settings[$package][$k];
+
+		if(array_key_exists($package, self::$settings)) {
+		    if(array_key_exists($k, self::$settings[$package])) {
+			    $r = self::$settings[$package][$k];
+		    }
+			else {
+				return filter('cc_settings_notfound', $r);
+			}
+		}
+		else {
+		    return filter('cc_settings_notfound', $r);
 		}
 
 		plugin('cc_settings_get', array($package, $k, &$ret));
