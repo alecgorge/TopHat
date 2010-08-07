@@ -21,8 +21,9 @@ class EditPage {
 	public static function display () {
 	    i18n::set('admin');
 
+		var_dump($_POST);
 	    if($_POST['edit_page']) {
-		Hooks::bind('post_edit_page', 'EditPage::handlePost');
+			Hooks::bind('post_edit_page', 'EditPage::handlePost');
 	    }
 
 	    $r .= sprintf("<h2>%s</h2>", __('edit-page'));

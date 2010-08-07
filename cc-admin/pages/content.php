@@ -105,7 +105,7 @@ EOT
    	}
 
 	public static function createContent () {
-		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('content/add-page'), __('admin', 'add-page'));
+		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('content/create-page'), __('admin', 'add-page'));
 	}
 }
 
