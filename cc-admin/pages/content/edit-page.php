@@ -47,13 +47,13 @@ class EditPage {
 		$themeList['-1'] = 'Default Theme';
 
 
-      	$form = new Form('self', 'post', 'edit_page');
+		$form = new Form('self', 'post', 'edit_page');
 
 		$form->startFieldset(__('page-info'));
 			$form->addInput(__('page-title'), 'text', 'title', self::get('title'), array('class' => 'large'));
 			$form->addSelectList(__('content-type'), 'content_type', array('asdf' => 'Page', 'asdf2' => 'Blog Post'), NULL, 'asdf2');
 			$form->addSelectList(__('theme-override'), 'theme', $themeList);
-       	$form->endFieldset();
+		$form->endFieldset();
 
 		$form->startFieldset(__('menu-settings'));
 			$form->addInput(__('menu-title'), 'text', 'menutitle', self::get('menutitle'));
