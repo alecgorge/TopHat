@@ -22,6 +22,7 @@ class Database {
 		self::$handle = $handle;
 	}
 
+
 	/**
 	 * Perform a select query on the CanyonCMS database.
 	 *

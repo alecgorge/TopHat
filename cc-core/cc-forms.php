@@ -100,6 +100,24 @@ class Form {
 		return $str;
     }
 
+	public function addHidden($name, $value, $attr_ar = array() ) {
+		if(array_key_exists('class', $attr_ar)) {
+			$attr_ar['class'] .= " input-$type";
+		}
+		else {
+			$attr_ar['class'] .= "input-$type";
+		}
+
+        $str = "\n<input type=\"hidden\" name=\"$name\" value=\"$value\"";
+        if ($attr_ar) {
+            $str .= $this->addAttributes( $attr_ar );
+        }
+        $str .= " />\n";
+
+		$this->form .= $str;
+		return true;
+	}
+
 	/**
 	 * Used to add input elements of type text, checkbox, radio, hidden, password, submit and image. It has named arguments for type, name and value. A text box with just these attributes is added as follows:
 	 * <code>$frm->addInput('text', 'firstName', 'Sharon');</code>
