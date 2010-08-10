@@ -36,7 +36,7 @@ input.input-text.hover, select.hover, button.hover, input.input-text:hover, sele
 
 input.input-submit:hover, button.hover { color:#000; }
 
-input.input-submit {width: auto;}
+input.input-submit {width: auto;padding:5px 8px;}
 
 input.focus, select.focus, input.text:focus, select:focus {
 	border-color:#777;

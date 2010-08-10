@@ -14,16 +14,29 @@ class EditPage {
 
 	public static function get ($x) {
 	    if($_POST[$x]) return $_POST[$x];
-	    if(self::$row[$x]) return self::$row[$x];
+	    if(array_key_exists($x, self::$row)) return self::$row[$x];
 	    return '';
 	}
 
 	public static function display () {
 	    i18n::set('admin');
 
-		var_dump($_POST);
-	    if($_POST['edit_page']) {
-			Hooks::bind('post_edit_page', 'EditPage::handlePost');
+	    if($_POST['cc_form'] == 'edit_page') {
+			plugin('admin_edit_post_pre');
+
+			$id				= $_GET['id'];
+			$title			= filter('admin_edit_post_title', self::get('title'));
+			$content		= filter('admin_edit_post_content', self::get('content'));
+			$last_modified	= filter('admin_edit_post_last_modified', time());
+			$settings		= filter('admin_edit_post_settings', self::get('settings'));
+			$weight			= filter('admin_edit_post_weight', self::get('weight'));
+			$menutitle		= filter('admin_edit_post_menutitle', self::get('menutitle'));
+			$parent_id		= filter('admin_edit_post_parent_id', self::get('parent_id'));
+			$type			= filter('admin_edit_post_type', self::get('content_type'));
+			$slug			= filter('admin_edit_post_slug', self::get('slug'));
+			
+
+			//Hooks::bind('post_edit_page', 'EditPage::handlePost');
 	    }
 
 	    $r .= sprintf("<h2>%s</h2>", __('edit-page'));
@@ -49,10 +62,13 @@ class EditPage {
 
 		$form = new Form('self', 'post', 'edit_page');
 
+		$form->addHidden('settings', self::get('settings'));
+
 		$form->startFieldset(__('page-info'));
 			$form->addInput(__('page-title'), 'text', 'title', self::get('title'), array('class' => 'large'));
 			$form->addSelectList(__('content-type'), 'content_type', array('asdf' => 'Page', 'asdf2' => 'Blog Post'), NULL, 'asdf2');
 			$form->addSelectList(__('theme-override'), 'theme', $themeList);
+			$form->addInput(__('weight'), 'text', 'weight', self::get('weight'));
 		$form->endFieldset();
 
 		$form->startFieldset(__('menu-settings'));
@@ -60,13 +76,13 @@ class EditPage {
 			$form->addInput(__('slug'), 'text', 'slug', self::get('slug'));
 		$form->endFieldset();
 
-		plugin('admin_editpage_custom_fields', array(&$form));
+		plugin('admin_edit_custom_fields', array(&$form));
 
 		$form->startFieldset(__('content'));
 			$form->addEditor('', 'content', self::get('content'));
 		$form->endFieldset();
 
-		plugin('admin_editpage_custom_fields2', array(&$form));
+		plugin('admin_edit_custom_fields2', array(&$form));
 
 		$form->startFieldset(__('save'));
 			$form->addSubmit('Save Changes', 'save');

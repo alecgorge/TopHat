@@ -26,6 +26,7 @@ i18n::register('en_US', 'admin', array(
 	'content-type' => 'Content Type',
 	'theme-override' => 'Theme Override',
 	'menu-settings' => 'Menu Settings',
+	'weight' => 'Weight',
 	'menu-title' => 'Menu Title',
 	'slug' => 'Slug (used for URL)',
 	'content' => 'Content',

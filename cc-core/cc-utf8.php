@@ -1,5 +1,141 @@
 <?php
 
+//--------------------------------------------------------------------
+/**
+* US-ASCII transliterations of Unicode text
+* Ported Sean M. Burke's Text::Unidecode Perl module (He did all the hard work!)
+* Warning: you should only pass this well formed UTF-8!
+* Be aware it works by making a copy of the input string which it appends transliterated
+* characters to - it uses a PHP output buffer to do this - it means, memory use will increase,
+* requiring up to the same amount again as the input string
+* @see http://search.cpan.org/~sburke/Text-Unidecode-0.04/lib/Text/Unidecode.pm
+* @param string UTF-8 string to convert
+* @param string (default = ?) Character use if character unknown
+* @return string US-ASCII string
+* @package utf8_to_ascii
+*/
+function utf8_to_ascii($str, $unknown = '?') {
+
+    # The database for transliteration stored here
+    static $UTF8_TO_ASCII = array();
+
+    # Variable lookups faster than accessing constants
+    $UTF8_TO_ASCII_DB = UTF8_TO_ASCII_DB;
+
+    if ( strlen($str) == 0 ) { return ''; }
+
+    $len = strlen($str);
+    $i = 0;
+
+    # Use an output buffer to copy the transliterated string
+    # This is done for performance vs. string concatenation - on my system, drops
+    # the average request time for the example from ~0.46ms to 0.41ms
+    # See http://phplens.com/lens/php-book/optimizing-debugging-php.php
+    # Section  "High Return Code Optimizations"
+    ob_start();
+
+    while ( $i < $len ) {
+
+        $ord = NULL;
+        $increment = 1;
+
+        $ord0 = ord($str{$i});
+
+        # Much nested if /else - PHP fn calls expensive, no block scope...
+
+        # 1 byte - ASCII
+        if ( $ord0 >= 0 && $ord0 <= 127 ) {
+
+            $ord = $ord0;
+            $increment = 1;
+
+        } else {
+
+            # 2 bytes
+            $ord1 = ord($str{$i+1});
+
+            if ( $ord0 >= 192 && $ord0 <= 223 ) {
+
+                $ord = ( $ord0 - 192 ) * 64 + ( $ord1 - 128 );
+                $increment = 2;
+
+            } else {
+
+                # 3 bytes
+                $ord2 = ord($str{$i+2});
+
+                if ( $ord0 >= 224 && $ord0 <= 239 ) {
+
+                    $ord = ($ord0-224)*4096 + ($ord1-128)*64 + ($ord2-128);
+                    $increment = 3;
+
+                } else {
+
+                    # 4 bytes
+                    $ord3 = ord($str{$i+3});
+
+                    if ($ord0>=240 && $ord0<=247) {
+
+                        $ord = ($ord0-240)*262144 + ($ord1-128)*4096
+                            + ($ord2-128)*64 + ($ord3-128);
+                        $increment = 4;
+
+                    } else {
+
+                        ob_end_clean();
+                        trigger_error("utf8_to_ascii: looks like badly formed UTF-8 at byte $i");
+                        return FALSE;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        $bank = $ord >> 8;
+
+        # If we haven't used anything from this bank before, need to load it...
+        if ( !array_key_exists($bank, $UTF8_TO_ASCII) ) {
+
+            $bankfile = UTF8_TO_ASCII_DB. '/'. sprintf("x%02x",$bank).'.php';
+
+            if ( file_exists($bankfile) ) {
+
+                # Load the appropriate database
+                if ( !include  $bankfile ) {
+                    ob_end_clean();
+                    trigger_error("utf8_to_ascii: unable to load $bankfile");
+                }
+
+            } else {
+
+                # Some banks are deliberately empty
+                $UTF8_TO_ASCII[$bank] = array();
+
+            }
+        }
+
+        $newchar = $ord & 255;
+
+        if ( array_key_exists($newchar, $UTF8_TO_ASCII[$bank]) ) {
+            echo $UTF8_TO_ASCII[$bank][$newchar];
+        } else {
+            echo $unknown;
+        }
+
+        $i += $increment;
+
+    }
+
+    $str = ob_get_contents();
+    ob_end_clean();
+    return $str;
+
+}
+
+
 /**
  * A few utilites to work with UTF-8 strings. Very useful for localization/internationalization/compatibility
  */
@@ -36,84 +172,7 @@ class UTF8 {
 
 		$string = filter('utf8_slugify_before', $string);
 
-		// Cyrillic Letters
-		$iso = array(
-		   "Є"=>"YE","І"=>"I","Ѓ"=>"G","і"=>"i","№"=>"#","є"=>"ye","ѓ"=>"g",
-		   "А"=>"A","Б"=>"B","В"=>"V","Г"=>"G","Д"=>"D",
-		   "Е"=>"E","Ё"=>"YO","Ж"=>"ZH",
-		   "З"=>"Z","И"=>"I","Й"=>"J","К"=>"K","Л"=>"L",
-		   "М"=>"M","Н"=>"N","О"=>"O","П"=>"P","Р"=>"R",
-		   "С"=>"S","Т"=>"T","У"=>"U","Ф"=>"F","Х"=>"X",
-		   "Ц"=>"C","Ч"=>"CH","Ш"=>"SH","Щ"=>"SHH","Ъ"=>"'",
-		   "Ы"=>"Y","Ь"=>"","Э"=>"E","Ю"=>"YU","Я"=>"YA",
-		   "а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d",
-		   "е"=>"e","ё"=>"yo","ж"=>"zh",
-		   "з"=>"z","и"=>"i","й"=>"j","к"=>"k","л"=>"l",
-		   "м"=>"m","н"=>"n","о"=>"o","п"=>"p","р"=>"r",
-		   "с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"x",
-		   "ц"=>"c","ч"=>"ch","ш"=>"sh","щ"=>"shh","ъ"=>"",
-		   "ы"=>"y","ь"=>"","э"=>"e","ю"=>"yu","я"=>"ya","đ"=>"dz","Đ"=>"DZ"
-		);
-
-		// More Cyrillic Letters
-		$iso2_k = array(
-		"Щ", "Ш", "Ч", "Ц","Ю", "Я", "Ж", "А","Б","В","Г","Д","Е","Ё","З","И","Й","К","Л","М","Н",
-		"О","П","Р","С","Т","У","Ф","Х", "Ь","Ы","Ъ","Э","Є","Ї","І","Ґ",
-		"щ", "ш", "ч", "ц","ю", "я", "ж", "а","б","в","г","д","е","ё","з","и","й","к","л","м","н",
-		"о","п","р","с","т","у","ф","х", "ь","ы","ъ","э","є","ї","і","ґ");
-		$iso2_v = array(
-		"Shh","Sh","Ch","C","Ju","Ja","Zh","A","B","V","G","D","Je","Jo","Z","I","J","K","L","M",
-		"N","O","P","R","S","T","U","F","Kh","","Y", "`","E","Je","Ji","I","G",
-		"shh","sh","ch","c","ju","ja","zh","a","b","v","g","d","je","jo","z","i","j","k","l","m",
-		"n","o","p","r","s","t","u","f","kh","","y", "","e","je","ji","i","g"
-		);
-
-		// Greek letters
-		$greekTranslit = array(
-			"α"=>"a","β"=>"b","γ"=>"g","δ"=>"d","ε"=>"e","ζ"=>"z","η"=>"h","θ"=>"h",
-			"ι"=>"i","κ"=>"k","λ"=>"l","μ"=>"m","ν"=>"n","ξ"=>"s","ο"=>"o","π"=>"p",
-			"ρ"=>"r","σ"=>"s","τ"=>"t","υ"=>"y","φ"=>"f","χ"=>"h","ψ"=>"s","ω"=>"w"
-		);
-
-		// put the Cyrillic together
-		foreach($iso2_k as $key => $value) {
-			$iso2[$value] = $iso2_v[$key];
-		}
-
-		// some iconv installations suck so we have to help with the most
-		// simple ones
-		$german_and_french = array(
-			"ä" => "ae", "Ä" => "Ae",
-			"ö" => "oe", "Ö" => "Oe",
-			"ü" => "ue", "Ü" => "Ue",
-			"ß" => "ss",
-			"ç" => "c", "Ç" => "C",
-			"æ" => "ae", "Æ" => "AE", "œ" => "oe", "Œ" => "OE",
-			"é" => "e", "É" => "E", "ê" => "e", "Ê" => "E", "è" => "e", "È" => "E",
-			"á" => "a", "Á" => "A", "à" => "a", "À" => "A",
-			"ò" => "o", "Ò" => "O", "ô" => "o", "Ô" => "O", "ó" => "o", "Ó" => "O"
-		);
-
-		// transliterate some Cyrillic
-		$string = strtr($string, $iso);
-
-		// transliterate the rest of the Cyrillic
-		$string = strtr($string, $iso2);
-
-		// transliterate the Greek
-		$string = strtr($string, $greekTranslit);
-
-		// transliterate the "common" accents.
-		$string = strtr($string, $german_and_french);
-
-		// try to transliterate anything else with the iconv installation.
-		$string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
-
-		// slugs are always lowercase
-		$string = strtolower($string);
-
-		// iconv can add some random chars to denote accents.
-		$string = str_replace(array('"',"'","^","~",'`'), "", $string);
+		$string = utf8_to_ascii($string);
 
 		// strip all remaning non slug-safe chars (A-z 0-9 - _)
 		$string = preg_replace("/[^a-zA-Z0-9-_]/", "-", $string);

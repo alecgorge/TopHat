@@ -260,31 +260,15 @@ class Content {
 		return self::$navCache;
 	}
 
-	public static function createPage ($title, $menutitle, $content, $settings = array(), $weight = 0, $parent = 0) {
-		/**
-		 * @todo Fix bug if menutitles are different but slugs are the same. (Blarg!!!! and Blarg!!!).
-		 */
-		$run = DB::select('content', 'COUNT(menutitle)', array('`menutitle` = ? AND `parent_id` = ?', $menutitle, $parent));
-		$count = $run->fetchColumn();
-		if($count > 0) {
-			return false;
-		}
-
-		$smt = DB::insert('content', array(
-			'title' => $title,
-			'menutitle' => $menutitle,
-			'content' => $content,
-			'created'=> time(),
+	public static function createNode ($type, $args) { //$title, $menutitle, $content, $settings = array(), $weight = 0, $parent = 0) {
+		$args = array(
+			'settings' => array(),
+			'weight' => 0,
+			'parent_id' => 0,
+			'created' => time(),
 			'last_modified' => time(),
-			'settings' => serialize($settings),
-			'weight' => $weight,
-			'parent_id'=>$parent,
-			'type' => 'page'
-		));
-
-		if($smt == 1) {
-			return true;
-		}
+		) + $args;
+		return Node::action('create', $type, $args);
 	}
 
 	public static function parseUrl () {
@@ -525,6 +509,10 @@ class Node {
 		return $class;
    	}
 
+	public static function action ($method_name, $node_type, $args) {
+		return call_user_func(self::$registration[$node_type].'::'.$method_name, $args);
+	}
+
 	/**
 	 * Registers a custom content type. All overwrite a previous bind.
 	 *
@@ -539,7 +527,7 @@ class Node {
 /**
  * The default implementation of NodeType
  */
-class PageNode extends NodeType {
+class PageNode extends NodeType implements NodeActions {
 	public function __construct($row) {
 		$this->checkRow($row);
     }
@@ -548,20 +536,48 @@ class PageNode extends NodeType {
 		$class = new PageNode($row);
 		return $class;
    	}
+
+	public static function create($args) {
+		/**
+		 * @todo Fix bug if menutitles are different but slugs are the same. (Blarg!!!! and Blarg!!!).
+		 */
+		$run = DB::select('content', 'COUNT(menutitle)', array('`menutitle` = ? AND `parent_id` = ?', $args['menutitle'], $args['parent_id']));
+		$count = $run->fetchColumn();
+		if($count > 0) {
+			return false;
+		}
+
+		$smt = DB::insert('content', $args + array(
+			'type' => 'page'
+		));
+
+		if($smt == 1) {
+			return true;
+		}
+	}
+
+	public static function edit($id, $args) {
+		$smt = DB::update('content', array('last_modified' => time()) + $args, null, array('id = ?', $id));
+	}
+
+	public static function delete($id) {
+		
+	}
 }
-function cc_register_default_NodeType () {
-	Node::register('page', 'PageNode');
-} cc_register_default_NodeType();
+Node::register('page', 'PageNode');
+
+interface NodeActions {
+	public static function create($args);
+	public static function edit($id, $args);
+	public static function delete($id);
+	public static function cc_setup();
+}
 
 abstract class NodeType {
 	private $settings = array();
 	private $id;
 	private $info = array();
 	private $db_row;
-
-	public static function cc_setup() {
-
-	}
 
 	public function getId () {
 		return $this->id;

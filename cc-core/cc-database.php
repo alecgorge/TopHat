@@ -147,6 +147,58 @@ class Database {
 	}
 
 	/**
+	 * Perform a delete query on the CanyonCMS database.
+	 *
+	 * This will perform a delete query on $table (the table prefix is automatically prefixed) and returns the number of affected rows.
+	 * <code>
+	 * // DB is an alias for Database
+	 * DB::delete('content', array('id = ?', 2));
+	 *
+	 * // limit it to 1, even though there could be more
+	 * DB::delete('content', array('id = ? OR id = ?', 2, 3), 1);
+	 * </code>
+	 *
+	 * @param string $table The table to access. The database prefix is automatically added.
+	 * @param array $where An array where the first item is one or more comparision statements. Question marks (?) can optionally be used for binding. Then the second item and beyond are the values for the binds. These binds are automatically escaped for security. Example: array('`col1' > ? AND `col2` < ?', '12', '24');
+	 * @param array $limit (optional) The number of rows to limit the query to.
+	 * @return int The number of rows affected.
+	 */
+	public static function delete ($table, $where, $limit = null) {
+		$sql = "DELETE FROM `%s%s` WHERE %s%s";
+
+		if(is_array($where)) {
+			if(count($where) > 1) {
+				$prepare = array_slice($where, 1);
+			}
+			$where = 'WHERE '.$where[0];
+		}
+		elseif(!is_null($where)) {
+			$where = 'WHERE '.$where;
+		}
+
+		if(!is_null($limit)) {
+			$limit = "LIMIT ".$limit;
+		}
+		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $where, $limit));
+		Log::add('DB Query: '.$sql);
+		$smt = self::getHandle()->prepare($sql);
+
+		if(!$smt) {
+			print_r(self::getHandle()->errorInfo());
+			return false;
+		}
+
+		if($smt->execute($binds)) {
+			return $smt->rowCount();
+		}
+		else {
+			echo '<h1>DB Error:</h1>';
+			print_r(self::getHandle()->errorInfo());
+			die();
+		}
+	}
+
+	/**
 	 * Perform a update query on the CanyonCMS database.
 	 *
 	 * This will perform a update query on $table (the table prefix is automatically prefixed) and returns the number of affected rows.
