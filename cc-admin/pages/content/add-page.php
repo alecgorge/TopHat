@@ -29,15 +29,9 @@ class CreatePage {
 		}
 
 		AdminSidebar::registerForPage('content/create-page', 'EditPage::fileUploadBlock');
-		AdminSidebar::registerForPage('content/create-page', 'EditPage::pageInfoBlock', -1);
 
 		return Content::nodeDisplay('create_display', $type, array());
    	}
-
-	public static function invalidIdError() {
-		self::$invalid = true;
-		return Message::error(__('admin', "edit-page-invalid-id"));
-	}
 }
 
 ?>

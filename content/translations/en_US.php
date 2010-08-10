@@ -36,6 +36,7 @@ i18n::register('en_US', 'admin', array(
 	'edit-page-invalid-id' => 'The page you are trying to edit is invalid.',
 	'add-page' => 'Create New Page',
 	'content-management' => 'Content Management',
-	'continue' => 'Continue'
+	'continue' => 'Continue',
+	'parent'=>'Parent'
 ));
 ?>
