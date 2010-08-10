@@ -503,10 +503,18 @@ class Content {
 		$x = filter('content_setslug', $x);
 		self::$content['slug'] = $x;
 	}
+
+	public static function nodeDisplay($action, $type, $row) {
+		return Node::action($action, $type, array($row));
+	}
+
+	public static function contentTypes () {
+		return Node::$registration;
+	}
 }
 
 class Node {
-	private static $registration = array();
+	public static $registration = array();
 
 	public static function fetchHandler ($id) {
 		$query = Database::select('content', '*', array('id = ?', $id));
@@ -550,6 +558,10 @@ class PageNode extends NodeType implements NodeActions {
 		$this->checkRow($row);
     }
 
+	public static function name () {
+		return __('admin', 'content-type-page');
+	}
+
   	public static function cc_setup ($row) {
 		$class = new PageNode($row);
 		return $class;
@@ -579,6 +591,95 @@ class PageNode extends NodeType implements NodeActions {
 	public static function delete($id) {
 		return (bool) DB::delete('content', array('id = ?', $id), 1);
 	}
+
+	public static $row = array();
+	public static function get ($x) {
+	    if($_POST[$x]) return $_POST[$x];
+	    if(array_key_exists($x, self::$row)) return self::$row[$x];
+	    return '';
+	}
+
+	public static function edit_display($row) {
+		self::$row = $row;
+	    i18n::set('admin');
+
+	    if($_POST['cc_form'] == 'edit_page') {
+			plugin('admin_edit_post_pre');
+
+			$id				= $_GET['id'];
+			$title			= filter('admin_edit_post_title', self::get('title'));
+			$content		= filter('admin_edit_post_content', self::get('content'));
+			$last_modified	= filter('admin_edit_post_last_modified', time());
+			$settings		= filter('admin_edit_post_settings', self::get('settings'));
+			$weight			= filter('admin_edit_post_weight', self::get('weight'));
+			$menutitle		= filter('admin_edit_post_menutitle', self::get('menutitle'));
+			$parent_id		= filter('admin_edit_post_parent_id', self::get('parent_id'));
+			$type			= filter('admin_edit_post_type', self::get('content_type'));
+			$slug			= filter('admin_edit_post_slug', self::get('slug'));
+
+			$res = Content::editNode($id, $type, array(
+				'title' => $title,
+				'content' => $content,
+				'settings' => $settings,
+				'weight' => $weight,
+				'menutitle' => $menutitle,
+				'parent_id' => $parent_id,
+				'slug' => $slug
+
+			));
+
+			if($res) {
+				$message = Message::success('Page updated successfully!');
+			}
+			else {
+				$message = Message::success('Page update failed (DB Error)!');
+			}
+			//Hooks::bind('post_edit_page', 'EditPage::handlePost');
+	    }
+
+	    $r .= sprintf("<h2>%s</h2>%s", __('edit-page'), $message);
+
+		$themeList = Themes::getThemeList();
+		$themeList['-1'] = 'Default Theme';
+		ksort($themeList);
+
+
+		$form = new Form('self', 'post', 'edit_page');
+
+		$form->addHidden('settings', self::get('settings'));
+
+		$form->startFieldset(__('page-info'));
+			$form->addInput(__('page-title'), 'text', 'title', self::get('title'), array('class' => 'large'));
+			$form->addHidden('content_type', self::get('type'));
+			$form->addSelectList(__('theme-override'), 'theme', $themeList);
+			$form->addInput(__('weight'), 'text', 'weight', self::get('weight'));
+		$form->endFieldset();
+
+		$form->startFieldset(__('menu-settings'));
+			$form->addInput(__('menu-title'), 'text', 'menutitle', self::get('menutitle'));
+			$form->addInput(__('slug'), 'text', 'slug', self::get('slug'));
+		$form->endFieldset();
+
+		plugin('admin_edit_custom_fields', array(&$form));
+
+		$form->startFieldset(__('content'));
+			$form->addEditor('', 'content', self::get('content'));
+		$form->endFieldset();
+
+		plugin('admin_edit_custom_fields2', array(&$form));
+
+		$form->startFieldset(__('save'));
+			$form->addSubmit(__('save'), 'save');
+		$form->endFieldset();
+
+		i18n::restore();
+
+		return $r.$form->endAndGetHTML();
+	}
+
+	public static function create_display() {
+		
+	}
 }
 Node::register('page', 'PageNode');
 
@@ -586,6 +687,8 @@ interface NodeActions {
 	public static function create($args);
 	public static function edit($id, $args);
 	public static function delete($id);
+	public static function edit_display($row);
+	public static function create_display();
 	public static function cc_setup($row);
 }
 

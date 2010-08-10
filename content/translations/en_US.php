@@ -6,6 +6,7 @@ i18n::register('en_US', 'core', array(
 i18n::register('en_US', 'admin', array(
 	'CanyonCMS Admin' => 'CanyonCMS Admin',
 	'login_cc' => 'Login to CanyonCMS',
+	'content-type-page' => 'Page',
 	'powered-by' => 'powered by %s',
 	'edit-page' => 'Edit Page',
 	'delete-page' => 'Delete Page',
@@ -34,6 +35,7 @@ i18n::register('en_US', 'admin', array(
 	'save' => 'Save',
 	'edit-page-invalid-id' => 'The page you are trying to edit is invalid.',
 	'add-page' => 'Create New Page',
-	'content-management' => 'Content Management'
+	'content-management' => 'Content Management',
+	'continue' => 'Continue'
 ));
 ?>
