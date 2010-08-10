@@ -37,11 +37,16 @@ body {
 	padding-left: 1px;
 }
 
+#nav li {
+	list-style:none;
+}
+
 #nav > ul > li {
 	list-style:none;
 	float:left;
 	margin-right: 7px;
 	position:relative;
+	list-style:none;
 	display:inline;
 }
 
@@ -287,3 +292,31 @@ input.input-text:focus, input.input-password:focus, select:focus {
 .nsw-item-row {
     min-height:16px;
 }*/
+
+.message {
+	margin: 7px 0 14px;
+	border: 1px transparent solid;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+.message p {
+	padding:10px;
+	margin:0;
+	font-size:1.1em;
+}
+.message-success {
+	background-color:#DAF0CB;
+	border-color:#B5E198;
+	color:#255B00;
+}
+.message-notice {
+	background-color:#D6E9F7;
+	border-color:#AED3F0;
+	color:#0B5793;
+}
+.message-error {
+	background-color:#F3DDD5;
+	border-color:#E2AC98;
+	color:#601000;
+}

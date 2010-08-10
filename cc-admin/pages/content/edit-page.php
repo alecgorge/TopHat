@@ -35,11 +35,27 @@ class EditPage {
 			$type			= filter('admin_edit_post_type', self::get('content_type'));
 			$slug			= filter('admin_edit_post_slug', self::get('slug'));
 			
+			$res = Content::editNode($id, $type, array(
+				'title' => $title,
+				'content' => $content,
+				'settings' => $settings,
+				'weight' => $weight,
+				'menutitle' => $menutitle,
+				'parent_id' => $parent_id,
+				'slug' => $slug
 
+			));
+			
+			if($res) {
+				$message = Message::success('Page updated successfully!');
+			}
+			else {
+				$message = Message::success('Page update failed (DB Error)!');
+			}
 			//Hooks::bind('post_edit_page', 'EditPage::handlePost');
 	    }
 
-	    $r .= sprintf("<h2>%s</h2>", __('edit-page'));
+	    $r .= sprintf("<h2>%s</h2>%s", __('edit-page'), $message);
 
 		$id = $_GET['id'];
 
@@ -58,6 +74,7 @@ class EditPage {
 
 		$themeList = Themes::getThemeList();
 		$themeList['-1'] = 'Default Theme';
+		ksort($themeList);
 
 
 		$form = new Form('self', 'post', 'edit_page');
@@ -66,7 +83,7 @@ class EditPage {
 
 		$form->startFieldset(__('page-info'));
 			$form->addInput(__('page-title'), 'text', 'title', self::get('title'), array('class' => 'large'));
-			$form->addSelectList(__('content-type'), 'content_type', array('asdf' => 'Page', 'asdf2' => 'Blog Post'), NULL, 'asdf2');
+			$form->addHidden('content_type', self::get('type'));
 			$form->addSelectList(__('theme-override'), 'theme', $themeList);
 			$form->addInput(__('weight'), 'text', 'weight', self::get('weight'));
 		$form->endFieldset();

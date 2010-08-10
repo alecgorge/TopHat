@@ -255,6 +255,7 @@ class Database {
 		}
 		
 		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $set, $where));
+
 		Log::add('DB Query: '.$sql);
 		$smt = self::getHandle()->prepare($sql);
 		
@@ -264,7 +265,8 @@ class Database {
 			return false;
 		}
 
-		if($smt->execute($binds+$prepare)) {
+
+		if($smt->execute(array_merge($binds,$prepare))) {
 			return $smt->rowCount();
 		}
 		else {

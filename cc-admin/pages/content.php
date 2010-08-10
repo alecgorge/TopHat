@@ -17,14 +17,16 @@ class ContentPage {
 			$order = explode('|', trim($_POST['order'], '|'));
 			foreach($order as $part) {
 			    $parts = explode(',', $part);
-			    $newOrder[$parts[0]] = $parts[1];
+			    $newOrder[$parts[0]] = array($parts[1], $parts[2]);
 			}
 			$order = $newOrder;
 			$weight = 0;
-			foreach($order as $id => $parent_id) {
-			    Database::update('content', array('weight', 'parent_id'), array($weight, $parent_id), array('id' => $id));
+			foreach($order as $id => $arr) {
+				$parent_id = $arr[1];
+				$weight = $arr[0];
+			    Database::update('content', array('weight', 'parent_id'), array($weight, $parent_id), array('`id` = ?', $id));
 			    if(!$statement->execute(array($weight, $parent_id, $id))) {
-				print_r(self::getHandle()->errorInfo());
+					print_r(self::getHandle()->errorInfo());
 			    }
 			    //$sql = "UPDATE `".CC_DB_PREFIX."content` SET weight = $weight, parent_id = $parent_id WHERE id = $id";
 			    //$conn->exec($sql);
@@ -49,7 +51,7 @@ class ContentPage {
 		$delete_link2 = '"<a href=\"'.Admin::link('content/delete-page').'&id=%4$s\" class=\"delete-page-link\">'.__('admin', 'delete-page').'</a>"';
 
 		$r .= "<h2>".__("admin", "content-management")."</h2>";
-		$r .= "<p class='page-intro'>".__('admin', 'content-intro')."</p>\n<div id='tree'></div>";
+		$r .= "<p class='page-intro'>".__('admin', 'content-intro')."</p>\n<div id='outbox'></div><div id='tree'></div>";
 
 		$count = Content::countNavItems();
 
@@ -68,7 +70,8 @@ class ContentPage {
 
 		$save_url = Admin::link('content', array('do' => 'reorder'));
 
-		$local_success = __('admin', 'page-reorder-success');
+		$local_success = Message::success(__('admin', 'page-reorder-success'));
+		$local_error = Message::error(__('admin', 'page-reorder-failure'));
 
 		queue_js_string(<<<EOT
 	$(function () {
@@ -80,10 +83,10 @@ class ContentPage {
 			    var isChild = (grandparent[0].tagName == 'LI' ? grandparent.attr('id').match(/nsw\-item\-([0-9]+)/)[1] : false);
 
 			    if(isChild !== false){
-				    string += "|" + $(this).attr('id').match(/nsw\-item\-([0-9]+)/)[1] + "," + isChild;
+				    string += "|" + $(this).attr('id').match(/nsw\-item\-([0-9]+)/)[1] + "," + $(this).index() + "," + isChild;
 			    }
 			    else {
-				    string += "|" +  $(this).attr('id').match(/nsw\-item\-([0-9]+)/)[1] + ",0" ;
+				    string += "|" +  $(this).attr('id').match(/nsw\-item\-([0-9]+)/)[1] + "," + $(this).index() + ",0" ;
 			    }
 			});
 			$.ajax({
@@ -91,7 +94,19 @@ class ContentPage {
 				type : "post",
 				data : "order="+string,
 				success: function(e, returnText) {
-				    $('<div class="message message-success">$local_success</div>').hide().prependTo(jdom).slideDown();
+					var out = $('#outbox');
+					out.html('');
+					if(e == 'ok')
+						$("$local_success").hide().appendTo(out).slideDown();
+					else {
+						$("$local_error").hide().appendTo(out).slideDown();
+						if(typeof(console) == 'object') {
+							console.log(e);
+						}
+						else {
+							alert(e);
+						}
+					}
 				}
 			});
 		}});

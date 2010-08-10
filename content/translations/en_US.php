@@ -11,6 +11,7 @@ i18n::register('en_US', 'admin', array(
 	'delete-page' => 'Delete Page',
 	'content-intro' => 'You can rearrange pages by simple clicking and dragging their names into a new location and pressing the "Save Order" button.',
 	'page-reorder-success' => 'The pages were successfully reordered.',
+	'page-reorder-failure' => 'The pages failed to be reordered.',
 	'page-name' => 'Page Name',
 	'Login'	=> 'Login',
 	'Username' => 'Username',

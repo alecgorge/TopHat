@@ -268,8 +268,26 @@ class Content {
 			'created' => time(),
 			'last_modified' => time(),
 		) + $args;
-		return Node::action('create', $type, $args);
+		return Node::action('create', $type, array($args));
 	}
+
+	public static function editNode ($id, $type, $args) { //$title, $menutitle, $content, $settings = array(), $weight = 0, $parent = 0) {
+		$args = array(
+			'last_modified' => time(),
+		) + $args;
+		return Node::action('edit', $type, array($id, $args));
+	}
+
+	/*public static function createNode ($type, $args) { //$title, $menutitle, $content, $settings = array(), $weight = 0, $parent = 0) {
+		$args = array(
+			'settings' => array(),
+			'weight' => 0,
+			'parent_id' => 0,
+			'created' => time(),
+			'last_modified' => time(),
+		) + $args;
+		return Node::action('create', $type, $args);
+	}*/
 
 	public static function parseUrl () {
 		$_GET['q'] = filter('content_parseurl', $_GET['q']);
@@ -510,7 +528,7 @@ class Node {
    	}
 
 	public static function action ($method_name, $node_type, $args) {
-		return call_user_func(self::$registration[$node_type].'::'.$method_name, $args);
+		return call_user_func_array(self::$registration[$node_type].'::'.$method_name, $args);
 	}
 
 	/**
@@ -551,17 +569,15 @@ class PageNode extends NodeType implements NodeActions {
 			'type' => 'page'
 		));
 
-		if($smt == 1) {
-			return true;
-		}
+		return (bool) $smt;
 	}
 
 	public static function edit($id, $args) {
-		$smt = DB::update('content', array('last_modified' => time()) + $args, null, array('id = ?', $id));
+		return DB::update('content', array('last_modified' => time()) + $args, null, array('id = ?', $id));
 	}
 
 	public static function delete($id) {
-		
+		return (bool) DB::delete('content', array('id = ?', $id), 1);
 	}
 }
 Node::register('page', 'PageNode');
@@ -570,7 +586,7 @@ interface NodeActions {
 	public static function create($args);
 	public static function edit($id, $args);
 	public static function delete($id);
-	public static function cc_setup();
+	public static function cc_setup($row);
 }
 
 abstract class NodeType {
