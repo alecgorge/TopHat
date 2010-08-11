@@ -14,7 +14,7 @@ class CKEditorPlugin implements NewEditor {
 
 	public static function create ($name, $initContents) {
 		$ckeditor = self::$plugin;
-		return "<textarea id='$name' name='$name'>$initContents</textarea>";
+		return "<textarea id='$name' name='$name' rows='10' >$initContents</textarea>";
 		require_once $ckeditor->pluginDir().'editor/ckeditor_php5.php';
 		self::$handles[$name] = new CKEditor($ckeditor->pluginPublicDir().'editor/');
 		self::$handles[$name]->returnOutput = true;

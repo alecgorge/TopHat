@@ -1,10 +1,15 @@
 <?php
 
 Admin::registerSubpage('content', 'edit-page', 'Edit Page', 'EditPage::display');
+AdminSidebar::registerForPage('content/edit-page', 'EditPage::viewAll', -10);
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::fileUploadBlock');
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::pageInfoBlock', -1);
 
 class EditPage {
+	public static function viewAll () {
+		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('content'), __('admin', 'view-all-pages'));
+	}
+
 	public static $invalid = false;
 	public static $row = array();
 

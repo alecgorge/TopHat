@@ -2,6 +2,8 @@
 
 Admin::registerPage('content', 'Content Management', 'ContentPage::display', -10);
 AdminSidebar::registerForPage('content', 'ContentPage::createContent');
+AdminSidebar::registerForPage('content/edit-page', 'ContentPage::createContent',-9);
+AdminSidebar::registerForPage('content/create-page', 'ContentPage::createContent',-9);
 //AdminSidebar::registerForPage('content', 'EditPage::pageInfoBlock', -1);
 
 class ContentPage {

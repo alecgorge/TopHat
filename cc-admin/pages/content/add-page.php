@@ -1,6 +1,7 @@
 <?php
 
 Admin::registerSubpage('content', 'create-page', __('admin', 'add-page'), 'CreatePage::display', -10);
+AdminSidebar::registerForPage('content/create-page', 'EditPage::viewAll', -10);
 
 class CreatePage {
 	public static $invalid = false;

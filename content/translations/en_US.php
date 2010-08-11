@@ -37,6 +37,11 @@ i18n::register('en_US', 'admin', array(
 	'add-page' => 'Create New Page',
 	'content-management' => 'Content Management',
 	'continue' => 'Continue',
-	'parent'=>'Parent'
+	'parent'=>'Parent',
+	'view-all-pages' => 'View All Pages',
+	'page-creation-successful' => 'Page created successfully!',
+	'blank-error' => 'Don\'t leave fields blank!',
+	'page-delete-success' => 'Page was deleted successfully!',
+	'page-creation-failed' => 'Page creation failed (DB error)!'
 ));
 ?>

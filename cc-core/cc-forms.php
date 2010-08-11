@@ -253,7 +253,7 @@ EOT;
         }
         foreach ( $option_list as $val => $text ) {
             $str .= $bVal? "  <option value=\"$val\"": "  <option";
-            if ( isset($selected_value) && ( $selected_value === $val || $selected_value === $text) ) {
+            if ( isset($selected_value) && ( $selected_value == $val || $selected_value === $text) ) {
                 $str .= ' selected="selected"';
             }
             $str .= ">$text</option>\n";

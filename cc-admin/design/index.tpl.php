@@ -17,7 +17,7 @@
 	<body>
 		<div id="header">
 			<div class="gutter">
-				<h1><?php echo Settings::get('site', 'site name', true); ?> <span><?php _e('admin', 'powered-by', '<a href="http://canyoncms.com/">CanyonCMS</a>'); ?></span></h1>
+				<h1><a href="<?php echo CC_PUB_ROOT; ?>"><?php echo Settings::get('site', 'site name', true); ?></a> <span><?php _e('admin', 'powered-by', '<a href="http://canyoncms.com/">CanyonCMS</a>'); ?></span></h1>
 				<div id="nav">
 					<?php echo Admin::menu(); ?>
 					<br class="clear" />

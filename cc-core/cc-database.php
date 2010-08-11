@@ -62,11 +62,19 @@ class Database {
 		}
 
 		if(is_array($order)) {
-			$order = "ORDER BY `{$order[0]}` {$order[1]}";
+			$orders = "ORDER BY";
+			foreach($order as $k => $v) {
+				if(($k+2)%2 == 0)
+					$orders .= " `$v`";
+				else
+					$orders .= " $v,";
+			}
+			$orders = trim($orders, ',');
 		}
 		else {
-			$order = '';
+			$orders = '';
 		}
+		$order = $orders;
 
 		if($limit > 0 && is_number($limit))  {
 			$limit = "LIMIT ".$limit;
@@ -164,7 +172,7 @@ class Database {
 	 * @return int The number of rows affected.
 	 */
 	public static function delete ($table, $where, $limit = null) {
-		$sql = "DELETE FROM `%s%s` WHERE %s%s";
+		$sql = "DELETE FROM `%s%s` %s%s";
 
 		if(is_array($where)) {
 			if(count($where) > 1) {
@@ -177,18 +185,18 @@ class Database {
 		}
 
 		if(!is_null($limit)) {
-			$limit = "LIMIT ".$limit;
+			$limit = " LIMIT ".$limit;
 		}
 		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $where, $limit));
 		Log::add('DB Query: '.$sql);
+
 		$smt = self::getHandle()->prepare($sql);
 
 		if(!$smt) {
 			print_r(self::getHandle()->errorInfo());
 			return false;
 		}
-
-		if($smt->execute($binds)) {
+		if($smt->execute($prepare)) {
 			return $smt->rowCount();
 		}
 		else {

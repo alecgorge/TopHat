@@ -17,6 +17,7 @@ class Content {
 	private static $childLookup;
 	private static $count;
 	private static $urlLookup;
+	private static $idTypeLookup;
 	private static $breadcrumbs;
 
 	private static $content = array();
@@ -35,7 +36,7 @@ class Content {
 			$options = false;
 			$list = array();
 			
-			$pages = DB::select('content', '*', array('type = ?', 'page'), array('weight', 'asc'));
+			$pages = DB::select('content', '*', array('type = ?', 'page'), array('weight', 'asc', 'menutitle', 'asc'));
 
 			while($data = $pages->fetch(PDO::FETCH_ASSOC)) {
 				$data = filter('content_parsenavigation_data', $data);
@@ -63,6 +64,7 @@ class Content {
 				plugin('content_parsenavigation_after', array($thisref, $data, $options));
 				
 				$list2[$thisref['id']] = $thisref['menutitle'];
+				$idTypeList[$data['id']] = $data['type'];
 				$list3[$thisref['id']] = $thisref['slug'];
 				$list4[$thisref['id']] = (int) $data['parent_id'];
 			}
@@ -81,6 +83,7 @@ class Content {
 			self::$idLookupClean = $list3;
 			self::$childLookup = $list4;
 			self::$count = $count;
+			self::$idTypeLookup = $idTypeList;
 			
 			self::$urlLookup = self::generateIdLookups();
 			self::$breadcrumbs = self::generateBreadcrumbs();
@@ -92,6 +95,11 @@ class Content {
 		else {
 			return self::$navArray;
 		}		
+	}
+
+	public static function getType ($id) {
+		if(empty(self::$idTypeLookup)) self::parseNavigation();
+		return self::$idTypeLookup[$id];
 	}
 
 	public static function countNavItems () {
@@ -199,8 +207,7 @@ class Content {
 				$mt = UTF8::htmlentities($item['menutitle']);
 				plugin('nav_haschild_before', array($item));
 
-				$page = Node::fetchHandler($item['id']);
-				$url = $page->url();
+				$url = Node::fetchUrlForId($item['id']);
 
 				// get the children's html
 				$childrenHtml = self::generateNavHTML($options, true, $item['children']);
@@ -225,8 +232,7 @@ class Content {
 				$mt = UTF8::htmlentities($item['menutitle']);
 				plugin('nav_nochild_before', array($item));
 
-				$page = Node::fetchHandler($item['id']);
-				$url = $page->url();
+				$url = Node::fetchUrlForId($item['id']);
 
 				// current page
 				if(Content::currentId() == $item['id']) {
@@ -261,20 +267,20 @@ class Content {
 	}
 
 	public static function createNode ($type, $args) { //$title, $menutitle, $content, $settings = array(), $weight = 0, $parent = 0) {
-		$args = array(
+		$args = array_merge(array(
 			'settings' => array(),
 			'weight' => 0,
 			'parent_id' => 0,
 			'created' => time(),
 			'last_modified' => time(),
-		) + $args;
+		), $args);
 		return Node::action('create', $type, array($args));
 	}
 
 	public static function editNode ($id, $type, $args) { //$title, $menutitle, $content, $settings = array(), $weight = 0, $parent = 0) {
-		$args = array(
+		$args = array_merge(array(
 			'last_modified' => time(),
-		) + $args;
+		), $args);
 		return Node::action('edit', $type, array($id, $args));
 	}
 
@@ -371,6 +377,7 @@ class Content {
 	public static function setCurrent ($id) {
 		self::$currentId = $id;
 		self::$current = Node::fetchHandler($id);
+
 
 		self::setContent(self::$current->getContent());
 		self::setTitle(self::$current->getTitle());
@@ -517,11 +524,9 @@ class Node {
 	public static $registration = array();
 
 	public static function fetchHandler ($id) {
-		$query = Database::select('content', '*', array('id = ?', $id));
-		$row = $query->fetch();
-
+		$smt = Database::select('content', '*', array('id = ?', $id));
+		$row = $smt->fetch(PDO::FETCH_ASSOC);
 		$type = $row['type'];
-
 
 		if(!array_key_exists($type, self::$registration)) {
 			$type = 'page';
@@ -534,6 +539,19 @@ class Node {
 
 		return $class;
    	}
+
+	public static function fetchUrlForId ($id) {
+		$type = Content::getType($id);
+
+		if(!array_key_exists($type, self::$registration)) {
+			$type = 'page';
+		}
+
+		$class = self::$registration[$type];
+
+		// bootstrap the content type
+		return call_user_func($class.'::url', $id);
+	}
 
 	public static function action ($method_name, $node_type, $args) {
 		return call_user_func_array(self::$registration[$node_type].'::'.$method_name, $args);
@@ -623,11 +641,11 @@ abstract class NodeType {
 		return $this->info['type'];
 	}
 
-	public function url () {
+	public static function url ($id) {
 		if(Settings::get('core', 'clean urls', true) !== true) {
 			$r .= "?q=";
 		}
-		$r .= Content::url($this->id);
+		$r .= Content::url($id);
 
 		return CC_PUB_ROOT.$r;
 	}
