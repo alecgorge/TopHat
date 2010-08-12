@@ -1,4 +1,16 @@
 $(function () {
+	$('.nsw-item-row a').live('click', function (e) {
+		return;
+		//e.cancelBubble is supported by IE - this will kill the bubbling process.
+		e.cancelBubble = true;
+		e.returnValue = false;
+
+		//e.stopPropagation works only in Firefox.
+		if (e.stopPropagation) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	});
 	$('#nav .admin-submenu .current').parents('li').addClass('current');
 	$('.message-error').fadeOut(300).fadeIn(400);
 	$("input, textarea").focus(function() {

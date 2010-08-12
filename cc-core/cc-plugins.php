@@ -1,13 +1,31 @@
 <?php
 /**
  * This class manages the plugins. Plugin is the class that is used to make new plugins.
+ *
+ * There are 3 levels of plugins:
+ * * available: the plugin file exists but it is not listed as activated in the database
+ * * registered: the plugin file exists and it is listed as activated in the database
+ * * active: the plugin has initalized in Plugin __construct
  */
 class Plugins {
 	/**
 	 * @var array An associcative array with the key being a plugins safe name and the value being a reference to the plugin.
 	 */
 	private static $registered = array();
-	
+
+	/**
+	 * @var array An associcative array with the key being a plugins name and the value being a reference to the plugin.
+	 */
+	private static $active = array();
+
+	public static function add(&$plugin) {
+		self::$active[] = $plugin;
+	}
+
+	public static function getActive() {
+		return self::$active;
+	}
+
 	/**
 	 * Registers a plugin as valid.
 	 * 
@@ -86,7 +104,6 @@ class Plugins {
 	public static function validate($name) {
 		return file_exists(CC_PLUGINS.$name.'/plugin.php');
 	}
-
 }
 Hooks::bind('system_ready', 'Plugins::bootstrap');
 
@@ -161,35 +178,35 @@ class Plugin {
 	/**
 	 * @var string The name of the plugin.
 	 */
-	private $name;
+	public $name;
 	/**
 	 * @var string The author of the plugin.
 	 */
-	private $author;
+	public $author;
 	/**
 	 * @var string A description of the plugin. Can be any length, but should be long enough to describe the plugin.
 	 */
-	private $description;
+	public $description;
 	/**
 	 * @var string The path to the homepage of the plugin.
 	 */
-	private $link = '';
+	public $link = '';
 	/**
 	 * @var array An array of the binds made.
 	 */
-	private $binds;
+	public $binds;
 	/**
 	 * @var array An array of the filters made.
 	 */
-	private $filters;
+	public $filters;
 	/**
 	 * @var string A url safe version of the plugin name.
 	 */
-	private $slug;
+	public $slug;
 	/**
 	 * @var string The folder the plugin is in under CC_PLUGINS
 	 */
-	private $dir;
+	public $dir;
 
 	/**
 	 * Create a new Plugin!
@@ -215,7 +232,7 @@ class Plugin {
 			$this->link = $link;
 		}
 
-
+		Plugins::add(&$this);
 	}
 
 	/**
