@@ -70,6 +70,8 @@ class PageNode extends NodeType implements NodeActions {
 	public static $row = array();
 	public static function get ($x) {
 	    if(array_key_exists($x, $_POST)) return $_POST[$x];
+		
+		if($x == 'content_area') $x = 'content';
 	    if(array_key_exists($x, self::$row)) return self::$row[$x];
 	    return '';
 	}
@@ -83,7 +85,7 @@ class PageNode extends NodeType implements NodeActions {
 
 			$id				= $_GET['id'];
 			$title			= filter('admin_edit_post_title', self::get('title'));
-			$content		= filter('admin_edit_post_content', self::get('content'));
+			$content		= filter('admin_edit_post_content', self::get('content_area'));
 			$last_modified	= filter('admin_edit_post_last_modified', time());
 			$settings		= filter('admin_edit_post_settings', self::get('settings'));
 			$weight			= filter('admin_edit_post_weight', self::get('weight'));
@@ -142,7 +144,7 @@ class PageNode extends NodeType implements NodeActions {
 		plugin('admin_edit_custom_fields2', array(&$form));
 
 		$form->startFieldset(__('content'));
-			$form->addEditor('', 'content', self::get('content'));
+			$form->addEditor('', 'content_area', self::get('content_area'));
 		$form->endFieldset();
 
 		plugin('admin_edit_custom_fields3', array(&$form));
@@ -164,7 +166,7 @@ class PageNode extends NodeType implements NodeActions {
 
 			$id				= $_GET['id'];
 			$title			= filter('admin_create_post_title', self::get('title'));
-			$content		= filter('admin_create_post_content', self::get('content'));
+			$content		= filter('admin_create_post_content', self::get('content_area'));
 			$last_modified	= filter('admin_create_post_last_modified', time());
 			$settings		= filter('admin_create_post_settings', self::get('settings'));
 			$weight			= filter('admin_create_post_weight', self::get('weight'));
@@ -228,7 +230,7 @@ class PageNode extends NodeType implements NodeActions {
 		plugin('admin_edit_custom_fields2', array(&$form));
 
 		$form->startFieldset(__('content'));
-			$form->addEditor('', 'content', self::get('content'));
+			$form->addEditor('', 'content_area', self::get('content_area'));
 		$form->endFieldset();
 
 		plugin('admin_edit_custom_fields3', array(&$form));
