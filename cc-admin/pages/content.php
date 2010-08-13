@@ -13,7 +13,7 @@ class ContentPage {
 	public static function updateFromPOST() {
 			$conn = Database::getHandle();
 
-			$statement = $conn->prepare("UPDATE `".CC_DB_PREFIX."content` SET weight = ? AND parent_id = ? WHERE id = ?");
+			$statement = $conn->prepare("UPDATE `".CC_DB_PREFIX."content` SET weight = ?, parent_id = ? WHERE id = ?");
 			$conn->beginTransaction();
 
 			$order = explode('|', trim($_POST['order'], '|'));
@@ -26,13 +26,12 @@ class ContentPage {
 			foreach($order as $id => $arr) {
 				$parent_id = $arr[1];
 				$weight = $arr[0];
-			    Database::update('content', array('weight', 'parent_id'), array($weight, $parent_id), array('`id` = ?', $id));
+			    //Database::update('content', array('weight', 'parent_id'), array($weight, $parent_id), array('`id` = ?', $id));
 			    if(!$statement->execute(array($weight, $parent_id, $id))) {
-					print_r(self::getHandle()->errorInfo());
+					print_r(Database::getHandle()->errorInfo());
 			    }
 			    //$sql = "UPDATE `".CC_DB_PREFIX."content` SET weight = $weight, parent_id = $parent_id WHERE id = $id";
 			    //$conn->exec($sql);
-			    $weight++;
 			}
 
 			$conn->commit();

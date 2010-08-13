@@ -22,6 +22,9 @@ class Users {
 
 	public static function loginHandle () {
 		if(check_post('cc_login_uname', 'cc_login_passwd', 'cc_login_login')) {
+			// for security, we don't want session fixation :(
+			session_regenerate_id();
+
 			$_SESSION['uname'] = $_POST['cc_login_uname'];
 			$_SESSION['pword'] = hash('whirlpool', $_POST['cc_login_passwd']);
 			$_SESSION['last_ip'] = $_SERVER['REMOTE_ADDR'];

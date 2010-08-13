@@ -63,6 +63,7 @@ cc_theme_include(Content::getTheme());
 
 plugin('system_complete');
 
+if(CC_DEBUG)
 register_shutdown_function(function () {
 	$time = microtime(true) - CC_START;
 	echo "<p>Took: ".round($time, 3)." seconds or ".round($time*1000, 3)." miliseconds.</p>";

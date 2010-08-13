@@ -164,8 +164,8 @@ $(function () {
 		return s;// trim to first num_chars chars
 	}
 
-	var $obj = $("#create_page input[name=slug]");
-	$('#create_page input[name=menutitle]').keyup(function () {
+	var $obj = $("form input[name=slug]");
+	$('form input[name=menutitle]').keyup(function () {
 		$obj.val(URLify($(this).val()));
 	});
 });

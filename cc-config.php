@@ -93,4 +93,6 @@ define('CC_PLUGINS', 'plugins/');
  * The location of the folder that contains the site's translations. Should contain trailing slash. Default: <code>CC_CONTENT.'translations/'</code>
  */
 define('CC_TRANSLATIONS', CC_CONTENT.'translations/');
+
+define("CC_DEBUG", true);
 ?>
