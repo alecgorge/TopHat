@@ -3,11 +3,16 @@
 Admin::registerSubpage('content', 'edit-page', 'Edit Page', 'EditPage::display');
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::viewAll', -10);
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::fileUploadBlock');
+AdminSidebar::registerForPage('content/edit-page', 'EditPage::viewPage', -10);
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::pageInfoBlock', -1);
 
 class EditPage {
 	public static function viewAll () {
 		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('content'), __('admin', 'view-all-pages'));
+	}
+
+	public static function viewPage () {
+		return sprintf("<a href='%s' target='_blank' class='action'>%s</a>", CC_PUB_ROOT.Content::url($_GET['id']), __('admin', 'view-page-on-site'));
 	}
 
 	public static $invalid = false;
@@ -27,6 +32,15 @@ class EditPage {
 		$pageInfo = Database::select('content', '*', array('id = ?', $id));
 
 		$row = $pageInfo->fetch(PDO::FETCH_ASSOC);
+
+		if(!$row) {
+			$r = self::invalidIdError();
+		    i18n::restore();
+			cc_redirect(Admin::link('content'));
+
+			return $r;
+		}
+
 		self::$row = $row;
 		return Content::nodeDisplay('edit_display', $row['type'], $row);
    	}
