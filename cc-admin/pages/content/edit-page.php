@@ -41,6 +41,8 @@ class EditPage {
 			return $r;
 		}
 
+		$row['settings'] = unserialize($row['settings']);
+
 		self::$row = $row;
 		return Content::nodeDisplay('edit_display', $row['type'], $row);
    	}

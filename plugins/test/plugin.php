@@ -9,4 +9,3 @@ class TestPlugin {
 Hooks::bind('system_complete', 'TestPlugin::bootstrap');
 
 
-?>

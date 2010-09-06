@@ -85,6 +85,9 @@ class Form {
 	 * @return string The attribute string.
 	 */
     private function addAttributes( $attr_ar ) {
+		if(!is_array($attr_ar)) {
+			return '';
+		}
         $str = '';
         // check minimized attributes
         $min_atts = array('checked', 'disabled', 'readonly', 'multiple');
@@ -131,7 +134,7 @@ class Form {
     public function addInput($label, $type, $name, $value = '', $attr_ar = array() ) {
 		$this->addLabelFor($name, $label);
 
-		if(array_key_exists('class', $attr_ar)) {
+		if(is_array($attr_ar) && array_key_exists('class', $attr_ar)) {
 			$attr_ar['class'] .= " input-$type";
 		}
 		else {

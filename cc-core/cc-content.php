@@ -12,6 +12,7 @@ class Content {
 	private static $parentPath;
 
 	private static $navArray;
+	private static $navArrayComplete;
 	private static $idLookup;
 	private static $idLookupClean;
 	private static $childLookup;
@@ -35,21 +36,23 @@ class Content {
 			$data = array();
 			$options = false;
 			$list = array();
+			$list5 = array();
 			
 			$pages = DB::select('content', '*', array('type = ?', 'page'), array('weight', 'asc', 'menutitle', 'asc'));
 
 			while($data = $pages->fetch(PDO::FETCH_ASSOC)) {
 				$data = filter('content_parsenavigation_data', $data);
-				$options = unserialize(stripcslashes($data['options']));
+				$options = unserialize($data['settings']);
 				$thisref = &$refs[ $data['id'] ];
 
 				$continue = true;
 				plugin('content_parsenavigation_before', array($thisref, $data, $options, &$continue));
 
+				$thisref['id'] = (int) $data['id'];
+				$thisref['menutitle'] = $data['menutitle'];
+				$thisref['slug'] = $data['slug'];
+
 				if($continue) {
-					$thisref['id'] = (int) $data['id'];
-					$thisref['menutitle'] = $data['menutitle'];
-					$thisref['slug'] = $data['slug'];
 					$count++;
 					if(!empty($options['external'])) {
 						$external[$thisref['id']] = $options['external'];
@@ -62,22 +65,25 @@ class Content {
 				}
 
 				plugin('content_parsenavigation_after', array($thisref, $data, $options));
-				
+
+				$list5[$thisref['id']] = &$thisref;
 				$list2[$thisref['id']] = $thisref['menutitle'];
 				$idTypeList[$data['id']] = $data['type'];
 				$list3[$thisref['id']] = $thisref['slug'];
 				$list4[$thisref['id']] = (int) $data['parent_id'];
 			}
 
-			plugin('content_parsenavigation_afterloop', array($list, $list2, $list3, $list4));
+			plugin('content_parsenavigation_afterloop', array($list, $list5, $list2, $list3, $list4));
 			$list = filter('content_parsenavigation_nav', $list);
 			$list2 = filter('content_parsenavigation_idlookup', $list2);
 			$list3 = filter('content_parsenavigation_idlookupclean', $list3);
 			$list4 = filter('content_parsenavigation_childlookup', $list4);
+			$list5 = filter('content_parsenavigation_childlookup', $list5);
 			$count = filter('content_parsenavigation_count', $count);
 
 
 			self::$navArray = $list;
+			self::$navArrayComplete = $list5;
 			self::$idLookup  = $list2;
 			self::$count = $count;
 			self::$idLookupClean = $list3;
@@ -109,7 +115,7 @@ class Content {
 
 	private static function generateIdLookups ($path = null, $children = array()) {
 		if($path === null) {
-			$children = self::$navArray;
+			$children = self::$navArrayComplete;
 		}
 
 		foreach($children as $key => $value) {
@@ -128,7 +134,7 @@ class Content {
 
 	private static function generateBreadcrumbString ($path = null, $children = array()) {
 		if($path === null) {
-			$children = self::$navArray;
+			$children = self::$navArrayComplete;
 		}
 
 		foreach($children as $key => $value) {
@@ -698,6 +704,6 @@ abstract class NodeType {
 }
 
 // admin has its own way of doing things
-if(!IS_ADMIN)
+if(!CC_IS_ADMIN)
 	Content::bootstrap();
 

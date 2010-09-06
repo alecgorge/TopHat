@@ -44,7 +44,7 @@ input.focus, select.focus, input.text:focus, select:focus {
 
 input.input-checkbox {
 	width:auto;
-	margin:0 7px; }
+	margin:5px 7px; }
 
 .form-row {
 	clear:both;

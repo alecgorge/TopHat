@@ -33,7 +33,7 @@ or implied, of Ramblingwood, LLC.
 
 
 */
-define('IS_ADMIN', true);
+define('CC_IS_ADMIN', true);
 
 require_once '../cc-config.php';
 

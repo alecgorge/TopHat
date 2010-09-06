@@ -38,8 +38,8 @@ define('CC_START', microtime(true));
 error_reporting(E_ALL - E_NOTICE);
 header('Content-Type: text/html; charset=utf-8');
 
-if(!defined('IS_ADMIN')) {
-	define('IS_ADMIN', false);
+if(!defined('CC_IS_ADMIN')) {
+	define('CC_IS_ADMIN', false);
 }
 
 /**

@@ -81,7 +81,7 @@ class PageNode extends NodeType implements NodeActions {
 	    i18n::set('admin');
 
 	    if($_POST['cc_form'] == 'edit_page') {
-			plugin('admin_edit_post_pre');
+			plugin('admin_edit_post_pre_processing');
 
 			$id				= $_GET['id'];
 			$title			= filter('admin_edit_post_title', self::get('title'));
@@ -94,17 +94,23 @@ class PageNode extends NodeType implements NodeActions {
 			$type			= filter('admin_edit_post_type', self::get('content_type'));
 			$slug			= filter('admin_edit_post_slug', self::get('slug'));
 
-
-			$res = Content::editNode($id, $type, array(
+			$values = array(
 				'title' => $title,
 				'content' => $content,
-				'settings' => $settings,
+				'settings' => unserialize($settings),
 				'weight' => $weight,
 				'menutitle' => $menutitle,
 				'parent_id' => $parent_id,
 				'slug' => $slug
 
-			));
+			);
+
+			plugin('admin_edit_post_post_processing');
+			$values = filter('admin_edit_post_posted_values', $values);
+
+			$values['settings'] = serialize($values['settings']);
+
+			$res = Content::editNode($id, $type, $values);
 
 			if($res) {
 				$message = Message::success('Page updated successfully!');
@@ -124,7 +130,7 @@ class PageNode extends NodeType implements NodeActions {
 
 		$form = new Form('self', 'post', 'edit_page');
 
-		$form->addHidden('settings', self::get('settings'));
+		$form->addHidden('settings', serialize(self::get('settings')));
 
 		$form->startFieldset(__('page-info'));
 			$form->addInput(__('page-title'), 'text', 'title', self::get('title'), array('class' => 'large'));
@@ -162,7 +168,7 @@ class PageNode extends NodeType implements NodeActions {
 	    i18n::set('admin');
 
 	    if($_POST['cc_form'] == 'create_page') {
-			plugin('admin_edit_post_pre');
+			plugin('admin_create_post_pre_proccessing');
 
 			$id				= $_GET['id'];
 			$title			= filter('admin_create_post_title', self::get('title'));
@@ -176,18 +182,24 @@ class PageNode extends NodeType implements NodeActions {
 
 			if(empty($menutitle) || empty($slug)) {
 				$message = Message::error(__('blank-error'));
+				plugin('admin_create_post_blank_error');
 			}
 			else {
-				$res = Content::createNode($_GET['type'], array(
+				plugin('admin_create_post_post_proccessing');
+				$values = array(
 					'title' => $title,
 					'content' => $content,
-					'settings' => $settings,
+					'settings' => unserialize($settings),
 					'weight' => $weight,
 					'menutitle' => $menutitle,
 					'parent_id' => $parent_id,
 					'slug' => $slug
 
-				));
+				);
+				$values = filter('admin_create_post_posted_values', $values);
+				$values['settings'] = serialize($values['settings']);
+				
+				$res = Content::createNode($_GET['type'], $values);
 
 				if($res) {
 					$message = Message::success(sprintf(__('page-creation-successful').' (<a href="%s">%s</a>)', Admin::link('content'), __('view-all-pages')));
@@ -220,20 +232,20 @@ class PageNode extends NodeType implements NodeActions {
 			$form->addInput(__('weight'), 'text', 'weight',  $_POST['weight'] ? $_POST['weight'] : '0');
 		$form->endFieldset();
 
-		plugin('admin_edit_custom_fields', array(&$form));
+		plugin('admin_create_custom_fields', array(&$form));
 
 		$form->startFieldset(__('menu-settings'));
 			$form->addInput(__('menu-title'), 'text', 'menutitle', self::get('menutitle'));
 			$form->addInput(__('slug'), 'text', 'slug', self::get('slug'));
 		$form->endFieldset();
 
-		plugin('admin_edit_custom_fields2', array(&$form));
+		plugin('admin_create_custom_fields2', array(&$form));
 
 		$form->startFieldset(__('content'));
 			$form->addEditor('', 'content_area', self::get('content_area'));
 		$form->endFieldset();
 
-		plugin('admin_edit_custom_fields3', array(&$form));
+		plugin('admin_create_custom_fields3', array(&$form));
 
 		$form->startFieldset(__('save'));
 			$form->addSubmit(__('save'), 'save');
