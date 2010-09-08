@@ -9,6 +9,14 @@ class HideNavPlugin {
 		return false;
 	}
 
+	public static function bootstrap () {
+		self::$plugin->bind('admin_edit_custom_fields2', 'HideNavPlugin::showEditForm');
+		self::$plugin->bind('admin_create_custom_fields2', 'HideNavPlugin::showEditForm');
+		self::$plugin->filter('admin_edit_post_posted_values', 'HideNavPlugin::handleForm');
+		self::$plugin->filter('admin_create_post_posted_values', 'HideNavPlugin::handleForm');
+		self::$plugin->bind('content_parsenavigation_before', 'HideNavPlugin::doHide');
+	}
+
 	public static function handleForm ($values) {
 		$values['settings']['hide-from-nav'] = ($_POST['hide-from-nav'] === 'hide' ? true : false);
 		self::$currentState = $values['settings']['hide-from-nav'];
@@ -30,9 +38,5 @@ i18n::register('en_US', 'hide-nav-plugin', array(
 	'form-label' => 'Hide page from menu'
 ));
 HideNavPlugin::$plugin = new Plugin(__('hide-nav-plugin', 'title'), 'CanyonCMS Team' , __('hide-nav-plugin', 'desc'), '1.0');
-HideNavPlugin::$plugin->bind('admin_edit_custom_fields2', 'HideNavPlugin::showEditForm');
-HideNavPlugin::$plugin->bind('admin_create_custom_fields2', 'HideNavPlugin::showEditForm');
-HideNavPlugin::$plugin->filter('admin_edit_post_posted_values', 'HideNavPlugin::handleForm');
-HideNavPlugin::$plugin->filter('admin_create_post_posted_values', 'HideNavPlugin::handleForm');
-HideNavPlugin::$plugin->bind('content_parsenavigation_before', 'HideNavPlugin::doHide');
+HideNavPlugin::$plugin->bootstrap('HideNavPlugin::bootstrap');
 

@@ -20,6 +20,18 @@ class Plugins {
 	private static $activePInfo = array();
 	private static $pInfo = array();
 
+	public static function addBooted(&$plugin) {
+		$vals = array(
+			'name' => $plugin->name,
+			'desc' => $plugin->description,
+			'author' => $plugin->author,
+			'version' => $plugin->version,
+			'dir' => trim($plugin->dir,'/')
+		);
+		self::$activePInfo[0][] = $vals;
+		self::$pInfo[0][] = $vals;
+	}
+
 	public static function add(&$plugin) {
 		self::$active[trim($plugin->dir,'/')] = $plugin;
 		$vals = array(
@@ -29,8 +41,8 @@ class Plugins {
 			'version' => $plugin->version,
 			'dir' => trim($plugin->dir,'/')
 		);
-		self::$activePInfo[] = $vals;
-		self::$pInfo[] = $vals;
+		self::$activePInfo[1][] = $vals;
+		self::$pInfo[1][] = $vals;
 	}
 
 	public static function getActive() {
@@ -38,7 +50,11 @@ class Plugins {
 	}
 
 	public static function getActiveInfo() {
-		return self::$activePInfo;
+		return self::$activePInfo[1];
+	}
+
+	public static function getBootedInfo() {
+		return self::$activePInfo[0];
 	}
 
 	/**
@@ -72,10 +88,7 @@ class Plugins {
 
 		foreach($activePlugins as $row) {
 			if(array_search($row['name'], $possiblePlugins) !== false) {
-				$bootstrap = self::$active[$row['name']]->bootstrap;
-				if(is_callable($bootstrap)) {
-					call_user_func($bootstrap);
-				}
+				self::$active[$row['name']]->bootstrap();
 			}
 		}
 
@@ -108,7 +121,7 @@ class Plugins {
 	 * @return array The array of plugins, one name per line.
 	 */
 	public static function getPluginList () {
-		return self::$pInfo;
+		return self::$pInfo[1];
 		$glob = glob(CC_ROOT.CC_PLUGINS.'*/plugin.php');
 		foreach($glob as $plugin) {
 			// $plugin is a full path, we don't want that.
@@ -130,7 +143,7 @@ class Plugins {
 	}
 }
 // Plugins::bootstrap();
-Hooks::bind('system_after_content_load', 'Plugins::bootstrap');
+Hooks::bind('system_after_content_load', 'Plugins::bootstrap', -100);
 
 /**
  * A class for each registered plugin
@@ -237,7 +250,14 @@ class Plugin {
 
 	public $bootstrap;
 
-	public function bootstrap ($callback) {
+	public function bootstrap ($callback = null) {
+		if($callback === null) {
+			if(is_callable($this->bootstrap)) {
+				Plugins::addBooted(&$this);
+				call_user_func($this->bootstrap);
+			}
+		}
+
 		$this->bootstrap = $callback;
 	}
 

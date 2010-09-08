@@ -713,5 +713,5 @@ abstract class NodeType {
 
 // admin has its own way of doing things
 if(!CC_IS_ADMIN)
-	Content::bootstrap();
+	Hooks::bind('system_after_content_load', 'Content::bootstrap');
 

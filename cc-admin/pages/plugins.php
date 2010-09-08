@@ -5,18 +5,8 @@ AdminSidebar::registerForPage('plugins', 'PluginAdminPage::getMore');
 
 class PluginAdminPage {
 	public static function pluginSort ($a, $b) {
-		if($a[1] === true) {
-			$raw[] = $a[0][0];
-		}
-		else {
-			$raw[] = $a[0];
-		}
-		if($b[1] === true) {
-			$raw[] = $b[0][0];
-		}
-		else {
-			$raw[] = $b[0];
-		}
+		$raw[] = $a[0][0];
+		$raw[] = $b[0][0];
 		$raw2 = $raw;
 		natcasesort($raw);
 		if($raw2 === $raw) {
@@ -55,11 +45,11 @@ class PluginAdminPage {
 				</thead>
 				<tbody>", __('admin', 'plugins'), __('admin', 'plugin-name'), __('admin', 'plugin-desc'));
 
-		foreach(Plugins::getActiveInfo() as $val) {
+		foreach(Plugins::getBootedInfo() as $val) {
 			$arr[] = array(array($val['name'], $val['dir'], $val['name'], $val['desc'], $val['author'], $val['version']), true);
 			$arr2[] = $val['dir'];
 		}
-		foreach(Plugins::getPluginList() as $val) {
+		foreach(Plugins::getActiveInfo() as $val) {
 			if(array_search($val['dir'], $arr2) === false) {
 				$arr[] = array(array($val['name'], $val['dir'], $val['name'], $val['desc'], $val['author'], $val['version']), false);
 			}
@@ -76,10 +66,10 @@ class PluginAdminPage {
 						);
 			}
 			else {
-				$r .= sprintf("<tr class='disabled'><td>%s</td><td>%s (<a href='%s'>%s</a>)</td></tr>",
-						$val[0],
+				$r .= sprintf("<tr class='disabled'><td>%s %s<span class='byline'>by %s</span></td><td>%s</td><td>%s (<a href='%s'>%s</a>)</td></tr>",
+						$val[0][2], $val[0][5], $val[0][4], $val[0][3],
 						__('admin', 'currently-disabled'),
-						Admin::link('plugins', array('action' => 'enable', 'name' => $val[0])),
+						Admin::link('plugins', array('action' => 'enable', 'name' => $val[0][1])),
 						__('admin', 'enable')
 						);
 			}

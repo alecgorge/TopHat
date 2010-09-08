@@ -37,6 +37,6 @@ class CKEditorPlugin implements NewEditor {
    	}
 }
 CKEditorPlugin::$plugin = new Plugin('CKEditor Enabler', 'author' , 'desc', '3.3');
+CKEditorPlugin::$plugin->bootstrap('CKEditorPlugin::bootstrap');
 
-Hooks::bind('system_complete', 'CKEditorPlugin::bootstrap');
 

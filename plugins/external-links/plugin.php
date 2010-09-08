@@ -183,9 +183,4 @@ i18n::register('en_US', 'external-link-plugin', array(
 ));
 
 ExternalLinkPlugin::$plugin = new Plugin(__('external-link-plugin', 'title'), 'CanyonCMS Team' , __('external-link-plugin', 'desc'), '1.0');
-ExternalLinkPlugin::$plugin->bind('admin_edit_custom_fields2', 'HideNavPlugin::showEditForm');
-ExternalLinkPlugin::$plugin->bind('admin_create_custom_fields2', 'HideNavPlugin::showEditForm');
-ExternalLinkPlugin::$plugin->filter('admin_edit_post_posted_values', 'HideNavPlugin::handleForm');
 ExternalLinkPlugin::$plugin->bootstrap('ExternalLinkPlugin::bootstrap');
-ExternalLinkPlugin::$plugin->filter('admin_create_post_posted_values', 'HideNavPlugin::handleForm');
-ExternalLinkPlugin::$plugin->bind('content_parsenavigation_before', 'HideNavPlugin::doHide');
