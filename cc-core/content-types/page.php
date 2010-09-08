@@ -258,4 +258,4 @@ class PageNode extends NodeType implements NodeActions {
 	}
 }
 Node::register('page', 'PageNode');
-?>
+

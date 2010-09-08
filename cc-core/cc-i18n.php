@@ -175,7 +175,7 @@ class i18n {
 		return true;
 	}
 }
-Hooks::bind('system_ready', 'i18n::boostrap');
+Hooks::bind('system_ready', 'i18n::boostrap', -50);
 
 
 

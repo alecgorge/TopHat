@@ -105,8 +105,8 @@ class Plugins {
 		return file_exists(CC_PLUGINS.$name.'/plugin.php');
 	}
 }
-Plugins::bootstrap();
-// Hooks::bind('system_ready', 'Plugins::bootstrap');
+// Plugins::bootstrap();
+Hooks::bind('system_ready', 'Plugins::bootstrap');
 
 /**
  * A class for each registered plugin

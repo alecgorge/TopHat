@@ -6,7 +6,6 @@ class CKEditorPlugin implements NewEditor {
 	public static $plugin;
 
 	public static function bootstrap () {
-		self::$plugin = new Plugin('CKEditor Enabler', 'author' , '3.3');
 		$editor = new Editor("CKEditor", 3.2, "xya");
 		$editor->bind_create("CKEditorPlugin::create");
 		Editors::register($editor);
@@ -37,7 +36,7 @@ class CKEditorPlugin implements NewEditor {
 		return self::$handles[$name]->editor($name, $initContents);
    	}
 }
+CKEditorPlugin::$plugin = new Plugin('CKEditor Enabler', 'author' , '3.3');
+
 Hooks::bind('system_complete', 'CKEditorPlugin::bootstrap');
 
-
-?>
