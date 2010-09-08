@@ -48,6 +48,7 @@ i18n::register('en_US', 'admin', array(
 	'currently-enabled' => 'Currently Enabled',
 	'currently-disabled' => 'Currently Disabled',
 	'plugin-name' => 'Plugin Name',
+	'plugin-desc' => 'Plugin Description',
 	'view-all-pages' => 'View All Pages',
 	'page-creation-successful' => 'Page created successfully!',
 	'blank-error' => 'Don\'t leave fields blank!',

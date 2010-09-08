@@ -3,6 +3,6 @@
 class TestPlugin {
 	public static $plugin;
 }
-TestPlugin::$plugin = new Plugin('TestPlugin', 'author' , '3.3');
+TestPlugin::$plugin = new Plugin('TestPlugin', 'author' , 'desc', '3.3');
 
 

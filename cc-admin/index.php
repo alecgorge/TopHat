@@ -92,13 +92,17 @@ cc_core_include('cc-i18n.php');
 // setup plugin architecture
 cc_core_include('cc-plugins.php');
 
+plugin('system_ready');
+
 cc_core_include('cc-content.php');
+
+plugin('system_after_content_load');
 
 cc_include_admin('cc-users.php');
 
 cc_include_admin('cc-admin-sidebar.php');
 
-plugin('system_ready');
+plugin('system_before_admin_loaded');
 
 // this is where the awesome is
 cc_include_admin('cc-admin.php');

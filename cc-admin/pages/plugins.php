@@ -51,25 +51,25 @@ class PluginAdminPage {
 		$r .= sprintf("<h2>%s</h2>
 			<table id='plugins-table' cellspacing='0' cellpadding='0'>
 				<thead>
-					<th>%s</th><th class='en-di-col'> </th>
+					<th>%s</th><th>%s</th><th class='en-di-col'> </th>
 				</thead>
-				<tbody>", __('admin', 'plugins'), __('admin', 'plugin-name'));
+				<tbody>", __('admin', 'plugins'), __('admin', 'plugin-name'), __('admin', 'plugin-desc'));
 
-		foreach(Plugins::getActive() as $val) {
-			$arr[] = array(array($val->getName(), trim($val->dir, '/')), true);
-			$arr2[] = trim($val->dir, '/');
+		foreach(Plugins::getActiveInfo() as $val) {
+			$arr[] = array(array($val['name'], $val['dir'], $val['name'], $val['desc'], $val['author'], $val['version']), true);
+			$arr2[] = $val['dir'];
 		}
 		foreach(Plugins::getPluginList() as $val) {
-			if(array_search($val, $arr2) === false) {
-				$arr[] = array($val, false);
+			if(array_search($val['dir'], $arr2) === false) {
+				$arr[] = array(array($val['name'], $val['dir'], $val['name'], $val['desc'], $val['author'], $val['version']), false);
 			}
 		}
 		usort($arr, 'PluginAdminPage::pluginSort');
 
 		foreach($arr as $val) {
 			if($val[1] == true) {
-				$r .= sprintf("<tr class='enabled'><td>%s</td><td>%s (<a href='%s'>%s</a>)</td></tr>",
-						$val[0][0],
+				$r .= sprintf("<tr class='enabled'><td>%s %s<span class='byline'>by %s</span></td><td>%s</td><td>%s (<a href='%s'>%s</a>)</td></tr>",
+						$val[0][2], $val[0][5], $val[0][4], $val[0][3],
 						__('admin', 'currently-enabled'),
 						Admin::link('plugins', array('action' => 'disable', 'name' => $val[0][1])),
 						__('admin', 'disable')

@@ -350,5 +350,6 @@ th {
 	border-bottom:1px #ccc solid;
 }
 .en-di-col {
-	width:35%;
+	width:29%;
 }
+td span.byline {display:block;font-size:90%;font-style: italic;}

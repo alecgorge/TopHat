@@ -128,7 +128,7 @@ class Users {
 		}
 	}
 }
-Hooks::bind('system_ready', 'Users::bootstrap');
+Hooks::bind('system_before_admin_loaded', 'Users::bootstrap');
 
 class User {
 

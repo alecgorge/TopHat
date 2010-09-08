@@ -17,13 +17,28 @@ class Plugins {
 	 * @var array An associcative array with the key being a plugins name and the value being a reference to the plugin.
 	 */
 	private static $active = array();
+	private static $activePInfo = array();
+	private static $pInfo = array();
 
 	public static function add(&$plugin) {
-		self::$active[] = $plugin;
+		self::$active[trim($plugin->dir,'/')] = $plugin;
+		$vals = array(
+			'name' => $plugin->name,
+			'desc' => $plugin->description,
+			'author' => $plugin->author,
+			'version' => $plugin->version,
+			'dir' => trim($plugin->dir,'/')
+		);
+		self::$activePInfo[] = $vals;
+		self::$pInfo[] = $vals;
 	}
 
 	public static function getActive() {
 		return self::$active;
+	}
+
+	public static function getActiveInfo() {
+		return self::$activePInfo;
 	}
 
 	/**
@@ -43,16 +58,24 @@ class Plugins {
 	 * It finds the list of active plugins from the database and compares them to the available plugins.
 	 */
 	public static function bootstrap () {
+		$files = glob(CC_ROOT.CC_PLUGINS.'*/plugin.php');
+		foreach($files as $file) {
+			require_once $file;
+			// $plugin is a full path, we don't want that.
+			$plugin = explode(CC_ROOT.CC_PLUGINS, $file, 2);
+			$plugin = explode('/plugin.php', $plugin[1]);
+			$possiblePlugins[] = $plugin[0];
+		}
+
 		$db = DB::select('plugins', '*', array('active = ?', 1));
 		$activePlugins = $db->fetchAll(PDO::FETCH_ASSOC);
 
-		$possiblePlugins = self::getPluginList();
-
 		foreach($activePlugins as $row) {
 			if(array_search($row['name'], $possiblePlugins) !== false) {
-				$plugin = new RegisteredPlugin($row['name'], unserialize($row['info']), true);
-				self::register($plugin);
-				$plugins[] = $plugin->makeSlug();
+				$bootstrap = self::$active[$row['name']]->bootstrap;
+				if(is_callable($bootstrap)) {
+					call_user_func($bootstrap);
+				}
 			}
 		}
 
@@ -85,6 +108,7 @@ class Plugins {
 	 * @return array The array of plugins, one name per line.
 	 */
 	public static function getPluginList () {
+		return self::$pInfo;
 		$glob = glob(CC_ROOT.CC_PLUGINS.'*/plugin.php');
 		foreach($glob as $plugin) {
 			// $plugin is a full path, we don't want that.
@@ -106,7 +130,7 @@ class Plugins {
 	}
 }
 // Plugins::bootstrap();
-Hooks::bind('system_ready', 'Plugins::bootstrap');
+Hooks::bind('system_after_content_load', 'Plugins::bootstrap');
 
 /**
  * A class for each registered plugin
@@ -209,15 +233,24 @@ class Plugin {
 	 */
 	public $dir;
 
+	public $version;
+
+	public $bootstrap;
+
+	public function bootstrap ($callback) {
+		$this->bootstrap = $callback;
+	}
+
 	/**
 	 * Create a new Plugin!
 	 *
 	 * @param string $name The name of the plugin.
 	 * @param string $author The creator of the plugin.
 	 * @param string $description A description of the plugin. Can be any length, but should be long enough to describe the plugin.
+	 * @param string $version
 	 * @param string $link Optional. The path to the homepage of the plugin.
 	 */
-	public function  __construct($name, $author, $description, $link = '') {
+	public function  __construct($name, $author, $description, $version, $link = '') {
 		$backtrace = debug_backtrace();
 		$caller = dirname($backtrace[0]['file']);
 		$caller = str_replace('\\', '/', $caller);
@@ -225,6 +258,7 @@ class Plugin {
 		$folderName = end($caller).'/';
 
 		$this->dir = $folderName;
+		$this->version = $version;
 		$this->name = $name;
 		$this->author = $author;
 		$this->description = $description;

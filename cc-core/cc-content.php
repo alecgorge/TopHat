@@ -38,7 +38,7 @@ class Content {
 			$list = array();
 			$list5 = array();
 			
-			$pages = DB::select('content', '*', array('type = ?', 'page'), array('weight', 'asc', 'menutitle', 'asc'));
+			$pages = DB::select('content', '*', null, array('weight', 'asc', 'menutitle', 'asc'));
 
 			while($data = $pages->fetch(PDO::FETCH_ASSOC)) {
 				$data = filter('content_parsenavigation_data', $data);
@@ -213,7 +213,7 @@ class Content {
 				$mt = UTF8::htmlentities($item['menutitle']);
 				plugin('nav_haschild_before', array($item));
 
-				$url = Node::fetchUrlForId($item['id']);
+				$url = Node::fetchUrlForId($item['id'], $item['menutitle'], $item['slug']);
 
 				// get the children's html
 				$childrenHtml = self::generateNavHTML($options, true, $item['children']);
@@ -238,7 +238,7 @@ class Content {
 				$mt = UTF8::htmlentities($item['menutitle']);
 				plugin('nav_nochild_before', array($item));
 
-				$url = Node::fetchUrlForId($item['id']);
+				$url = Node::fetchUrlForId($item['id'], $item['menutitle'], $item['slug']);
 
 				// current page
 				if(Content::currentId() == $item['id']) {
@@ -546,7 +546,7 @@ class Node {
 		return $class;
    	}
 
-	public static function fetchUrlForId ($id) {
+	public static function fetchUrlForId ($id, $menutitle, $slug) {
 		$type = Content::getType($id);
 
 		if(!array_key_exists($type, self::$registration)) {
@@ -556,7 +556,7 @@ class Node {
 		$class = self::$registration[$type];
 
 		// bootstrap the content type
-		return call_user_func($class.'::url', $id);
+		return call_user_func_array($class.'::url', array($id, $menutitle, $slug));
 	}
 
 	public static function action ($method_name, $node_type, $args) {
@@ -647,7 +647,7 @@ abstract class NodeType {
 		return $this->info['type'];
 	}
 
-	public static function url ($id) {
+	public static function url ($id, $menutitle, $slug) {
 		if(Settings::get('core', 'clean urls', true) !== true) {
 			$r .= "?q=";
 		}
