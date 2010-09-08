@@ -7,23 +7,23 @@
  * @todo change page references to node
  */
 class Content {
-	private static $current;
-	private static $currentId;
+	public static $current;
+	public static $currentId;
 	private static $parentPath;
 
-	private static $navArray;
-	private static $navArrayComplete;
-	private static $idLookup;
-	private static $idLookupClean;
-	private static $childLookup;
-	private static $count;
-	private static $urlLookup;
-	private static $idTypeLookup;
-	private static $breadcrumbs;
+	public static $navArray;
+	public static $navArrayComplete;
+	public static $idLookup;
+	public static $idLookupClean;
+	public static $childLookup;
+	public static $count;
+	public static $urlLookup;
+	public static $idTypeLookup;
+	public static $breadcrumbs;
 
-	private static $content = array();
-	private static $navCache;
-	private static $navCheck;
+	public static $content = array();
+	public static $navCache;
+	public static $navCheck;
 
 	public static function bootstrap () {
 		self::parseNavigation();
@@ -546,7 +546,15 @@ class Node {
 		return $class;
    	}
 
-	public static function fetchUrlForId ($id, $menutitle, $slug) {
+	public static function fetchUrlForId ($id, $menutitle = null, $slug = null) {
+		if($menutitle === null) {
+			$menutitle = Content::$idLookup[$id];
+		}
+
+		if($slug === null) {
+			$slug = Content::$idLookupClean[$id];
+		}
+
 		$type = Content::getType($id);
 
 		if(!array_key_exists($type, self::$registration)) {

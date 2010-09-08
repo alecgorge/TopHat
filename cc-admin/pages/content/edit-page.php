@@ -12,7 +12,7 @@ class EditPage {
 	}
 
 	public static function viewPage () {
-		return sprintf("<a href='%s' target='_blank' class='action'>%s</a>", CC_PUB_ROOT.Content::url($_GET['id']), __('admin', 'view-page-on-site'));
+		return sprintf("<a href='%s' target='_blank' class='action'>%s</a>", Node::fetchUrlForId($_GET['id']), __('admin', 'view-page-on-site'));
 	}
 
 	public static $invalid = false;
