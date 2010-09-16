@@ -213,6 +213,11 @@ EOT;
 		$this->form .= $r;
 		return true;
 	}
+
+	public function addHTML ($text) {
+		$this->form .= $r;
+	}
+
     // for attribute refers to id of associated form element
     public function addLabelFor($forID, $text, $attr_ar = array() ) {
 		$attr_ar['class'] .= ' form-row';

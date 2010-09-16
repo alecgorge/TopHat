@@ -108,6 +108,26 @@ class i18n {
 		return filter('translated_value', $this->translations[$locale][$section][$key]);
 	}
 
+	public static function translationExists ($section, $key = null, $locale = 'DEFAULT') {
+		plugin('translate_exists', array($section, $key, $locale));
+		if($locale === 'DEFAULT') {
+			$locale = self::$handle->getLocale();
+		}
+
+		if(is_null($key)) {
+			$key = $section;
+			$section = self::$rel;
+		}
+
+		//var_dump(func_get_args());
+		if(!array_key_exists($key, (array)self::$handle->translations[$locale][$section])) {
+			return false;
+			//trigger_error("'$key' doesn't exist in the translation for '$locale' in the section '$section'.");
+			return null;
+		}
+		return true;
+	}
+
 	/**
 	 * Return a translated string from the key and section.
 	 *
