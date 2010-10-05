@@ -54,6 +54,7 @@ i18n::register('en_US', 'admin', array(
 	'blank-error' => 'Don\'t leave fields blank!',
 	'page-delete-success' => 'Page was deleted successfully!',
 	'page-creation-failed' => 'Page creation failed (DB error)!',
-	'view-page-on-site' => 'View Publicly Available Page'
+	'view-page-on-site' => 'View Publicly Available Page',
+	'settings' => 'Settings'
 ));
 ?>
