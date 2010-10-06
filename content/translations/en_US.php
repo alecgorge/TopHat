@@ -12,12 +12,14 @@ i18n::register('en_US', 'settings', array(
 	'locale' => 'Language',
 	'homepage id' => 'Home page',
 	'clean urls' => 'Use clean urls',
+	'editor' => 'Content editor',
 	'site name' => 'Site name',
 	'homepage' => 'Admin Homepage'
 ));
 
 i18n::register('en_US', 'admin', array(
 	'CanyonCMS Admin' => 'CanyonCMS Admin',
+	'settings-saved' => 'Your settings were saved!',
 	'yes' => 'Yes',
 	'no' => 'No',
 	'login_cc' => 'Login to CanyonCMS',

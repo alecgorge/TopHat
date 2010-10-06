@@ -10,6 +10,10 @@ class Editors {
 	public static function bootstrap () {
 		self::$editor = Settings::get('gui', 'editor', true);
 	}
+
+	public static function getNamesOfRegistered () {
+		return array_keys(self::$registered);
+	}
 	
 	public static function getEditorObj () {
 		if(array_key_exists(self::$editor, self::$registered)) {

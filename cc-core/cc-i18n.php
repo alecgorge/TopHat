@@ -194,6 +194,20 @@ class i18n {
 		self::$handle->locale = self::$handle->old_locale;
 		return true;
 	}
+	
+	/**
+	 * Gets the translations array
+	 */
+	public function getTranslations () {
+		return $this->translations;
+	}
+
+	/**
+	 * Returns the list of registered locales (locales may be incomplete)
+	 */
+	public static function getLocales () {
+		return array_keys(self::$handle->getTranslations());
+	}
 }
 Hooks::bind('system_ready', 'i18n::boostrap', -50);
 

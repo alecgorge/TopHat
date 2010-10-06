@@ -22,6 +22,18 @@ class Database {
 		self::$handle = $handle;
 	}
 
+	public static function beginTransaction () {
+		self::$handle->beginTransaction();
+	}
+
+	public static function endTransaction () {
+		self::$handle->commit();
+	}
+
+	public static function rollbackTransaction () {
+		self::$handle->rollBack();
+	}
+
 
 	/**
 	 * Perform a select query on the CanyonCMS database.

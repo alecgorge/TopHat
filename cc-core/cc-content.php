@@ -103,6 +103,32 @@ class Content {
 		}		
 	}
 
+	/**
+	 * Adds a em-dash before each indented item
+	 */
+	public static function optionListArrayFromArray($arr, $selected = "", $indent=0, $mother_run=true, $nameInValue = 0){
+		foreach($arr as $k=>$v){
+			// skip the baseval thingy. Not a real node.
+			if($k == "__base_val") continue;
+
+			if($k == "id" || $k == 'menutitle' || $k == 'slug') continue;
+			// determine the real value of this node.
+			$show_val = ( is_array($v) ? $v["__base_val"] : $v );
+
+			if($k == "children") {
+				$return = (array)$return + (array)self::optionListArrayFromArray($v, $selected, ($indent), false, $nameInValue);
+			}
+			else {
+				$return[$v['id']] = str_repeat("&#8212; ", $indent).$v['menutitle'];
+				if(is_array($v)){
+					// this is what makes it recursive, rerun for childs
+					$return = (array)$return + (array)self::optionListArrayFromArray($v, $selected, ($indent+1), false, $nameInValue);
+				}
+			}
+		}
+		return $return;
+	}
+
 	public static function getType ($id) {
 		if(empty(self::$idTypeLookup)) self::parseNavigation();
 		return self::$idTypeLookup[$id];

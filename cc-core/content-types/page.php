@@ -16,31 +16,8 @@ class PageNode extends NodeType implements NodeActions {
 		return $class;
    	}
 
-	public static function optionListFromArray($arr, $pre, $selected = "", $indent=0, $mother_run=true, $nameInValue = 0){
-		foreach($arr as $k=>$v){
-			// skip the baseval thingy. Not a real node.
-			if($k == "__base_val") continue;
-
-			if($k == "id" || $k == 'menutitle' || $k == 'slug') continue;
-			// determine the real value of this node.
-			$show_val = ( is_array($v) ? $v["__base_val"] : $v );
-
-			if($k == "children") {
-				$return = (array)$return + (array)self::optionListFromArray($v, $pre, $selected, ($indent), false, $nameInValue);
-			}
-			else {
-				$return[$v['id']] = str_repeat("&#8212; ", $indent).stripcslashes($v['menutitle']);
-				if(is_array($v)){
-					// this is what makes it recursive, rerun for childs
-					$return = (array)$return + (array)self::optionListFromArray($v, $pre, $selected, ($indent+1), false, $nameInValue);
-				}
-			}
-		}
-		return $return;
-	}
-
 	public static function buildParentOptions () {
-		return array_merge(array(0 => '-- None --'), self::optionListFromArray(Content::parseNavigation(), ""));
+		return array_merge(array(0 => '-- None --'), Content::optionListArrayFromArray(Content::parseNavigation()));
 	}
 
 	public static function create($args) {
