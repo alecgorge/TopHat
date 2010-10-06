@@ -93,12 +93,12 @@ class Settings {
 			    $r = self::$settings[$package][$k];
 		    }
 			else {
-				Log::add("[ERROR] setting not found. package: ".$package.", key: ".$key);
+				Log::add("[ERROR] setting not found. package: ".$package.", key: ".$k.", backtrace:\n".  print_r(debug_backtrace(),true));
 				return filter('cc_settings_notfound', $r);
 			}
 		}
 		else {
-			Log::add("[ERROR] setting not found. package: ".$package.", key: ".$key);
+			Log::add("[ERROR] setting not found. package: ".$package.", key: ".$k.", backtrace:\n".  print_r(debug_backtrace(),true));
 		    return filter('cc_settings_notfound', $r);
 		}
 

@@ -349,7 +349,7 @@ class Content {
 			}
 		}
 		else {
-			self::setCurrent(Settings::get('core', 'homepage id', true));
+			self::setCurrent(Settings::get('site', 'homepage id', true));
 		}
 	}
 
@@ -388,7 +388,7 @@ class Content {
 
 		self::setTitle($e404t);
 		self::setContent($e404c);
-		self::setTheme(Settings::get('core', 'theme', true));
+		self::setTheme(Settings::get('site', 'theme', true));
 		self::$currentId = -1;
 		self::$breadcrumbs[-1] = array($e404mt);
 	}
@@ -708,7 +708,7 @@ abstract class NodeType {
 				}
 			}
 			else {
-				$this->info['theme'] = Settings::get('core', 'theme', true);
+				$this->info['theme'] = Settings::get('site', 'theme', true);
 			}
 		}
 		return $this->info['theme'];

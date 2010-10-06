@@ -18,7 +18,7 @@ class Themes {
 		}
 		self::$themes = $themes;
 
-		self::$set_theme = Settings::get('core', 'theme', true);
+		self::$set_theme = Settings::get('site', 'theme', true);
 
 		self::setCurrentTheme(self::$set_theme);
 	}
