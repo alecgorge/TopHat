@@ -3,8 +3,23 @@ i18n::register('en_US', 'core', array(
 	'site-name' => 'Site',
 ));
 
+i18n::register('en_US', 'settings', array(
+	'core' => 'Core',
+	'admin' => 'Administration',
+	'site' => 'Site',
+	'gui' => 'User Interface',
+	'theme' => 'Theme',
+	'locale' => 'Language',
+	'homepage id' => 'Home page',
+	'clean urls' => 'Use clean urls',
+	'site name' => 'Site name',
+	'homepage' => 'Admin Homepage'
+));
+
 i18n::register('en_US', 'admin', array(
 	'CanyonCMS Admin' => 'CanyonCMS Admin',
+	'yes' => 'Yes',
+	'no' => 'No',
 	'login_cc' => 'Login to CanyonCMS',
 	'content-type-page' => 'Page',
 	'powered-by' => 'powered by %s',

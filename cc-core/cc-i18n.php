@@ -147,7 +147,7 @@ class i18n {
 	}
 
 	public static function boostrap () {
-		$locale = Settings::get('core', 'locale', true);
+		$locale = Settings::get('gui', 'locale', true);
 
 		if(empty($locale)) {
 			$locale = 'en_US';
