@@ -5,6 +5,8 @@
  * specified time, but it will run on the first page load AFTER the time.
  * 
  * Timers are executed at the hook "system_ready"
+ *
+ * @todo be compatibile with APC for speed?
  */
 class Timers {
 	/**
