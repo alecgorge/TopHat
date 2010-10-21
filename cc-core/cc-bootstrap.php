@@ -12,6 +12,8 @@ cc_core_include('cc-message.php');
 
 cc_core_include('cc-timers.php');
 
+cc_core_include('cc-tokenizer.php');
+
 // forms
 cc_core_include('cc-forms.php');
 
