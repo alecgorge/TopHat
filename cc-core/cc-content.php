@@ -96,6 +96,7 @@ class Content {
 
 			plugin('content_parsenavigation_aftergeneration');
 
+
 			return self::$navArray;
 		}
 		else {
@@ -139,28 +140,27 @@ class Content {
 	    return self::$count;
 	}
 
-	private static function generateIdLookups ($path = null, $children = array()) {
+	private static function generateIdLookups ($path = null, $children = array(), $isRoot = true) {
 		if($path === null) {
-			$children = self::$navArrayComplete;
+			$children = self::$navArray;
 		}
 
 		foreach($children as $key => $value) {
-			$hasChildren = array_key_exists('children', $value);
-
-			if($hasChildren) {
+			if(array_key_exists('children', $value)) {
 				$r[$value['id']] = $path.'/'.$value['slug'];
-				$r += self::generateIdLookups($path.'/'.$value['slug'], $value['children']);
+				$r += self::generateIdLookups((string)$path.'/'.$value['slug'], $value['children'], false);
 			}
 			else {
 				$r[$value['id']] = $path.'/'.$value['slug'];
 			}
 		}
+
 		return $r;
 	}
 
 	private static function generateBreadcrumbString ($path = null, $children = array()) {
 		if($path === null) {
-			$children = self::$navArrayComplete;
+			$children = self::$navArray;
 		}
 
 		foreach($children as $key => $value) {
@@ -168,7 +168,7 @@ class Content {
 
 			if($hasChildren) {
 				$r[$value['id']] = $path."\0".$value['menutitle'];
-				$r += self::generateBreadcrumbString($path."\0".$value['menutitle'], $value['children']);
+				$r = array_merge($r, self::generateBreadcrumbString($path."\0".$value['menutitle'], $value['children']));
 			}
 			else {
 				$r[$value['id']] = $path."\0".$value['menutitle'];
@@ -371,6 +371,7 @@ class Content {
 	 * @return string The url like menu-test-1/menu-test-2/menu-title-1 to the node with the id $id.
 	 */
 	public static function url ($id) {
+		// var_dump(self::$urlLookup);
 		return filter('content-url', ltrim(self::$urlLookup[$id], '/'));
 	}
 

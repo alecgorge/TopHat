@@ -17,7 +17,7 @@ class PageNode extends NodeType implements NodeActions {
    	}
 
 	public static function buildParentOptions () {
-		return array_merge(array(0 => '-- None --'), Content::optionListArrayFromArray(Content::parseNavigation()));
+		return array(0 => '-- None --') + Content::optionListArrayFromArray(Content::parseNavigation());
 	}
 
 	public static function create($args) {
