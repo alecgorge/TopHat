@@ -21,7 +21,7 @@ class CKEditorPlugin implements NewEditor {
 		self::$handles[$name]->config['width'] = 645;
 		self::$handles[$name]->config['height'] = 400;
 		self::$handles[$name]->config['toolbar'] = array(
-			array('Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'),
+			array('Source', 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'),
 			array('Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'),
 			array('HorizontalRule','Smiley','SpecialChar','PageBreak'),
 			'/',
