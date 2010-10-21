@@ -33,6 +33,7 @@ class Content {
 	public static function parseNavigation () {
 		if(empty(self::$navArray)) {
 			$refs = array();
+			$refs5 = array();
 			$data = array();
 			$options = false;
 			$list = array();
@@ -44,6 +45,7 @@ class Content {
 				$data = filter('content_parsenavigation_data', $data);
 				$options = unserialize($data['settings']);
 				$thisref = &$refs[ $data['id'] ];
+				$thisref5 = &$refs5[ $data['id'] ];
 
 				$continue = true;
 				plugin('content_parsenavigation_before', array($thisref, $data, $options, &$continue));
@@ -51,6 +53,10 @@ class Content {
 				$thisref['id'] = (int) $data['id'];
 				$thisref['menutitle'] = $data['menutitle'];
 				$thisref['slug'] = $data['slug'];
+
+				$thisref5['id'] = (int) $data['id'];
+				$thisref5['menutitle'] = $data['menutitle'];
+				$thisref5['slug'] = $data['slug'];
 
 				if($continue) {
 					$count++;
@@ -64,9 +70,16 @@ class Content {
 					}
 				}
 
+				if ($data['parent_id'] == 0) {
+					$list5[$thisref['id']] = &$thisref5;
+				} else {
+					$refs5[ $data['parent_id'] ]['children'][ $thisref5['id'] ] = &$thisref5;
+				}
+
+
 				plugin('content_parsenavigation_after', array($thisref, $data, $options));
 
-				$list5[$thisref['id']] = &$thisref;
+				//$list5[$thisref['id']] = &$thisref;
 				$list2[$thisref['id']] = $thisref['menutitle'];
 				$idTypeList[$data['id']] = $data['type'];
 				$list3[$thisref['id']] = $thisref['slug'];
@@ -88,7 +101,6 @@ class Content {
 			self::$count = $count;
 			self::$idLookupClean = $list3;
 			self::$childLookup = $list4;
-			self::$count = $count;
 			self::$idTypeLookup = $idTypeList;
 			
 			self::$urlLookup = self::generateIdLookups();
@@ -142,7 +154,7 @@ class Content {
 
 	private static function generateIdLookups ($path = null, $children = array(), $isRoot = true) {
 		if($path === null) {
-			$children = self::$navArray;
+			$children = self::$navArrayComplete;
 		}
 
 		foreach($children as $key => $value) {
@@ -160,7 +172,7 @@ class Content {
 
 	private static function generateBreadcrumbString ($path = null, $children = array()) {
 		if($path === null) {
-			$children = self::$navArray;
+			$children = self::$navArrayComplete;
 		}
 
 		foreach($children as $key => $value) {
@@ -168,7 +180,7 @@ class Content {
 
 			if($hasChildren) {
 				$r[$value['id']] = $path."\0".$value['menutitle'];
-				$r = array_merge($r, self::generateBreadcrumbString($path."\0".$value['menutitle'], $value['children']));
+				$r += self::generateBreadcrumbString($path."\0".$value['menutitle'], $value['children']);
 			}
 			else {
 				$r[$value['id']] = $path."\0".$value['menutitle'];
