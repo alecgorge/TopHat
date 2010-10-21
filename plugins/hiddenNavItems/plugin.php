@@ -4,7 +4,7 @@ class HideNavPlugin {
 	public static $plugin;
 
 	public static function doHide ($ref, $data, $options, &$continue) {
-		if(!defined('CC_IS_ADMIN') && $options['hide-from-nav'] === true)
+		if((!defined('CC_IS_ADMIN') || CC_IS_ADMIN == false) && $options['hide-from-nav'] === true)
 			$continue = false; // skips it from being added to the menus
 		return false;
 	}

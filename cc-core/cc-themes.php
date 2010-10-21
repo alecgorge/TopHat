@@ -5,9 +5,9 @@
  */
 
 class Themes {
-	private static $themes = array();
-	private static $set_theme;
-	private static $curr_theme;
+	public static $themes = array();
+	public static $set_theme;
+	public static $curr_theme;
 
 	public static function bootstrap () {
 		$g = glob(CC_ROOT.CC_THEMES.'*/theme.ini');
@@ -199,5 +199,9 @@ function breadcrumbs ($sep = ' &lsquo; ', $rev = false) {
  */
 function nav ($options = array()) {
 	return Content::generateNavHTML($options);
+}
+
+function theme_dir () {
+	return Themes::$curr_theme->getPublicPath();
 }
 ?>
