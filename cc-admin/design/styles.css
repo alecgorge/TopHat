@@ -1,7 +1,7 @@
 * { margin:0; padding:0; }
 
 body {
-	font:0.7em Helvetica, sans-serif;
+	font:0.7em Helvetica, Arial, sans-serif;
 	background: #f3f3f3;
 }
 
@@ -53,7 +53,7 @@ body {
 #nav ul ul {
 	position:absolute;
 	width: 6em;
-	top:34px;
+	top:30px;
 	display:none;
 	width: 100%;
 }
