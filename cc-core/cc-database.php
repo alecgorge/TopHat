@@ -22,6 +22,8 @@ class Database {
 		self::$handle = $handle;
 	}
 
+	public static $totalTime = 0;
+
 	public static function beginTransaction () {
 		self::$handle->beginTransaction();
 	}
@@ -52,6 +54,8 @@ class Database {
 	 * @return PDOStatement A PDOStatement with all of the results.
 	 */
 	public static function select ($table, $cols = '*', $where = null, $order = null, $limit = -1) {
+		$start = microtime(true);
+
 		$prepare = array();
 
 		$sql = "SELECT %s from `%s%s` %s %s %s";
@@ -96,7 +100,11 @@ class Database {
 		}
 
 		$sql = trim(sprintf($sql, $cols, CC_DB_PREFIX, $table, $where, $order, $limit));
-		Log::add('DB Query: '.$sql);
+
+		$time = microtime(true) - $start;
+		self::$totalTime += $time;
+
+		Log::add('DB Query: (time: '.$time.') '.$sql);
 		$smt = self::getHandle()->prepare($sql);
 
 		if(!$smt) {
@@ -132,6 +140,7 @@ class Database {
 	 * @return int The number of rows affected.
 	 */
 	public static function insert ($table, $cols, $values = null) {
+		$start = microtime(true);
 		$prepare = array();
 
 		$sql = "INSERT INTO `%s%s` (%s) VALUES (%s)";
@@ -148,7 +157,9 @@ class Database {
 		}
 
 		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $keys, implode(',',$values)));
-		Log::add('DB Query: '.$sql);
+		self::$totalTime += $time;
+
+		Log::add('DB Query: (time: '.$time.') '.$sql);
 		$smt = self::getHandle()->prepare($sql);
 
 		if(!$smt) {
@@ -184,6 +195,7 @@ class Database {
 	 * @return int The number of rows affected.
 	 */
 	public static function delete ($table, $where, $limit = null) {
+		$start = microtime(true);
 		$sql = "DELETE FROM `%s%s` %s%s";
 
 		if(is_array($where)) {
@@ -200,7 +212,9 @@ class Database {
 			$limit = " LIMIT ".$limit;
 		}
 		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $where, $limit));
-		Log::add('DB Query: '.$sql);
+		self::$totalTime += $time;
+
+		Log::add('DB Query: (time: '.$time.') '.$sql);
 
 		$smt = self::getHandle()->prepare($sql);
 
@@ -237,6 +251,7 @@ class Database {
 	 * @return int The number of rows affected.
 	 */
 	public static function update ($table, $cols, $values = null, $where) {
+		$start = microtime(true);
 		$prepare = array();
 
 		$sql = "UPDATE `%s%s` SET%s %s";
@@ -276,7 +291,9 @@ class Database {
 		
 		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $set, $where));
 
-		Log::add('DB Query: '.$sql);
+		self::$totalTime += $time;
+
+		Log::add('DB Query: (time: '.$time.') '.$sql);
 		$smt = self::getHandle()->prepare($sql);
 		
 		if(!$smt) {
