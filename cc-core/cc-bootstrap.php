@@ -17,6 +17,8 @@ cc_core_include('cc-tokenizer.php');
 // forms
 cc_core_include('cc-forms.php');
 
+cc_core_include('cc-table.php');
+
 // utf-8 utils
 cc_core_include('cc-utf8.php');
 
