@@ -74,5 +74,3 @@ EOT
 		, __('admin', 'page-summary'), __('admin', 'date-last-modified'), date('D, M y h:m:sa', self::$row['last_modified']));
 	}
 }
-
-?>

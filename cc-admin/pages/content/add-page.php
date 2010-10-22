@@ -34,5 +34,3 @@ class CreatePage {
 		return Content::nodeDisplay('create_display', $type, array());
    	}
 }
-
-?>

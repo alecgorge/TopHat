@@ -95,4 +95,3 @@ class SettingsPage {
 		return $r.$form->endAndGetHTML();
 	}
 }
-?>

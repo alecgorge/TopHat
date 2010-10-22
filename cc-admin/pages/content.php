@@ -124,5 +124,3 @@ EOT
 		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('content/create-page'), __('admin', 'add-page'));
 	}
 }
-
-?>

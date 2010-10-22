@@ -72,6 +72,7 @@ i18n::register('en_US', 'admin', array(
 	'page-delete-success' => 'Page was deleted successfully!',
 	'page-creation-failed' => 'Page creation failed (DB error)!',
 	'view-page-on-site' => 'View Publicly Available Page',
-	'settings' => 'Settings'
+	'settings' => 'Settings',
+	'user-management' => 'User Management'
 ));
 ?>

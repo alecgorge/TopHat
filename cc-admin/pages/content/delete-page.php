@@ -11,5 +11,3 @@ if($_GET['page'] == 'content/delete-page' && is_numeric($_GET['id'])) {
 	var_dump($res);
 	exit();
 }
-
-?>
