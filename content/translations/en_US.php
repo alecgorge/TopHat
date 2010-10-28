@@ -17,6 +17,11 @@ i18n::register('en_US', 'settings', array(
 	'homepage' => 'Admin Homepage'
 ));
 
+i18n::register('en_US', 'icons', array(
+	'user_edit' => 'Edit user',
+	'user_delete' => 'Delete user'
+));
+
 i18n::register('en_US', 'admin', array(
 	'CanyonCMS Admin' => 'CanyonCMS Admin',
 	'settings-saved' => 'Your settings were saved!',
@@ -79,6 +84,7 @@ i18n::register('en_US', 'admin', array(
 	'group-name' => "Group Name",
 	'actions' => "Actions",
 	'name' => 'Name',
-	'group' => 'Group'
+	'group' => 'Group',
+	'404' => 'Page not found.'
 ));
 ?>

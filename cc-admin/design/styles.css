@@ -353,3 +353,11 @@ th {
 	width:29%;
 }
 td span.byline {display:block;font-size:90%;font-style: italic;}
+
+table td.actions, table th.actions {
+	width:15%;
+}
+
+.cc-icon a {
+	padding:5px;
+}

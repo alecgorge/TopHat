@@ -87,12 +87,23 @@ class Admin {
 		else {
 			$this->currentItem = $this->plugin_menu[$parts[0]];
 		}
+
+		if(is_null($this->currentItem)) {
+			$this->currentItem = array('title' => __('admin', '404'));
+		}
+
 		return $this->currentItem;
 	}
 
 	public function getContent () {
 		$current = $this->getCurrentItem();
-		self::$content = call_user_func($current['callback']);
+
+		if(is_callable($current['callback'])) {
+			self::$content = call_user_func($current['callback']);
+		}
+		else {
+			self::$content = "<h2>".__('admin', "404").'</h2>';
+		}
    	}
 	
 	/**
