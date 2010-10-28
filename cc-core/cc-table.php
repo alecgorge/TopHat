@@ -6,6 +6,7 @@ class Table {
 	private $rowCount = 1;
 
 	public function  __construct ($id = '', $rowClasses = array(), $attr = array(), $cellpadding = 0, $cellspacing = 0) {
+		$this->rowClasses = $rowClasses;
 		$this->html = sprintf('<table id="%s" cellpadding="%s" cellspacing="%s" %s>'."\n", $id, $cellpadding, $cellspacing, $this->attr($attr));
 	}
 
@@ -24,7 +25,7 @@ class Table {
 
 		$this->html .= sprintf("\t<tr class=\"%s\">\n", ($this->rowCount % 2 == 0 ? 'even' : 'odd').trim(" ".$rowClass));
 		foreach($values as $k => $v) {
-			$this->html .= sprintf("\t\t<td%s>%s</td>\n", $classes[$k], $v);
+			$this->html .= sprintf("\t\t<td class='%s'>%s</td>\n", $classes[$k], $v);
 		}
 		$this->html .= "\t</tr>\n";
 
@@ -40,17 +41,25 @@ class Table {
 	}
 
 	public function addHeader($values, $classes = array()) {
+		if(empty($classes)) {
+			$classes = $this->rowClasses;
+		}
+
 		$this->html .= "\t<thead>\n";
 		foreach($values as $k => $v) {
-			$this->html .= sprintf("\t\t<th%s>%s</th>\n", $classes[$k], $v);
+			$this->html .= sprintf("\t\t<th class='%s'>%s</th>\n", $classes[$k], $v);
 		}
 		$this->html .= "\t</thead>\n";
 	}
 
 	public function addFooter($values, $classes = array()) {
+		if(empty($classes)) {
+			$classes = $this->rowClasses;
+		}
+
 		$this->html .= "\t<tfoot>\n";
 		foreach($values as $k => $v) {
-			$this->html .= sprintf("\t\t<td%s>%s</td>\n", $classes[$k], $v);
+			$this->html .= sprintf("\t\t<td class='%s'>%s</td>\n", $classes[$k], $v);
 		}
 		$this->html .= "\t</tfoot>\n";
 	}
