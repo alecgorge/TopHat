@@ -129,7 +129,7 @@ class Users {
 	}
 
 	public static function allGroups () {
-		$rows = Database::select('users', '*', array('`group` = ?', '-1'), array('name', 'DESC'))->fetchAll(PDO::FETCH_ASSOC);
+		$rows = Database::select('users', '*', array('`group` = ?', '-1'), array('name', 'ASC'))->fetchAll(PDO::FETCH_ASSOC);
 
 		$r = array();
 		foreach($rows as $k => $v) {

@@ -146,11 +146,15 @@ body {
 	-moz-border-radius: 0 0 10px 10px;
 	border:1px #ccc solid;
 	border-top:0;
+	padding:10px 16px;
+}
+
+#status div.message {
+	margin: 0 !important;
 }
 
 #status p {
 	margin:0;
-	padding:10px 16px;
 }
 
 div#content {

@@ -22,10 +22,13 @@ $(function () {
 	$('a.delete-page-link').live('click', function () {
 		var conf = confirm('Are you sure you want to delete this page and all of its children?');
 		if(conf) {
-			$('#outbox').load($(this).attr('href'));
-			$(this).parent().parent().parent().slideUp(function () {
-				$(this).remove();
+			var self = $(this);
+			$('#status').text('Processing...').load(self.attr('href'), function() {
+				self.parent().parent().parent().slideUp(function () {
+					self.remove();
+				});
 			});
+			return false;
 		}
 		return false;
 	});
@@ -167,5 +170,14 @@ $(function () {
 	var $obj = $("form input[name=slug]");
 	$('form input[name=menutitle]').keyup(function () {
 		$obj.val(URLify($(this).val()));
+	});
+
+	$('td.actions a.delete-link').click(function () {
+		var self = $(this);
+		$('#status').text('Processing...').load($(this).attr('href'), function () {
+			self.parents('tr').slideUp().remove();
+		});
+
+		return false;
 	});
 });

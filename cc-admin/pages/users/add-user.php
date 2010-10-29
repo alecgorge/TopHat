@@ -14,7 +14,7 @@ class AddUserPage {
 				$messages .= Message::error(__('admin', 'passwords-dont-match'));
 			}
 			else {
-				$rows = Database::select('users', 'name', array('name = ?', $username), null, 1)->fetch(PDO::FETCH_ASSOC);
+				$rows = Database::select('users', 'name', array('name = ? AND type = ?', $username, 'user'), null, 1)->fetch(PDO::FETCH_ASSOC);
 				if(!empty($rows)) {
 					$messages .= Message::error(__('admin', 'username-in-use'));
 				}
@@ -59,7 +59,7 @@ class AddUserPage {
 	}
 	public static function get ($x) {
 	    if(array_key_exists($x, $_POST)) return $_POST[$x];
-	    if(array_key_exists($x, self::$row)) return self::$row[$x];
+	    //if(array_key_exists($x, self::$row)) return self::$row[$x];
 	    return '';
 	}
 }
