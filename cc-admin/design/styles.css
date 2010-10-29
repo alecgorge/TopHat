@@ -360,4 +360,9 @@ table td.actions, table th.actions {
 
 .cc-icon a {
 	padding:5px;
+	width:16px;
+	height:16px;
+}
+.cc-icon a:hover {
+	border-bottom:3px #ccc solid;
 }

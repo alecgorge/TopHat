@@ -92,7 +92,7 @@ class Database {
 		}
 		$order = $orders;
 
-		if($limit > 0 && is_number($limit))  {
+		if($limit > 0 && is_numeric($limit))  {
 			$limit = "LIMIT ".$limit;
 		}
 		else {

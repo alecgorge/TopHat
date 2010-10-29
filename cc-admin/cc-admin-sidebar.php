@@ -32,8 +32,10 @@ class AdminSidebar {
 	 * @param integer $importance See AdminSidebar::register
 	 */
 	public static function registerForPage ($page, $callback, $importance = 0) {
-		if(Admin::isPage($page)) {
-			self::register($callback, $importance);
+		foreach((array)$page as $v) {
+			if(Admin::isPage($v)) {
+				self::register($callback, $importance);
+			}
 		}
 	}
 

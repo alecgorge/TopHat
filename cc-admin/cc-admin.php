@@ -187,7 +187,7 @@ class Admin {
 	 */
 	public function _registerPage ($unique_slug, $menutitle, $callback, $weight = 0) {
 		if(array_key_exists($unique_slug, $this->plugin_menu)) {
-			trigger_error("Admin menu item '$unique_slug' already exists, overwriting previous handle.", E_WARNING);
+			trigger_error("Admin menu item '$unique_slug' already exists, overwriting previous handle.", E_USER_WARNING);
 		}
 		$this->plugin_menu[$unique_slug] = array(
 			'title' => $menutitle,

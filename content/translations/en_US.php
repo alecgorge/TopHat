@@ -85,6 +85,17 @@ i18n::register('en_US', 'admin', array(
 	'actions' => "Actions",
 	'name' => 'Name',
 	'group' => 'Group',
-	'404' => 'Page not found.'
+	'404' => 'Page not found.',
+	'add-user' => 'Add a user',
+	'add-group' => 'Add a group',
+	'add-a-user' => 'Add a user',
+	'add-a-group' => 'Add a group',
+	'username' => 'Username',
+	'password' => 'Password',
+	'confirm-password' => 'Confirm Password',
+	'user-information' => 'User Information',
+	'passwords-dont-match' => 'The supplied passwords don\'t match.',
+	'username-in-use' => 'That username is already in use.',
+	'user-added' => 'User added successfully'
 ));
 ?>

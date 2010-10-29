@@ -1,7 +1,8 @@
 <?php
 
 Admin::registerPage('users', __('admin', 'user-management'), 'UsersPage::display', 3);
-// AdminSidebar::registerForPage('plugins', 'PluginAdminPage::getMore');
+AdminSidebar::registerForPage(array('users','users/add-user', 'users/edit-user','users/add-group', 'users/edit-group'), 'UsersPage::addUser');
+AdminSidebar::registerForPage(array('users','users/add-group', 'users/edit-group','users/add-user', 'users/edit-user'), 'UsersPage::addGroup');
 
 class UsersPage {
 	public static function display () {
@@ -18,7 +19,7 @@ class UsersPage {
 			$group_array[$value['id']] = $value['name'];
 			$groups_table->addRow(array(
 				$value['name'],
-				icon('user_edit', Admin::link('users/user-edit', array('id' => $value['id']))).icon('user_delete', Admin::link('users/user-delete', array('id' => $value['id'])))
+				icon('user_edit', Admin::link('users/edit-user', array('id' => $value['id']))).icon('user_delete', Admin::link('users/user-delete', array('id' => $value['id'])))
 			));
 		}
 		$groups_table = $groups_table->html();
@@ -29,11 +30,19 @@ class UsersPage {
 			$users_table->addRow(array(
 				$value['name'],
 				$group_array[$value['group']],
-				icon('user_edit', Admin::link('users/group-edit', array('id' => $value['id']))).icon('user_delete', Admin::link('users/group-delete', array('id' => $value['id']))),
+				icon('user_edit', Admin::link('users/edit-group', array('id' => $value['id']))).icon('user_delete', Admin::link('users/group-delete', array('id' => $value['id']))),
 			));
 		}
 		$r .= "<h3>".__('admin', 'users')."</h3>".$users_table->html()."<h3>".__('admin', 'groups')."</h3>".$groups_table;
 
 		return $r;
+	}
+
+	public static function addUser () {
+		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('users/add-user'), __('admin', 'add-a-user'));
+	}
+
+	public static function addGroup () {
+		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('users/add-group'), __('admin', 'add-a-group'));
 	}
 }

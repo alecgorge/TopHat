@@ -127,6 +127,17 @@ class Users {
 			self::$isValid = Users::checkSession();
 		}
 	}
+
+	public static function allGroups () {
+		$rows = Database::select('users', '*', array('`group` = ?', '-1'), array('name', 'DESC'))->fetchAll(PDO::FETCH_ASSOC);
+
+		$r = array();
+		foreach($rows as $k => $v) {
+			$r[$v['id']] = $v['name'];
+		}
+		
+		return $r;
+	}
 }
 Hooks::bind('system_before_admin_loaded', 'Users::bootstrap');
 
