@@ -25,7 +25,7 @@ class AddUserPage {
 						'name' => filter('admin_add_user_username', $username),
 						'value' => $hash,
 						'type' => 'user',
-						'group' => $group,
+						'group' => filter('admin_add_group', $group),
 						'data' => serialize(filter('admin_add_user_data', array()))
 					));
 

@@ -101,6 +101,8 @@ i18n::register('en_US', 'admin', array(
 	'user-added' => 'User added successfully.',
 	'group-added' => 'Group added successfully.',
 	'view-all-users-and-groups' => 'View all users and groups',
-	'group-delete-success' => 'Group deleted successfully.'
+	'group-delete-success' => 'Group deleted successfully.',
+	'edit-user' => 'Edit User',
+	'user-updated' => 'User updated'
 ));
 ?>

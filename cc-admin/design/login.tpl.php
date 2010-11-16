@@ -12,17 +12,19 @@
 		?>
 	</head>
 	<body>
-		<h2><?php _e('login_cc'); ?></h2>
-		<?php
-		$form = new Form('self', 'post', 'login');
-			$form->startFieldset(__('Login'));
-				$form->addInput(__("Username"), 'text', 'cc_login_uname');
-				$form->addInput(__("Password"), 'password', 'cc_login_passwd');
-				$form->addSubmit('', 'cc_login_login', __('login_cc'));
-			$form->endFieldset();
-		echo $form->endAndGetHTML();
+		<div id="login-wrapper">
+			<h2><?php _e('login_cc'); ?></h2>
+			<?php
+			$form = new Form('self', 'post', 'login');
+				$form->startFieldset(__('Login'));
+					$form->addInput(__("Username"), 'text', 'cc_login_uname');
+					$form->addInput(__("Password"), 'password', 'cc_login_passwd');
+					$form->addSubmit('', 'cc_login_login', __('login_cc'));
+				$form->endFieldset();
+			echo $form->endAndGetHTML();
 
-		i18n::restore();
-		?>
+			i18n::restore();
+			?>
+		</div>
 	</body>
 </html>
