@@ -20,7 +20,7 @@ class UsersPage {
 			$group_array[$value['id']] = $value['name'];
 			$groups_table->addRow(array(
 				$value['name'],
-				icon('user_edit', Admin::link('users/edit-group', array('id' => $value['id']))).icon('user_delete', Admin::link('users/delete', array('id' => $value['id'])), false, array('class' => 'delete-link'))
+				icon('group_edit', Admin::link('users/edit-group', array('id' => $value['id']))).icon('group_delete', Admin::link('users/delete', array('id' => $value['id'])), false, array('class' => 'delete-link'))
 			));
 		}
 		$groups_table = $groups_table->html();
@@ -40,14 +40,14 @@ class UsersPage {
 	}
 
 	public static function addUser () {
-		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('users/add-user'), __('admin', 'add-a-user'));
+		return sprintf("<a href='%s' class='action'>%s%s</a>", Admin::link('users/add-user'), icon('user_add'), __('admin', 'add-a-user'));
 	}
 
 	public static function addGroup () {
-		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('users/add-group'), __('admin', 'add-a-group'));
+		return sprintf("<a href='%s' class='action'>%s%s</a>", Admin::link('users/add-group'), icon('group_add'), __('admin', 'add-a-group'));
 	}
 
 	public static function viewAll () {
-		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('users'), __('admin', 'view-all-users-and-groups'));
+		return sprintf("<a href='%s' class='action'>%s%s</a>", Admin::link('users'), icon('group'), __('admin', 'view-all-users-and-groups'));
 	}
 }

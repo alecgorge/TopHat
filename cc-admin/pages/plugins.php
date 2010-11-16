@@ -79,7 +79,7 @@ class PluginAdminPage {
 		return $r;
 	}
 	public static function getMore () {
-		return sprintf("<a href='%s' class='action'>%s</a>", 'http://canyoncms.com/plugins/', __('admin', 'get-more-plugins'));
+		return sprintf("<a href='%s' class='action'>%s%s</a>", 'http://canyoncms.com/plugins/', icon('plugin_add'), __('admin', 'get-more-plugins'));
 	}
 }
 

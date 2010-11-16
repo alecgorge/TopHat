@@ -273,6 +273,19 @@ input.input-text:focus, input.input-password:focus, select:focus {
 	background: #266FBF;
 }
 
+#admin-sidebar > li a.action .cc-icon {
+	height: 1.3em;
+	margin-left:-9px;
+}
+
+#admin-sidebar > li a.action .cc-icon img {
+	vertical-align: text-top;
+	margin-top:1px;
+	padding-right: 9px;
+}
+
+
+
 #admin-sidebar > li a.action:hover {
 	background: #488fdf;
 }

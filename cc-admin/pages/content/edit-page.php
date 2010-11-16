@@ -8,11 +8,11 @@ AdminSidebar::registerForPage('content/edit-page', 'EditPage::pageInfoBlock', -1
 
 class EditPage {
 	public static function viewAll () {
-		return sprintf("<a href='%s' class='action'>%s</a>", Admin::link('content'), __('admin', 'view-all-pages'));
+		return sprintf("<a href='%s' class='action'>%s%s</a>", Admin::link('content'), icon('pages_all'), __('admin', 'view-all-pages'));
 	}
 
 	public static function viewPage () {
-		return sprintf("<a href='%s' target='_blank' class='action'>%s</a>", Node::fetchUrlForId($_GET['id']), __('admin', 'view-page-on-site'));
+		return sprintf("<a href='%s' target='_blank' class='action'>%s%s</a>", Node::fetchUrlForId($_GET['id']), icon('page_magnify'), __('admin', 'view-page-on-site'));
 	}
 
 	public static $invalid = false;
