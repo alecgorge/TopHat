@@ -15,10 +15,10 @@ class EditUserPage {
 		}
 		
 		if($_POST['cc_form'] === 'edit-user') {
-			$username = $_POST['eusername'];
-			$password = $_POST['epassword'];
-			$cpassword = $_POST['econfirm-password'];
-			$group = $_POST['egroup'];
+			$username = $_POST['name'];
+			$password = $_POST['password'];
+			$cpassword = $_POST['confirm-password'];
+			$group = $_POST['group'];
 
 			if($password != $cpassword) {
 				$messages .= Message::error(__('admin', 'passwords-dont-match'));
@@ -28,30 +28,43 @@ class EditUserPage {
 
 				$row = $result->fetch(PDO::FETCH_ASSOC);
 
-				var_dump($password, $cpassword);
+				$result = Database::select('users', '*', array('name = ?', $username));
 
-				if(!empty($password) && !empty($cpassword) && $password == $cpassword) {
-					$hash = hash('whirlpool', $password);
+				if(!empty($result)) {
+					$userRow = $result->fetch(PDO::FETCH_ASSOC);
 				}
 				else {
-					$hash = $row['value'];
+					$result = false;
 				}
 
-				$data = unserialize($row['data']);
+				if($result && $userRow['name'] == $username && $id != $userRow['id']) {
+					$messages .= Message::error(__('admin', 'username-in-use'));
+				}
+				else {
 
-				$result = Database::update('users', array(
-					'name' => filter('admin_edit_user_username', $username),
-					'value' => $hash,
-					'type' => 'user',
-					'group' => filter('admin_edit_group', $group),
-					'data' => serialize(filter('admin_edit_user_data', $data))
-				), null, array(
-					'id = ?',
-					$id
-				));
+					if(!empty($password) && !empty($cpassword) && $password == $cpassword) {
+						$hash = hash('whirlpool', $password);
+					}
+					else {
+						$hash = $row['value'];
+					}
 
-				if($result === 1) {
-					$messages .= Message::success(__('admin', 'user-updated'));
+					$data = unserialize($row['data']);
+
+					$result = Database::update('users', array(
+						'name' => filter('admin_edit_user_username', $username),
+						'value' => $hash,
+						'type' => 'user',
+						'group' => filter('admin_edit_group', $group),
+						'data' => serialize(filter('admin_edit_user_data', $data))
+					), null, array(
+						'id = ?',
+						$id
+					));
+
+					if($result === 1) {
+						$messages .= Message::success(__('admin', 'user-updated'));
+					}
 				}
 			}
 		}
@@ -69,10 +82,10 @@ class EditUserPage {
 		$form = new Form('self', 'post', 'edit-user');
 
 		$form->startFieldset(__("admin", 'user-information'));
-			$form->addInput(__('admin', 'username'), 'text', 'eusername', self::get('name'));
-			$form->addInput(__('admin', 'password'), 'password', 'epassword');
-			$form->addInput(__('admin', 'confirm-password'), 'password', 'econfirm-password');
-			$form->addSelectList(__('admin', 'group'), 'egroup', Users::allGroups(), true, self::get('group'));
+			$form->addInput(__('admin', 'username'), 'text', 'name', self::get('name'));
+			$form->addInput(__('admin', 'password'), 'password', 'password');
+			$form->addInput(__('admin', 'confirm-password'), 'password', 'confirm-password');
+			$form->addSelectList(__('admin', 'group'), 'group', Users::allGroups(), true, self::get('group'));
 			plugin('admin_edit_user_custom_fields', array(&$form));
 		$form->endFieldset();
 
