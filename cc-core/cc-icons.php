@@ -14,7 +14,9 @@ function icon ($slug, $link = false, $showText = false, $attr = array()) {
 	}
 
 	if(file_exists($icon_file) && ($showText === false || i18n::translationExists('icons', $slug))) {
-		$trans = __('icons', $slug);
+		if($showText) {
+			$trans = __('icons', $slug);
+		}
 		return sprintf('<span class="cc-icon cc-icon-%s">%s<img src="%s" title="%s" />%s%s</span>',
 						$slug,
 						($link ? '<a href="'.$link.'"'.(is_string($attr) ? $attr : '') .' title="'.$trans.'">' : ''),
