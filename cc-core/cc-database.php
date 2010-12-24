@@ -313,7 +313,7 @@ class Database {
 		}
 	}
 }
-class_alias('Database', 'DB');
+class DB extends Database {}
 
 try {
 	global $database, $db_username, $db_password, $db_prefix;

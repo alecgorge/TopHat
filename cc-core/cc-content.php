@@ -646,37 +646,37 @@ abstract class NodeType {
 
 	public function getContent () {
 		$this->checkRow();
-		return $this->info['content'];
+		return filter('node_content', $this->info['content']);
 	}
 
 	public function getMenutitle () {
 		$this->checkRow();
-		return $this->info['menutitle'];
+		return filter('node_menutitle', $this->info['menutitle']);
 	}
 
 	public function getTitle () {
 		$this->checkRow();
-		return $this->info['title'];
+		return filter('node_title', $this->info['title']);
 	}
 
 	public function getSettings () {
 		$this->checkRow();
-		return $this->info['settings'];
+		return filter('node_settings', $this->info['settings']);
 	}
 
 	public function getCreated () {
 		$this->checkRow();
-		return $this->info['created'];
+		return filter('node_created', $this->info['created']);
 	}
 
 	public function getLastModified () {
 		$this->checkRow();
-		return $this->info['last_modified'];
+		return filter('node_last_modified', $this->info['last_modified']);
 	}
 
 	public function getWeight () {
 		$this->checkRow();
-		return $this->info['weight'];
+		return filter('node_weight', $this->info['weight']);
 	}
 
 	public function getParentId () {
@@ -686,12 +686,12 @@ abstract class NodeType {
 
 	public function getSlug () {
 		$this->checkRow();
-		return $this->info['slug'];
+		return filter('node_slug', $this->info['slug']);
 	}
 
 	public function getType () {
 		$this->checkRow();
-		return $this->info['type'];
+		return filter('node_type', $this->info['type']);
 	}
 
 	public static function url ($id, $menutitle, $slug) {
@@ -700,7 +700,7 @@ abstract class NodeType {
 		}
 		$r .= Content::url($id);
 
-		return CC_PUB_ROOT.$r;
+		return filter('node_url', CC_PUB_ROOT.$r);
 	}
 
 	public function link () {
@@ -724,7 +724,7 @@ abstract class NodeType {
 				$this->info['theme'] = Settings::get('site', 'theme', true);
 			}
 		}
-		return $this->info['theme'];
+		return filter('node_theme', $this->info['theme']);
 	}
 
 	protected function checkRow ($raw_row = null) {

@@ -101,6 +101,10 @@ class Theme {
 		if(empty($this->config)) {
 			$this->config = parse_ini_file($this->getConfigPath());
 
+			foreach($this->config as $k => $v) {
+				$this->config[$k] = trim($v, "'");
+			}
+			
 			if(array_key_exists('interface', $this->config)) {
 				if(!file_exists($this->getAbsolutePath().$this->config['interface'])) {
 					die("Interface for ".$this->config['name']." doesn't exist (".$this->getAbsolutePath().$this->config['interface'].")");
