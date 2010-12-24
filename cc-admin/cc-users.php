@@ -16,6 +16,8 @@ class Users {
 	 */
 	public static $phash;
 
+	private static $currUser;
+
 	public static function isValid () {
 		return self::$isValid;
 	}
@@ -161,7 +163,7 @@ class Users {
 	}
 
 	public static function currentUser () {
-
+		return self::$currUser;
 	}
 }
 Hooks::bind('system_before_admin_loaded', 'Users::bootstrap');
@@ -244,7 +246,7 @@ class Group {
 	}
 
 	public function isAllowed ($data) {
-		return (bool)$this->data['data'][$data];
+		return ($this->data['data']['permissions'][$data] == true);
 	}
 }
 
