@@ -81,11 +81,16 @@ class EditUserPage {
 		$r = sprintf("<h2>%s</h2>\n",__('admin', 'edit-user'));
 		$form = new Form('self', 'post', 'edit-user');
 
+		$groups = Users::allGroups();
+		foreach ($groups as $key => $value) {
+			$groups[$value->getId()] = $value->getName();
+		}
+
 		$form->startFieldset(__("admin", 'user-information'));
 			$form->addInput(__('admin', 'username'), 'text', 'name', self::get('name'));
 			$form->addInput(__('admin', 'password'), 'password', 'password');
 			$form->addInput(__('admin', 'confirm-password'), 'password', 'confirm-password');
-			$form->addSelectList(__('admin', 'group'), 'group', Users::allGroups(), true, self::get('group'));
+			$form->addSelectList(__('admin', 'group'), 'group', $groups, true, self::get('group'));
 			plugin('admin_edit_user_custom_fields', array(&$form));
 		$form->endFieldset();
 
