@@ -82,6 +82,7 @@ i18n::register('en_US', 'admin', array(
 	'users' => 'Users',
 	'groups' => 'Groups',
 	'group-name' => "Group Name",
+	'edit-group' => 'Edit Group',
 	'actions' => "Actions",
 	'name' => 'Name',
 	'group' => 'Group',
@@ -105,6 +106,7 @@ i18n::register('en_US', 'admin', array(
 	'edit-user' => 'Edit User',
 	'user-updated' => 'User updated',
 	'logout' => 'Log out',
-	'theme-settings' => 'Theme Settings'
+	'theme-settings' => 'Theme Settings',
+	'permissions' => 'Permissions'
 ));
 ?>

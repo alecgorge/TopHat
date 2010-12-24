@@ -12,7 +12,7 @@ class Permissions {
 		self::$items = $handle->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public static function register ($name, $type, $default) {
+	public static function register ($name, $default, $type = '') {
 		$r = (bool)DB::insert('permissions', array('name', 'default_value', 'type'), array($name, $default, $type));
 		if($r) {
 			self::bootstrap();
@@ -26,5 +26,13 @@ class Permissions {
 			self::bootstrap();
 		}
 		return $r;
+	}
+
+	/**
+	 *
+	 * @return array All the permission items.
+	 */
+	public static function getAll () {
+		return self::$items;
 	}
 }

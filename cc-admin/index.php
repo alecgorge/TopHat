@@ -68,6 +68,9 @@ cc_core_include('cc-log.php');
 // editors
 cc_core_include('cc-editors.php');
 
+// permissions
+cc_admin_include('cc-permissions.php');
+
 // some libraries
 cc_core_include('cc-library.php');
 
@@ -104,14 +107,14 @@ cc_core_include('cc-content.php');
 
 plugin('system_after_content_load');
 
-cc_include_admin('cc-users.php');
+cc_admin_include('cc-users.php');
 
-cc_include_admin('cc-admin-sidebar.php');
+cc_admin_include('cc-admin-sidebar.php');
 
 plugin('system_before_admin_loaded');
 
 // this is where the awesome is
-cc_include_admin('cc-admin.php');
+cc_admin_include('cc-admin.php');
 
 // let some things run (pulling settings, etc) before we go on to pull the page info
 plugin('system_complete');

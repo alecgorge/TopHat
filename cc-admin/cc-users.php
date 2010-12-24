@@ -152,6 +152,64 @@ function cc_logout () {
 }
 
 class User {
+	private $data;
+	public function  __construct($name) {
+		if(is_string($name)) {
+			$this->data = DB::select('users', '*', array('type = ? AND name = ?', 'user', $name))->fetchAll(PDO::FETCH_ASSOC);
+		}
+		else {
+			$this->data = DB::select('users', '*', array('id = ?', $name))->fetchAll(PDO::FETCH_ASSOC);
+		}
+	}
 
+	public function getId () {
+		return $this->data['id'];
+	}
+
+	public function getName () {
+		return $this->data['name'];
+	}
+
+	/**
+	 *
+	 * @return Group The group corresponding to the user.
+	 */
+	public function getGroup () {
+		return new Group($this->data['group']);
+	}
+
+	public function passwordHash () {
+		return $this->data['value'];
+	}
 }
-?>
+
+class Group {
+	private $data;
+	public function  __construct($name) {
+		if(is_string($name)) {
+			$data = DB::select('users', '*', array('type = ? AND name = ?', 'group', $name))->fetchAll(PDO::FETCH_ASSOC);
+		}
+		else {
+			$data = DB::select('users', '*', array('id = ?', $name))->fetchAll(PDO::FETCH_ASSOC);
+		}
+		$data['data'] = unserialize($data['data']);
+		$this->data = $data;
+	}
+
+	public function getName () {
+		return $this->data['name'];
+	}
+
+	public function getId () {
+		return $this->data['id'];
+	}
+
+	public function getPermissions () {
+		return $this->data['data'];
+	}
+
+	public function isAllowed ($data) {
+		return (bool)$this->data['data'][$data];
+	}
+}
+
