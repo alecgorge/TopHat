@@ -141,6 +141,16 @@ class Users {
 }
 Hooks::bind('system_before_admin_loaded', 'Users::bootstrap');
 
+/**
+ * Logs the user out and redirects them to the home page.
+ */
+function cc_logout () {
+	Users::logout();
+
+	cc_redirect("", true);
+	exit();
+}
+
 class User {
 
 }
