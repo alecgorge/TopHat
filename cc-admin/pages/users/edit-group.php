@@ -13,9 +13,12 @@ class GroupPage {
 			$group = $_POST['group'];
 			$permissions = (array)$_POST['permissions'];
 			$new = array_merge($previous, $permissions);
-			foreach($new as &$v) {
-				if($v == "true") {
-					$v = true;
+			foreach($new as $k => $v) {
+				if($v == "1") {
+					$new[$k] = true;
+				}
+				if(!array_key_exists($k, $permissions)) {
+					$new[$k] = false;
 				}
 			}
 
