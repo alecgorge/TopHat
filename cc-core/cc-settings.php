@@ -167,5 +167,6 @@ class Settings {
 		}
 	}
 }
-Hooks::bind('system_ready', 'Settings::bootstrap', -100);
+Settings::bootstrap();
+//Hooks::bind('system_ready', 'Settings::bootstrap', -100);
 ?>

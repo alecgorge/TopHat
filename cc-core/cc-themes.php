@@ -5,11 +5,16 @@
  */
 
 class Themes {
-	public static $themes = array();
+	private static $themes = array();
 	public static $set_theme;
 	public static $curr_theme;
 
 	public static function bootstrap () {
+		self::$set_theme = Settings::get('site', 'theme', true);
+		self::setCurrentTheme(self::$set_theme);
+	}
+
+	private static function checkThemes () {
 		$g = glob(CC_ROOT.CC_THEMES.'*/theme.ini');
 		foreach($g as $v) {
 		    $parts = explode('/', str_replace('\\', '/', $v));
@@ -17,26 +22,30 @@ class Themes {
 		    $themes[$parts[count($parts)-2]] = $ini;
 		}
 		self::$themes = $themes;
-
-		self::$set_theme = Settings::get('site', 'theme', true);
-
-		self::setCurrentTheme(self::$set_theme);
 	}
 
+	/**
+	 *
+	 * @return Theme Returns an instance of Theme containing the current theme.
+	 */
 	public static function getCurrentTheme () {
-		return self::$themes[self::$curr_theme];
+		return self::$curr_theme;
 	}
 
 	public static function setCurrentTheme ($x) {
 		self::$set_theme = $x;
 
 		$theme = new Theme(self::$set_theme);
+
 		if($theme->validate()) {
 			self::$curr_theme = $theme;
 		}
 	}
 
 	public static function getThemeList () {
+		if(empty(self::$themes)) {
+			self::checkThemes();
+		}
 	    return self::$themes;
 	}
 }
@@ -109,6 +118,9 @@ class Theme {
 				if(!file_exists($this->getAbsolutePath().$this->config['interface'])) {
 					die("Interface for ".$this->config['name']." doesn't exist (".$this->getAbsolutePath().$this->config['interface'].")");
 				}
+				else {
+					$this->config['interface'] = $this->getAbsolutePath().$this->config['interface'];
+				}
 			}
 
 			$this->name = $this->config['name'];
@@ -144,6 +156,10 @@ class Theme {
 
 	public function hasInterface () {
 		return (bool) $this->config['interface'];
+	}
+
+	public function getInterface () {
+		return $this->config['interface'];
 	}
 
 	public function getPublicPath () {

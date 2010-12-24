@@ -104,6 +104,7 @@ i18n::register('en_US', 'admin', array(
 	'group-delete-success' => 'Group deleted successfully.',
 	'edit-user' => 'Edit User',
 	'user-updated' => 'User updated',
-	'logout' => 'Log out'
+	'logout' => 'Log out',
+	'theme-settings' => 'Theme Settings'
 ));
 ?>
