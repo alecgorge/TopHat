@@ -114,6 +114,10 @@ i18n::register('en_US', 'admin', array(
 	'logout' => 'Log out',
 	'theme-settings' => 'Theme Settings',
 	'permissions' => 'Permissions',
-	'save-permissions' => 'Save Permissions'
+	'save-permissions' => 'Save Permissions',
+	'inherit-permissions' => 'Inherit permissions from',
+	'save-changes' => 'Save Changes',
+	'group-information-updated' => 'Group information successfuly updated.',
+	'database-error' => 'Database Error'
 ));
 ?>

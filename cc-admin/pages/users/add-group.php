@@ -12,11 +12,15 @@ class AddGroupPage {
 				$messages .= Message::error(__('admin', 'group-in-use'));
 			}
 			else {
+				$row = DB::select('users', array('data'), array('users_id = ?', $_GET['parent']))->fetch(PDO::FETCH_ASSOC);
+				$inheritance = unserialize($row['data']);
+				$inheritance = $inheritance['permissions'];
+
 				$result = Database::insert('users', array(
 					'name' => filter('admin_add_group_name', $group),
 					'type' => 'group',
 					'group' => '-1',
-					'data' => serialize(filter('admin_add_group_data', array()))
+					'data' => serialize(filter('admin_add_group_data', array('permissions' => $inheritance)))
 				));
 
 				if($result === 1) {
@@ -29,7 +33,14 @@ class AddGroupPage {
 		$form = new Form('self', 'post', 'add-group');
 
 		$form->startFieldset(__("admin", 'group-information'));
-			$form->addInput(__('admin', 'group'), 'text', 'group', self::get('group'));
+			$form->addInput(__('admin', 'group-name'), 'text', 'group', self::get('group'));
+
+			$groups = Users::allGroups();
+			foreach ($groups as $key => $value) {
+				$groups[$value->getId()] = $value->getName();
+			}
+
+			$form->addSelectList(__('admin', 'inherit-permissions'), 'parent', $groups);
 			plugin('admin_add_group_custom_fields', array(&$form));
 		$form->endFieldset();
 

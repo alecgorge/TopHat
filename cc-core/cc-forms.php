@@ -78,6 +78,10 @@ class Form {
        	}
 	}
 
+	public function setCC_Form ($name) {
+		$this->form .= sprintf("\n\t<input type='hidden' name='%s' value='%s' />\n", 'cc_form', $name);
+	}
+
 	/**
 	 * Takes an array of attributes and adds them.
 	 *

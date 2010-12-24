@@ -107,6 +107,7 @@ class Users {
 
 		$smt = Database::select('users', array('value'), array('name = ? AND type = ?', $uname, 'user'));
 		$row = $smt->fetch(PDO::FETCH_ASSOC);
+		self::$currUser = new User($row);
 
 		// correct password
 		if($pword === $row['value']) {
@@ -157,6 +158,10 @@ class Users {
 		}
 
 		return $r;
+	}
+
+	public static function currentUser () {
+
 	}
 }
 Hooks::bind('system_before_admin_loaded', 'Users::bootstrap');
@@ -235,11 +240,11 @@ class Group {
 	}
 
 	public function getPermissions () {
-		return Permissions::$byUser[$this->getId()];
+		return $this->data['data'];
 	}
 
 	public function isAllowed ($data) {
-		return (bool)Permissions::$byUser[$this->getId()][$data];
+		return (bool)$this->data['data'][$data];
 	}
 }
 
