@@ -71,7 +71,7 @@ class i18n {
 		if(!array_key_exists($section, $this->translations[$locale])) {
 			$this->translations[$locale][$section] = array();
 		}
-		$this->translations[$locale][$section] = $translations;
+		$this->translations[$locale][$section] = array_merge($this->translations[$locale][$section], $translations);
 	}
 
 	/**
