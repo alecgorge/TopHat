@@ -36,7 +36,7 @@ class Settings {
 		self::$settings[$package][$key] = $v;
 
 		if($isUpdate && !$local) {
-			DB::update('settings', array('data','package', 'name', 'last_modified'), array(serialize($v), $package, $k, time()), array('id = ?', self::$settings[$package][$key]['id']));
+			DB::update('settings', array('data','package', 'name', 'last_modified'), array(serialize($v), $package, $k, time()), array('settings_id = ?', self::$settings[$package][$key]['id']));
 		}
 		elseif(!$local) {
 			DB::insert('settings', array('package','name','data', 'last_modified'), array($package, $k, serialize($v), time()));
@@ -133,7 +133,7 @@ class Settings {
 		foreach(self::$db_load as $key => $value) {
 			self::addToList($value['package'], array(
 				$value['name'] => array(
-					'id' => $value['id'],
+					'id' => $value['settings_id'],
 					'last_modified' => $value['last_modified'],
 					'value' => unserialize($value['data'])
 				)

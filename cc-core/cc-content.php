@@ -44,17 +44,17 @@ class Content {
 			while($data = $pages->fetch(PDO::FETCH_ASSOC)) {
 				$data = filter('content_parsenavigation_data', $data);
 				$options = unserialize($data['settings']);
-				$thisref = &$refs[ $data['id'] ];
-				$thisref5 = &$refs5[ $data['id'] ];
+				$thisref = &$refs[ $data['content_id'] ];
+				$thisref5 = &$refs5[ $data['content_id'] ];
 
 				$continue = true;
 				plugin('content_parsenavigation_before', array($thisref, $data, $options, &$continue));
 
-				$thisref['id'] = (int) $data['id'];
+				$thisref['id'] = (int) $data['content_id'];
 				$thisref['menutitle'] = $data['menutitle'];
 				$thisref['slug'] = $data['slug'];
 
-				$thisref5['id'] = (int) $data['id'];
+				$thisref5['id'] = (int) $data['content_id'];
 				$thisref5['menutitle'] = $data['menutitle'];
 				$thisref5['slug'] = $data['slug'];
 
@@ -81,7 +81,7 @@ class Content {
 
 				//$list5[$thisref['id']] = &$thisref;
 				$list2[$thisref['id']] = $thisref['menutitle'];
-				$idTypeList[$data['id']] = $data['type'];
+				$idTypeList[$data['content_id']] = $data['type'];
 				$list3[$thisref['id']] = $thisref['slug'];
 				$list4[$thisref['id']] = (int) $data['parent_id'];
 			}
@@ -569,7 +569,7 @@ class Node {
 	public static $registration = array();
 
 	public static function fetchHandler ($id) {
-		$smt = Database::select('content', '*', array('id = ?', $id));
+		$smt = Database::select('content', '*', array('content_id = ?', $id));
 		$row = $smt->fetch(PDO::FETCH_ASSOC);
 		$type = $row['type'];
 

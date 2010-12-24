@@ -133,7 +133,7 @@ class Users {
 
 		$r = array();
 		foreach($rows as $k => $v) {
-			$r[$v['id']] = $v['name'];
+			$r[$v['users_id']] = $v['name'];
 		}
 		
 		return $r;
@@ -157,13 +157,16 @@ class User {
 		if(is_string($name)) {
 			$this->data = DB::select('users', '*', array('type = ? AND name = ?', 'user', $name))->fetchAll(PDO::FETCH_ASSOC);
 		}
+		else if (is_array ($name)) {
+			$this->data = $name;
+		}
 		else {
-			$this->data = DB::select('users', '*', array('id = ?', $name))->fetchAll(PDO::FETCH_ASSOC);
+			$this->data = DB::select('users', '*', array('users_id = ?', $name))->fetchAll(PDO::FETCH_ASSOC);
 		}
 	}
 
 	public function getId () {
-		return $this->data['id'];
+		return $this->data['users_id'];
 	}
 
 	public function getName () {
@@ -189,8 +192,11 @@ class Group {
 		if(is_string($name)) {
 			$data = DB::select('users', '*', array('type = ? AND name = ?', 'group', $name))->fetchAll(PDO::FETCH_ASSOC);
 		}
+		else if (is_array ($name)) {
+			$this->data = $name;
+		}
 		else {
-			$data = DB::select('users', '*', array('id = ?', $name))->fetchAll(PDO::FETCH_ASSOC);
+			$data = DB::select('users', '*', array('users_id = ?', $name))->fetchAll(PDO::FETCH_ASSOC);
 		}
 		$data['data'] = unserialize($data['data']);
 		$this->data = $data;
@@ -201,7 +207,7 @@ class Group {
 	}
 
 	public function getId () {
-		return $this->data['id'];
+		return $this->data['users_id'];
 	}
 
 	public function getPermissions () {

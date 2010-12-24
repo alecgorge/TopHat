@@ -47,11 +47,11 @@ class ExternalLinkNodeType extends NodeType implements NodeActions {
 	}
 
 	public static function edit($id, $args) {
-		return DB::update('content', array('last_modified' => time()) + $args, null, array('id = ?', $id));
+		return DB::update('content', array('last_modified' => time()) + $args, null, array('content_id = ?', $id));
 	}
 
 	public static function delete($id) {
-		return DB::delete('content', array('id = ?', $id));
+		return DB::delete('content', array('content_id = ?', $id));
 	}
 
 	public static $row = array();

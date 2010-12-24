@@ -13,7 +13,7 @@ class ContentPage {
 	public static function updateFromPOST() {
 			$conn = Database::getHandle();
 
-			$statement = $conn->prepare("UPDATE `".CC_DB_PREFIX."content` SET weight = ?, parent_id = ? WHERE id = ?");
+			$statement = $conn->prepare("UPDATE `".CC_DB_PREFIX."content` SET weight = ?, parent_id = ? WHERE content_id = ?");
 			$conn->beginTransaction();
 
 			$order = explode('|', trim($_POST['order'], '|'));

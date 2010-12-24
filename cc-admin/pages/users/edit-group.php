@@ -6,7 +6,11 @@ class GroupPage {
 	public static function display () {
 		$p = Permissions::getAll();
 
+
 		$p_table = new Table('permissions');
+		$p_table->addHeader(array(
+			'Name', 'Allowed'
+		));
 		foreach($p as $k => $v) {
 
 		}

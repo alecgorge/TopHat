@@ -103,6 +103,7 @@ i18n::register('en_US', 'admin', array(
 	'group-added' => 'Group added successfully.',
 	'view-all-users-and-groups' => 'View all users and groups',
 	'group-delete-success' => 'Group deleted successfully.',
+	'user-delete-success' => 'User deleted successfully.',
 	'edit-user' => 'Edit User',
 	'user-updated' => 'User updated',
 	'logout' => 'Log out',

@@ -29,7 +29,7 @@ class EditPage {
 			return $r;
 		}
 
-		$pageInfo = Database::select('content', '*', array('id = ?', $id));
+		$pageInfo = Database::select('content', '*', array('content_id = ?', $id));
 
 		$row = $pageInfo->fetch(PDO::FETCH_ASSOC);
 

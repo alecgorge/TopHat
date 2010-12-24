@@ -17,10 +17,10 @@ class UsersPage {
 		$groups_table = new Table("groups", array('', 'actions'));
 		$groups_table->addHeader(array(__('admin',"group-name"), __('admin', "actions")));
 		foreach($groups->fetchAll(PDO::FETCH_ASSOC) as $key => $value) {
-			$group_array[$value['id']] = $value['name'];
+			$group_array[$value['users_id']] = $value['name'];
 			$groups_table->addRow(array(
 				$value['name'],
-				icon('group_edit', Admin::link('users/edit-group', array('id' => $value['id']))).icon('group_delete', Admin::link('users/delete', array('id' => $value['id'])), false, array('class' => 'delete-link'))
+				icon('group_edit', Admin::link('users/edit-group', array('id' => $value['users_id']))).icon('group_delete', Admin::link('users/delete', array('id' => $value['users_id'], 'type' => 'group')), false, array('class' => 'delete-link'))
 			));
 		}
 		$groups_table = $groups_table->html();
@@ -31,7 +31,8 @@ class UsersPage {
 			$users_table->addRow(array(
 				$value['name'],
 				$group_array[$value['group']],
-				icon('user_edit', Admin::link('users/edit-user', array('id' => $value['id']))).icon('user_delete', Admin::link('users/delete', array('id' => $value['id'])), false, array('class' => 'delete-link')),
+				icon('user_edit', Admin::link('users/edit-user', array('id' => $value['users_id'])))
+					.icon('user_delete', Admin::link('users/delete', array('id' => $value['users_id'], 'type' => 'user')), false, array('class' => 'delete-link')),
 			));
 		}
 		$r .= "<h3>".__('admin', 'users')."</h3>".$users_table->html()."<h3>".__('admin', 'groups')."</h3>".$groups_table;

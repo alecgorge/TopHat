@@ -337,3 +337,4 @@
 [23-Dec-2010 23:49:57] PHP Warning:  session_start() [<a href='function.session-start'>function.session-start</a>]: Cannot send session cache limiter - headers already sent (output started at H:\php\canyoncms\cc-admin\cc-users.php:143) in H:\php\canyoncms\cc-admin\cc-users.php on line 121
 [24-Dec-2010 00:17:50] PHP Notice:  'user-edit-group' doesn't exist in the translation for 'en_US' in the section 'admin'. in H:\php\canyoncms\cc-core\cc-i18n.php on line 99
 [24-Dec-2010 00:18:28] PHP Fatal error:  Class 'Permissions' not found in H:\php\canyoncms\cc-admin\pages\users\edit-group.php on line 7
+[24-Dec-2010 12:10:58] PHP Fatal error:  Call to a member function fetch() on a non-object in H:\php\canyoncms\cc-admin\pages\content\edit-page.php on line 34

@@ -24,7 +24,7 @@ class EditUserPage {
 				$messages .= Message::error(__('admin', 'passwords-dont-match'));
 			}
 			else {
-				$result = Database::select('users', '*', array('id = ?', $id));
+				$result = Database::select('users', '*', array('users_id = ?', $id));
 
 				$row = $result->fetch(PDO::FETCH_ASSOC);
 
@@ -69,7 +69,7 @@ class EditUserPage {
 			}
 		}
 
-		$result = Database::select('users', '*', array('id = ?', $id));
+		$result = Database::select('users', '*', array('users_id = ?', $id));
 
 		if(empty($result)) {
 		    i18n::restore();
