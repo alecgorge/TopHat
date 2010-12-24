@@ -44,7 +44,7 @@ class GroupPage {
 			));
 			foreach($p as $k => $v) {
 				$previous[$v['name']] = $g->isAllowed($v['name']);
-				var_dump($g->isAllowed($v['name']));
+
 				$p_table->addRow(array(
 					__('permissions', $v['name']),
 					sprintf('<input type="checkbox" name="permissions[%s]"%svalue="1"/>', $v['name'], ($g->isAllowed($v['name']) ? ' checked="checked"' : ''))
