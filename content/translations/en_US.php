@@ -17,6 +17,11 @@ i18n::register('en_US', 'settings', array(
 	'homepage' => 'Admin Homepage'
 ));
 
+i18n::register('en_US', 'permissions', array(
+	'page_editing' => 'Page Editing',
+	'page_deletion' => 'Page Deletion'
+));
+
 i18n::register('en_US', 'icons', array(
 	'user_edit' => 'Edit user',
 	'user_delete' => 'Delete user'
@@ -108,6 +113,7 @@ i18n::register('en_US', 'admin', array(
 	'user-updated' => 'User updated',
 	'logout' => 'Log out',
 	'theme-settings' => 'Theme Settings',
-	'permissions' => 'Permissions'
+	'permissions' => 'Permissions',
+	'save-permissions' => 'Save Permissions'
 ));
 ?>

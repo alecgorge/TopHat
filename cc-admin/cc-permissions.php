@@ -6,14 +6,26 @@
  *	- creates 21
  */
 class Permissions {
-	private static $items = array();
+	public static $items = array();
+	public static $byUser = array();
 	public static function bootstrap () {
 		$handle = DB::select('permissions');
-		self::$items = $handle->fetchAll(PDO::FETCH_ASSOC);
+		$raw = $handle->fetchAll(PDO::FETCH_ASSOC);
+		foreach($raw as $row) {
+			if($row['type'] == 'permission') {
+				self::$items[] = $row;
+			}
+			else if(is_numeric($row['type'])) {
+				if(!is_array(self::$byUser[$row['type']])) {
+					self::$byUser[$row['type']] = array();
+				}
+				self::$byUser[$row['type']][$row['name']] = $row['value'];
+			}
+		}
 	}
 
 	public static function register ($name, $default, $type = '') {
-		$r = (bool)DB::insert('permissions', array('name', 'default_value', 'type'), array($name, $default, $type));
+		$r = (bool)DB::insert('permissions', array('name', 'value', 'type'), array($name, $default, $type));
 		if($r) {
 			self::bootstrap();
 		}
@@ -21,7 +33,13 @@ class Permissions {
 	}
 
 	public static function deregister ($name) {
-		$r = (bool)DB::delete('permissions', array('name = ?', $name));
+		if(is_numeric($name)) {
+			$r = (bool)DB::delete('permissions', array('permissions_id = ?', $name));
+		}
+		else {
+			$r = (bool)DB::delete('permissions', array('name = ?', $name));
+		}
+
 		if($r) {
 			self::bootstrap();
 		}
@@ -36,3 +54,5 @@ class Permissions {
 		return self::$items;
 	}
 }
+
+Permissions::bootstrap();

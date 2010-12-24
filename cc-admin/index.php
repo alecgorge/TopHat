@@ -68,9 +68,6 @@ cc_core_include('cc-log.php');
 // editors
 cc_core_include('cc-editors.php');
 
-// permissions
-cc_admin_include('cc-permissions.php');
-
 // some libraries
 cc_core_include('cc-library.php');
 
@@ -85,6 +82,9 @@ if(!INSTALLED) {
 
 // the all important db abstraction layer
 cc_core_include('cc-database.php');
+
+// permissions
+cc_admin_include('cc-permissions.php');
 
 // get the validation methods
 cc_core_include('cc-validate.php');

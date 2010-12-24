@@ -4,16 +4,27 @@ Admin::registerSubpage('users', 'edit-group', __('admin', 'edit-group'), 'GroupP
 
 class GroupPage {
 	public static function display () {
-		$p = Permissions::getAll();
-
-
-		$p_table = new Table('permissions');
-		$p_table->addHeader(array(
-			'Name', 'Allowed'
-		));
-		foreach($p as $k => $v) {
-
+		if(!is_numeric($_GET['id'])) {
+			cc_redirect(Admin::link('users'));
 		}
-		return sprintf("<h2>%s</h2>", __('admin', 'permissions')).$p_table->html();
+
+		$p = Permissions::getAll();
+		$g = new Group((int)$_GET['id']);
+
+		$p_form = new Form();
+			$p_table = new Table('permissions');
+			$p_table->addHeader(array(
+				'Name', 'Allowed'
+			));
+			foreach($p as $k => $v) {
+				$p_table->addRow(array(
+					__('permissions', $v['name']),
+					sprintf('<input type="checkbox" name="%s"%s/>', $v['name'], ($g->isAllowed($v['name']) ? ' checked="checked"' : ''))
+				));
+			}
+		$p_form->addHTML($p_table->html());
+		$p_form->addHTML(sprintf('<input type="submit" name="%s" value="%s" class="input-submit" />', 'save-permissions', __('admin', 'save-permissions')));
+
+		return sprintf("<h2>%s: %s</h2>", __('admin', 'permissions'), $g->getName()).$p_form->html();
 	}
 }

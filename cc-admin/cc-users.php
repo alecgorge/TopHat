@@ -117,8 +117,17 @@ class Users {
 		return false;
    	}
 
+	public static function refChecks () {
+		// we do not want people have links sent to them that delete pages/users/groups
+		$ref = parse_url($_SERVER['HTTP_REFERER']);
+		if($ref['host'] !== NULL && $ref['host'] !== $_SERVER['HTTP_HOST']) {
+			cc_logout();
+		}
+	}
+
 	public static function bootstrap () {
 		session_start();
+		self::refChecks();
 
 		Hooks::bind('post_login', 'Users::loginHandle');
 		self::$isValid = Users::checkSession();
@@ -129,13 +138,24 @@ class Users {
 	}
 
 	public static function allGroups () {
-		$rows = Database::select('users', '*', array('`group` = ?', '-1'), array('name', 'ASC'))->fetchAll(PDO::FETCH_ASSOC);
+		$rows = Database::select('users', '*', array('`type` = ?', 'group'), array('name', 'ASC'))->fetchAll(PDO::FETCH_ASSOC);
 
 		$r = array();
 		foreach($rows as $k => $v) {
-			$r[$v['users_id']] = $v['name'];
+			$r[$v['users_id']] = new Group($v);
 		}
-		
+
+		return $r;
+	}
+
+	public static function allUsers () {
+		$rows = Database::select('users', '*', array('`type` = ?', 'user'), array('name', 'ASC'))->fetchAll(PDO::FETCH_ASSOC);
+
+		$r = array();
+		foreach($rows as $k => $v) {
+			$r[$v['users_id']] = new User($v);
+		}
+
 		return $r;
 	}
 }
@@ -156,12 +176,14 @@ class User {
 	public function  __construct($name) {
 		if(is_string($name)) {
 			$this->data = DB::select('users', '*', array('type = ? AND name = ?', 'user', $name))->fetchAll(PDO::FETCH_ASSOC);
+			$this->data = $this->data[0];
 		}
 		else if (is_array ($name)) {
 			$this->data = $name;
 		}
 		else {
 			$this->data = DB::select('users', '*', array('users_id = ?', $name))->fetchAll(PDO::FETCH_ASSOC);
+			$this->data = $this->data[0];
 		}
 	}
 
@@ -191,12 +213,14 @@ class Group {
 	public function  __construct($name) {
 		if(is_string($name)) {
 			$data = DB::select('users', '*', array('type = ? AND name = ?', 'group', $name))->fetchAll(PDO::FETCH_ASSOC);
+			$data = $data[0];
 		}
 		else if (is_array ($name)) {
-			$this->data = $name;
+			$data = $name;
 		}
 		else {
 			$data = DB::select('users', '*', array('users_id = ?', $name))->fetchAll(PDO::FETCH_ASSOC);
+			$data = $data[0];
 		}
 		$data['data'] = unserialize($data['data']);
 		$this->data = $data;
@@ -211,11 +235,11 @@ class Group {
 	}
 
 	public function getPermissions () {
-		return $this->data['data'];
+		return Permissions::$byUser[$this->getId()];
 	}
 
 	public function isAllowed ($data) {
-		return (bool)$this->data['data'][$data];
+		return (bool)Permissions::$byUser[$this->getId()][$data];
 	}
 }
 

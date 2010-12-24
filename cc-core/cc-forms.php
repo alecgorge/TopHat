@@ -215,7 +215,7 @@ EOT;
 	}
 
 	public function addHTML ($text) {
-		$this->form .= $r;
+		$this->form .= $text;
 	}
 
     // for attribute refers to id of associated form element
@@ -285,6 +285,11 @@ EOT;
 		$this->endForm();
 		return $this->getHTML();
    	}
+
+	public function html () {
+		$this->endForm();
+		return $this->getHTML();
+	}
 }
 
 ?>
