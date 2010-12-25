@@ -55,7 +55,7 @@ class EditPage {
 	public static function fileUploadBlock () {
 		if(self::$invalid) return;
 
-		var_dump(Uploads::getAllFolders());
+		var_dump(Uploads::getAllFolders(false, "/esft$/"));
 
 		i18n::set('admin');
 

@@ -129,7 +129,6 @@ class Uploads {
 		return $r;
 	}
 
-
 	/**
 	 * Returns Windows paths into Unix paths.
 	 *
