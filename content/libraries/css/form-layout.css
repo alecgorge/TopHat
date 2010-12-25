@@ -12,7 +12,7 @@ label {
 	color:#777;
 	font-style:italic; }
 
-input.input-text, select, button, input.input-password {
+input.input-text, select, input.input-password {
 	padding:3px;
 	border:1px #aaa solid;
 	color:#333;
@@ -30,13 +30,13 @@ textarea {
 	width:100%;
 	margin:0 0 0 1px; }
 
-input.input-text.hover, select.hover, button.hover, input.input-text:hover, select:hover, button:hover, input.input-password:hover {
+input.input-text.hover, select.hover, input.input-text:hover, select:hover, input.input-password:hover {
 	border-color:#999;
 	background:#e5e5e5; }
 
 input.input-submit:hover, button.hover { color:#000; }
 
-input.input-submit {width: auto;padding:5px 8px;}
+input.input-submit, button {width: auto;padding:5px 8px;}
 
 input.focus, select.focus, input.text:focus, select:focus {
 	border-color:#777;
