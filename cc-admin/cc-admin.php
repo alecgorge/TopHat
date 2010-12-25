@@ -249,6 +249,7 @@ class Admin {
 		plugin('admin_sidebar');
 
 		self::$handle->getContent();
+		AdminSidebar::cache();
 
 		//self::$handle->buildMenu();
 		self::$handle->includeDesign();

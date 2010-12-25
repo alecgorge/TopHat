@@ -193,6 +193,7 @@ function load_css() {
 function load_js() {
 	JS::load();
 }
-Hooks::bind('system_ready','Library::bootstrap', -100);
+Library::bootstrap();
+//Hooks::bind('system_ready','Library::bootstrap', -100);
 
 ?>

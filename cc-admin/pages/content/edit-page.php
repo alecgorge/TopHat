@@ -55,13 +55,50 @@ class EditPage {
 	public static function fileUploadBlock () {
 		if(self::$invalid) return;
 
+		var_dump(Uploads::getAllFolders());
+
 		i18n::set('admin');
 
-		$r .= sprintf("<h3>%s</h3>", __('upload-files'));
+		$uploader = new Uploader('editFiles', 'EditPage::handleUpload', false, array(
+			'multi' => true
+		));
+
+		load_library('jquery-tools');
+		queue_js_string("$(function(){\$('.view-uploads').overlay({
+	mask: {
+		color: '#000',
+		loadSpeed: 200,
+		opacity: 0.7
+	},
+
+	closeOnClick: true
+});});");
+
+		$uploadedButton =  sprintf("<a href='#' class='action view-uploads' rel='#cc_uploaded_overlay'>%s%s</a>", icon('folder_picture'), __('admin', 'view-all-files'));
+
+		$uploadedFiles = <<<EOT
+<div class="cc_uploaded_files">
+$uploadedButton
+	<div id="cc_uploaded_overlay" class="cc_modal">
+		<h2>%s</h2>
+		<ul class="cc_file_list">
+			<li>
+				<span class="name">testing.ducks.jpg (765.5 kb)</span>
+			</li>
+		</ul>
+	</div>
+</div>
+EOT;
+
+		$r .= sprintf("<h3>%s</h3>%s%s", __('upload-files'), sprintf($uploadedFiles, __('uploaded-files')), $uploader->createHTML());
 
 		return $r;
 
 		i18n::restore();
+	}
+
+	public static function handleUpload ($file) {
+		var_dump($file);
 	}
 
 	public static function pageInfoBlock () {

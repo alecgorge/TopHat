@@ -118,6 +118,10 @@ i18n::register('en_US', 'admin', array(
 	'inherit-permissions' => 'Inherit permissions from',
 	'save-changes' => 'Save Changes',
 	'group-information-updated' => 'Group information successfuly updated.',
-	'database-error' => 'Database Error'
+	'database-error' => 'Database Error',
+	'upload' => 'Upload',
+	'view-all-files' => 'View All Uploaded Files',
+	'uploaded-files' => 'Uploaded Files',
+	'is-not-writable' => 'is not writable!'
 ));
 ?>

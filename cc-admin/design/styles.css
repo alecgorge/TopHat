@@ -64,6 +64,8 @@ body {
 
 #nav ul ul li:last-child a {
 	-moz-border-radius: 0 0 5px 5px;
+	-webkit-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
 	border-bottom-width:3px;
 	padding-bottom: 4px;
 }
@@ -114,6 +116,8 @@ body {
 	color:white;
 	text-decoration: none;
 	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
 	position: relative;
 }
 
@@ -144,6 +148,8 @@ body {
 #status {
 	background:white;
 	-moz-border-radius: 0 0 10px 10px;
+	-webkit-border-radius: 0 0 10px 10px;
+	border-radius: 0 0 10px 10px;
 	border:1px #ccc solid;
 	border-top:0;
 	padding:10px 16px;
@@ -162,6 +168,8 @@ div#content {
 	width:700px;
 	background: white;
 	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
 	margin-top:15px;
 	border:1px #ccc solid;
 }
@@ -242,6 +250,8 @@ input.input-text, input.input-password, select, textarea {
 	background: white;
 	border: 1px #bbb solid;
 	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 
 input.input-text:hover, input.input-password:hover, select:hover {
@@ -266,10 +276,12 @@ input.input-text:focus, input.input-password:focus, select:focus {
 	display:block;
 	color:white;
 	padding:9px 0px 9px 18px;
-	margin-right: 9px;
+	margin-right: 0px;
 	font:normal 1.3em/1.3em Arial, sans-serif;
 	text-decoration:none;
-
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
 	background: #266FBF;
 }
 
@@ -402,3 +414,96 @@ table td.actions, table th.actions {
 
 tr td {border-bottom: 1px #ddd solid;}
 tr:hover td {background: #f5f5f5;}
+
+/**
+ * Uploadify stuff
+ */
+.cc_upload_box_queue {
+	margin-top:10px;
+}
+
+.cc_upload_box_buttons {
+	padding-top:5px;
+}
+
+.cc_upload_box_buttons object {
+	float:right;
+}
+
+.cc_upload_box_queue .uploadifyQueueItem {
+	border-bottom:1px #999 solid;
+	font-size:1.1em;
+	padding:7px;
+	border:1px #ddd solid;
+	background: #eee;
+	margin-bottom: 5px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+}
+
+.cc_upload_box_queue .uploadifyQueueItem:hover {
+	background:#e5e5e5;
+	border-color: #d5d5d5;
+}
+
+.cc_upload_box_queue .uploadifyQueueItem:hover .uploadifyProgress {
+	background-color: #ccc;
+
+}
+
+.cc_upload_box_queue .uploadifyQueueItem .cancel {
+	float:right;
+}
+
+.cc_upload_box_queue .uploadifyError {
+	background-color: #FDE5DD !important;
+	border: 2px solid #FBCBBC !important;
+}
+
+.cc_upload_box_queue .uploadifyQueue .completed {
+	background-color: #E5E5E5;
+}
+
+.cc_upload_box_queue .uploadifyProgress {
+	background-color: #ddd;
+	margin-top: 10px;
+	width: 100%;
+}
+
+.cc_upload_box_queue .uploadifyProgressBar {
+	background-color: #0099FF;
+	height: 3px;
+	width: 1px;
+}
+
+/* uploaded files stuff */
+.cc_uploaded_files .action {
+	margin-top:10px;
+}
+
+.cc_uploaded_files ul {
+	margin:0;
+	margin-top:10px;
+	list-style:none;
+}
+
+.cc_uploaded_files ul li {
+	list-style: none;
+	font-size:1.2em;
+	padding:7px 4px;
+	border-bottom:1px #ddd solid;
+}
+
+.cc_uploaded_files ul li:first-child {
+	border-top:1px #ddd solid;
+}
+
+.cc_modal {
+	background-color:#fff;
+	display:none;
+	width:600px;
+	padding:15px;
+	text-align:left;
+	border:4px solid black;
+}

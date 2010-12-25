@@ -21,6 +21,8 @@ cc_core_include('cc-table.php');
 
 cc_core_include('cc-icons.php');
 
+cc_core_include('cc-uploadify.php');
+
 // utf-8 utils
 cc_core_include('cc-utf8.php');
 

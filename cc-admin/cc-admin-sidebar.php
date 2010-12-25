@@ -9,6 +9,8 @@ class AdminSidebar {
 	 */
 	private static $registered = array();
 
+	private static $cache;
+
 	/**
 	 * This adds a callback to when the admin sidebar for each page is generated.
 	 *
@@ -39,12 +41,20 @@ class AdminSidebar {
 		}
 	}
 
+	public static function cache () {
+		self::$cache = self::get();
+	}
+
 	/**
 	 * Get the HTML of the admin's sidebar.
 	 *
 	 * @return string The HTML of the admin's sidebar.
 	 */
 	public static function get () {
+		if(!empty(self::$cache)) {
+			return self::$cache;
+		}
+
 		ksort(self::$registered);
        	foreach(self::$registered as $arr2) {
 			foreach($arr2 as $callback) {
