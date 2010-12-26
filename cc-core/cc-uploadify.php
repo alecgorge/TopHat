@@ -77,8 +77,12 @@ class Uploads {
 
 	public static function bootstrap () {
 		self::$absPath = CC_ROOT.CC_UPLOADS;
-		if(!is_writable(self::$absPath)) {
-			echo self::$absPath." ".__('admin', 'is-not-writable');
+		self::testWritable(self::$absPath);
+	}
+
+	private static function testWritable ($dir) {
+		if(!is_writable($dir)) {
+			echo $dir." ".__('admin', 'is-not-writable');
 			die();
 		}
 	}
@@ -102,7 +106,7 @@ class Uploads {
 			$r[] = $k;
 		}
 
-		return $r;
+		return filter('uploads_all_files', $r);
 	}
 
 	/**
@@ -126,7 +130,7 @@ class Uploads {
 			}
 		}
 
-		return $r;
+		return filter('uploads_all_folders', $r);
 	}
 
 	/**
@@ -137,6 +141,46 @@ class Uploads {
 	 */
 	public static function normalize ($file) {
 		return mb_str_replace('\\', '/', $file);
+	}
+
+	/**
+	 * Adds a file to the uploads directory. Useful
+	 *
+	 * @param string $src The path to the file that will be added the the uploads directory.
+	 * @param string $dest The path relative to CC_ROOT.CC_UPLOADS to place the file.
+	 * @param boolean $move Defaults to true. If false, the file will be copied instead of being moved.
+	 * @return Uploads Returns the static reference to Uploads.
+	 */
+	public static function addFile ($src, $dest, $move = true) {
+		plugin('uploads_add', array($src, $dest, $move));
+		if($move) {
+			rename($src, self::$absPath.$dest);
+		}
+		else {
+			copy($src, self::$absPath.$dest);
+		}
+		return self;
+	}
+
+	/**
+	 * Creates a folder with proper permissions.
+	 *
+	 * @param string $name Name of the folder without the trailing slash.
+	 * @param string $folder Name of the folder to create $name in. Relative to CC_CORE.CC_CONTENT
+	 * @return mixed The absolute path to the folder if creation was successful, otherwise false.
+	 */
+	public static function createFolder ($name, $folder = false) {
+		$new = self::$absPath.($folder ? $folder : "").rtrim($name, "/")."/";
+		self::testWritable(self::$absPath.($folder ? $folder : ""));
+
+		$res = mkdir($new);
+
+		if(function_exists('chmod')) {
+			// 0777 because execute commands are needed for some reason to properly iterate over the folder
+			// and to make new folders. don't ask me why...
+			$res2 = chmod($new, octdec(777));
+		}
+		return ($res && $res2 ? $new : false);
 	}
 
 	/**

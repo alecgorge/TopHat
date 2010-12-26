@@ -101,7 +101,12 @@ class Hooks {
 	 * @return array All of the callbacks bound to $hook.
 	 */
 	public static function hookCallbacks($hook) {
-		return (array) self::$registered[$hook];
+		if(array_key_exists($hook, self::$registered)) {
+			return self::$registered[$hook];
+		}
+		else {
+			return array();
+		}
 	}
 	
 	/**
@@ -180,9 +185,9 @@ class Filters extends Hooks {
 	 *
 	 * @param string $hook The hook name bound to all of the callbacks for the hook.
 	 * @param mixed The value for the callbacks to mutate.
-	 * @return bool Ture if all the callbacks were successfully run, false otherwise.
+	 * @return bool True if all the callbacks were successfully run, false otherwise.
 	 */
-	public static function execute ($hook, $value) {
+	public static function execute ($hook, $value = "") {
 		if(!self::hookExists($hook)) {
 			self::register($hook);
 		}
@@ -231,7 +236,12 @@ class Filters extends Hooks {
 	 * @return array All of the callbacks bound to $hook.
 	 */
 	public static function hookCallbacks($hook) {
-		return (array) self::$registered[$hook];
+		if(array_key_exists($hook, self::$registered)) {
+			return self::$registered[$hook];
+		}
+		else {
+			return array();
+		}
 	}
 
 	/**

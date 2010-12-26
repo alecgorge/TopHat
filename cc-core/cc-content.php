@@ -41,6 +41,8 @@ class Content {
 			
 			$pages = DB::select('content', '*', null, array('weight', 'asc', 'menutitle', 'asc'));
 
+			$count = 0;
+
 			while($data = $pages->fetch(PDO::FETCH_ASSOC)) {
 				$data = filter('content_parsenavigation_data', $data);
 				$options = unserialize($data['settings']);
