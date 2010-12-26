@@ -122,6 +122,7 @@ i18n::register('en_US', 'admin', array(
 	'upload' => 'Upload',
 	'view-all-files' => 'View All Uploaded Files',
 	'uploaded-files' => 'Uploaded Files',
-	'is-not-writable' => 'is not writable!'
+	'is-not-writable' => 'is not writable!',
+	'no-gd-imagick' => 'Neither GD or Imagick is installed!'
 ));
 ?>

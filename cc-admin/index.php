@@ -59,6 +59,8 @@ cc_core_include('cc-table.php');
 
 cc_core_include('cc-icons.php');
 
+cc_core_include('cc-image.php');
+
 cc_core_include('cc-uploadify.php');
 
 // utf-8 utils
