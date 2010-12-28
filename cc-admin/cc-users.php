@@ -34,6 +34,13 @@ class Users {
 
 			if(self::checkSession()) {
 				//var_dump(CC_PUB_ADMIN);exit();
+				if($_POST['cc_login_remember'] == "yes") {
+					$host = $_SERVER['HTTP_HOST'];
+					if(substr($host,0,4) == "www.") {
+						$host = substr($host,3);
+					}
+					setcookie('ln', self::packCookie(), time()+60*60*24*30*12);
+				}
 				cc_redirect(CC_PUB_ADMIN.'index.php?page=content&first=true', true);
            	}
 			else {
@@ -53,7 +60,7 @@ class Users {
 	 */
 	public static function unpackCookie() {
 		// cookie is in format (# of = at end)(base64 of json uname and password assoc)
-		$str = base64_decode($_COOKIE['ln']);
+		$str = gzinflate(base64_decode($_COOKIE['ln']));
 
 		// no sense going further
 		if(empty($str)) {
@@ -61,13 +68,13 @@ class Users {
 		}
 
 		// secert ninja stuff :)
-		return json_decode(base64_decode(substr($str, 1).str_repeat('=', substr($str, 0, 1))));
+		return (array)json_decode(base64_decode(substr($str, 1).str_repeat('=', substr($str, 0, 1))));
    	}
 
 	public static function packCookie() {
-		$base = base64_decode(json_encode(array('uname'=>$_SESSION['uname'], 'pword' => $_SESSION['pword'])));
+		$base = base64_encode(json_encode(array('uname'=>$_SESSION['uname'], 'pword' => $_SESSION['pword'])));
 		$t = trim($base, '=');
-		return base64_encode(strlen($base)-strlen($t).$t);
+		return base64_encode(gzdeflate(strlen($base)-strlen($t).$t,9));
 	}
 
 	public static function checkCookie () {
@@ -77,8 +84,8 @@ class Users {
 			return false;
 		}
 
-		$_SESSION['uname'] = $res;
-		$_SESSION['pword'] = $pword;
+		$_SESSION['uname'] = $res['uname'];
+		$_SESSION['pword'] = $res['pword'];
 		$_SESSION['last_ip'] = $_SERVER['REMOTE_ADDR'];
 		$_SESSION['last_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 	}
@@ -87,7 +94,9 @@ class Users {
 		unset($_SESSION['uname']);
 		unset($_SESSION['pword']);
 		unset($_SESSION['last_ip']);
+		session_regenerate_id();
 		session_destroy();
+		setcookie("ln", "", time()-60*60*24*12);
    	}
 
 	/**

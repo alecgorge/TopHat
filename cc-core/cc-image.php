@@ -315,4 +315,4 @@ else if(extension_loaded('gd')) {
 else {
 	throw new Exception(__('admin', 'no-gd-imagick'));
 }
-phpinfo();
+//phpinfo();

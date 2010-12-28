@@ -19,6 +19,7 @@
 				$form->startFieldset(__('Login'));
 					$form->addInput(__("Username"), 'text', 'cc_login_uname');
 					$form->addInput(__("Password"), 'password', 'cc_login_passwd');
+					$form->addInput(__("remember-me"), 'checkbox', 'cc_login_remember', 'yes');
 					$form->addSubmit('', 'cc_login_login', __('login_cc'));
 				$form->endFieldset();
 			echo $form->endAndGetHTML();
