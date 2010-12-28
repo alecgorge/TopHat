@@ -30,6 +30,7 @@ class Users {
 			$_SESSION['uname'] = $_POST['cc_login_uname'];
 			$_SESSION['pword'] = hash('whirlpool', $_POST['cc_login_passwd']);
 			$_SESSION['last_ip'] = $_SERVER['REMOTE_ADDR'];
+			$_SESSION['last_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
 			if(self::checkSession()) {
 				//var_dump(CC_PUB_ADMIN);exit();
@@ -51,19 +52,23 @@ class Users {
 	 * @return array The assoc array of uname and pword from the cookie.
 	 */
 	public static function unpackCookie() {
-		// cookie is in format (# of = at end)|(base64 of json uname and password assoc)
-		$str = $_COOKIE['ln'];
+		// cookie is in format (# of = at end)(base64 of json uname and password assoc)
+		$str = base64_decode($_COOKIE['ln']);
 
 		// no sense going further
 		if(empty($str)) {
 			return false;
 		}
 
-		$str = (array)explode('|', $str);
-
 		// secert ninja stuff :)
-		return json_decode(base64_decode($str[1].str_repeat('=', $str[0])));
+		return json_decode(base64_decode(substr($str, 1).str_repeat('=', substr($str, 0, 1))));
    	}
+
+	public static function packCookie() {
+		$base = base64_decode(json_encode(array('uname'=>$_SESSION['uname'], 'pword' => $_SESSION['pword'])));
+		$t = trim($base, '=');
+		return base64_encode(strlen($base)-strlen($t).$t);
+	}
 
 	public static function checkCookie () {
 		$res = self::unpackCookie();
@@ -72,9 +77,10 @@ class Users {
 			return false;
 		}
 
-		$_SESSION['uname'] = $uname;
+		$_SESSION['uname'] = $res;
 		$_SESSION['pword'] = $pword;
 		$_SESSION['last_ip'] = $_SERVER['REMOTE_ADDR'];
+		$_SESSION['last_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 	}
 
 	public static function logout() {
@@ -103,6 +109,9 @@ class Users {
 
 		// session spoofing!!
 		if($last_ip !== $current_ip) {
+			return false;
+		}
+		if($_SESSION['last_user_agent'] != $_SERVER['HTTP_USER_AGENT']) {
 			return false;
 		}
 		$_SESSION['last_ip'] = $current_ip;
