@@ -1,7 +1,7 @@
 <?php
 class Admin {
 	/**
-	 * @var Contains the handle to class for static access.
+	 * @var Admin Contains the handle to class for static access.
 	 */
 	public static $handle;
 
@@ -24,6 +24,8 @@ class Admin {
 	 * @var Menu items added by plugins.
 	 */
 	private $plugin_menu = array();
+
+	public $select_menu = array();
 
 	public static $content;
 
@@ -105,6 +107,11 @@ class Admin {
 			self::$content = "<h2>".__('admin', "404").'</h2>';
 		}
    	}
+
+	public static function getAdminPageOptions () {
+		ksort(self::$handle->select_menu);
+		return filter('admin_admin_page_options', self::$handle->select_menu);
+	}
 	
 	/**
 	 * Generates a multilevel array of the nav items.
@@ -189,6 +196,7 @@ class Admin {
 		if(array_key_exists($unique_slug, $this->plugin_menu)) {
 			trigger_error("Admin menu item '$unique_slug' already exists, overwriting previous handle.", E_USER_WARNING);
 		}
+		$this->select_menu[$unique_slug] = $menutitle;
 		$this->plugin_menu[$unique_slug] = array(
 			'title' => $menutitle,
 			'callback' => $callback,
@@ -211,6 +219,7 @@ class Admin {
 		if(!array_key_exists($parent_slug, (array)$this->plugin_menu)) {
 			trigger_error("Admin parent menu item '$parent_slug' for '$unique_slug' doesn't exist!", E_USER_WARNING);
 		}
+		$this->select_menu[$parent_slug.'/'.$unique_slug] = "&#8212; $menutitle";
 		$this->plugin_menu[$parent_slug]['children'][$unique_slug] = array(
 			'title' => $menutitle,
 			'callback' => $callback,

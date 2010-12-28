@@ -83,6 +83,9 @@ class SettingsPage {
 
 					$form->addSelectList(__('settings',$row['name']), UTF8::slugify($row['name']), $editors, false, $data);
 				}
+				else if($row['name'] == 'homepage') {
+					$form->addSelectList(__('settings',$row['name']), UTF8::slugify($row['name']), Admin::getAdminPageOptions(), true, $data);
+				}
 			}
 
 			$form->endFieldset();
