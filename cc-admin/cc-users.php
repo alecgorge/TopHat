@@ -41,7 +41,7 @@ class Users {
 					}
 					setcookie('ln', self::packCookie(), time()+60*60*24*30*12);
 				}
-				cc_redirect(CC_PUB_ADMIN.'index.php?page=content&first=true', true);
+				cc_redirect(CC_PUB_ADMIN, true);
            	}
 			else {
 				Filters::bind('post_output_login', 'Users::outputError');
