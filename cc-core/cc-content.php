@@ -258,8 +258,10 @@ class Content {
 				// get the children's html
 				$childrenHtml = self::generateNavHTML($options, true, $item['children']);
 
+				$childIds = array_subkeys($item['children'], 'id', 'children');
+
 				// current page
-				if(Content::currentId() == $item['id']) {
+				if(Content::currentId() == $item['id'] || in_array(Content::currentId(), $childIds)) {
 					// add the html on
 					$thisOutput = sprintf($options['itemHasChildSelected'], $mt, $url, $childrenHtml, $item['id']);
 				}

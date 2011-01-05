@@ -96,5 +96,5 @@ define('CC_TRANSLATIONS', CC_CONTENT.'translations/');
 
 date_default_timezone_set($timezone);
 
-define("CC_DEBUG", true);
+define("CC_DEBUG", false);
 ?>

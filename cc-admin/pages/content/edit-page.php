@@ -80,15 +80,14 @@ $uploadedButton
 	<div id="cc_uploaded_overlay" class="cc_modal">
 		<h2>%s</h2>
 		<ul class="cc_file_list">
-			<li>
-				<span class="name">testing.ducks.jpg (765.5 kb)</span>
-			</li>
+			%s
 		</ul>
 	</div>
 </div>
 EOT;
+		//foreach(Uploads::getAllFiles() as $)
 
-		$r .= sprintf("<h3>%s</h3>%s%s", __('upload-files'), sprintf($uploadedFiles, __('uploaded-files')), $uploader->createHTML());
+		$r .= sprintf("<h3>%s</h3>%s%s", __('upload-files'), sprintf($uploadedFiles, __('uploaded-files'), $files), $uploader->createHTML());
 
 		return $r;
 

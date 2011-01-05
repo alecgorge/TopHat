@@ -54,6 +54,7 @@ class PageNode extends NodeType implements NodeActions {
 	}
 
 	public static function edit_display($row) {
+		//$row['data'] = unserialize($row['data']);
 		self::$row = $row;
 	    i18n::set('admin');
 
@@ -100,9 +101,13 @@ class PageNode extends NodeType implements NodeActions {
 
 	    $r .= sprintf("<h2>%s</h2>%s", __('edit-page'), $message);
 
+		//var_dump(self::$row);
 		$themeList = Themes::getThemeList();
-		$themeList['-1'] = 'Default Theme';
-		ksort($themeList);
+		foreach($themeList as $k=>$v) {
+			$tl[$k] = $v['name'];
+		}
+		$tl['-1'] = 'Default Theme';
+		ksort($tl);
 
 
 		$form = new Form('self', 'post', 'edit_page');
@@ -112,7 +117,7 @@ class PageNode extends NodeType implements NodeActions {
 		$form->startFieldset(__('page-info'));
 			$form->addInput(__('page-title'), 'text', 'title', self::get('title'), array('class' => 'large'));
 			$form->addHidden('content_type', self::get('type'));
-			$form->addSelectList(__('theme-override'), 'theme', $themeList);
+			$form->addSelectList(__('theme-override'), 'theme', $tl, true, self::get('theme'));
 			$form->addSelectList(__('parent'), 'parent_id', self::buildParentOptions(), true, self::get('parent_id'));
 			$form->addInput(__('weight'), 'text', 'weight', self::get('weight'));
 		$form->endFieldset();

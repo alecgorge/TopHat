@@ -8,6 +8,21 @@ function array_remove_empty($arr) {
 	return $r;
 }
 
+function array_subkeys ($haystack, $needle, $recursive = false) {
+	$results = array();
+	foreach($haystack as $k => $v) {
+		foreach($v as $key => $value) {
+			if($key == $needle) {
+				array_push($results, $value);
+			}
+			else if ($key == $recursive) {
+				array_merge($results, array_subkeys($v[$recursive], $needle, $recursive));
+			}
+		}
+	}
+	return $results;
+}
+
 /**
  * Gets the path to a CSS stylesheet at (by default) content/css/*.css
  *
