@@ -2,7 +2,7 @@
 
 Admin::registerSubpage('content', 'edit-page', __('admin', 'edit-page'), 'EditPage::display');
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::viewAll', -10);
-AdminSidebar::registerForPage('content/edit-page', 'EditPage::fileUploadBlock');
+//AdminSidebar::registerForPage('content/edit-page', 'EditPage::fileUploadBlock');
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::viewPage', -10);
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::pageInfoBlock', -1);
 

@@ -28,6 +28,9 @@ class Content {
 	public static function bootstrap () {
 		self::parseNavigation();
 		self::parseUrl();
+
+		// cache content
+		self::get();
 	}
 	
 	public static function parseNavigation () {
@@ -343,29 +346,34 @@ class Content {
 		return Node::action('create', $type, $args);
 	}*/
 
-	public static function parseUrl () {
-		$_GET['q'] = filter('content_parseurl', $_GET['q']);
-		$parts = array_remove_empty(explode('/', $_GET['q']));
-
-		if(count($parts) == 1) {
-			if(self::isNode('/'.$parts[0])) {
-				self::setCurrent(self::nameToId('/'.$parts[0]));
-			}
-			else {
-				self::trigger404();
-			}
-		}
-		elseif(count($parts) > 1) {
-			$page = '/'.implode('/', $parts);
-			if(self::isNode($page)) {
-				self::setCurrent(self::nameToId($page));
-			}
-			else {
-				self::trigger404();
-			}
+	public static function parseUrl ($arg = false) {
+		if($arg === false) {
+			$_GET['q'] = filter('content_parseurl', $_GET['q']);
+			URLMap::from("*", "Content::parseURL", 1000);
 		}
 		else {
-			self::setCurrent(Settings::get('site', 'homepage id', true));
+			$parts = array_remove_empty(explode('/', $_GET['q']));
+
+			if(count($parts) == 1) {
+				if(self::isNode('/'.$parts[0])) {
+					self::setCurrent(self::nameToId('/'.$parts[0]));
+				}
+				else {
+					self::trigger404();
+				}
+			}
+			elseif(count($parts) > 1) {
+				$page = '/'.implode('/', $parts);
+				if(self::isNode($page)) {
+					self::setCurrent(self::nameToId($page));
+				}
+				else {
+					self::trigger404();
+				}
+			}
+			else {
+				self::setCurrent(Settings::get('site', 'homepage id', true));
+			}
 		}
 	}
 
@@ -445,12 +453,19 @@ class Content {
 		return self::$current;
 	}
 
+
+	private static $initContent = false;
 	/**
 	 * Gets the content of the current node.
 	 *
 	 * @return string The requested item.
 	 */
 	public static function get () {
+		if(!self::$initContent) {
+			plugin('content_get_inital');
+			self::$content['content'] = filter('content_get_inital', self::$content['content']);
+			self::$initContent = true;
+		}
 		plugin('content_get');
 		return filter('content_get', UTF8::htmlentities(self::$content['content']));
 	}

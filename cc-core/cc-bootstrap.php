@@ -5,12 +5,16 @@ require CC_CORE.'cc-hooks.php';
 // include include manager
 require CC_CORE.'cc-includes.php';
 
+cc_core_include('cc-urlmap.php');
+
 // some helper functions
 cc_core_include('cc-functions.php');
 
 cc_core_include('cc-message.php');
 
 cc_core_include('cc-timers.php');
+
+cc_core_include('cc-library.php');
 
 cc_core_include('cc-tokenizer.php');
 

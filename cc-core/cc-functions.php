@@ -1,4 +1,8 @@
 <?php
+function cc_admin_include ($file) {
+	require_once CC_ADMIN.$file;
+}
+
 function array_remove_empty($arr) {
 	foreach($arr as $k => $v) {
 		if(!empty($v)) {
@@ -6,6 +10,11 @@ function array_remove_empty($arr) {
 		}
 	}
 	return $r;
+}
+
+function mail_utf8($to, $subject = '(No subject)', $message = '', $header = '') {
+	$header_ = 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n";
+	mail($to, '=?UTF-8?B?'.base64_encode($subject).'?=', $message, $header_ . $header);
 }
 
 function array_subkeys ($haystack, $needle, $recursive = false) {

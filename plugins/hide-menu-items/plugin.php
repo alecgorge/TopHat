@@ -18,5 +18,3 @@ Italics::$plugin->bootstrap('Italics::bootstrap');
 		echo 'test';
 	});
 });*/
-
-?>

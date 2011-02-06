@@ -17,7 +17,12 @@ class Tokenizer {
 	public static function replace ($matches) {
 		$key = trim($matches[2], "{}");
 		if(array_key_exists($key, self::$tokens)) {
-			return $matches[1].self::$tokens[$key];
+			if(is_callable(self::$tokens[$key])) {
+				return $matches[1].call_user_func(self::$tokens[$key]);
+			}
+			else {
+				return $matches[1].self::$tokens[$key];
+			}
 		}
 		else {
 			error_log("$key isn't a valid token!", E_USER_WARNING);
@@ -75,4 +80,4 @@ class Tokens {
 }
 
 Hooks::bind("system_after_themes_load", "Tokens::registerDefaults");
-Filters::bind("content_get", "Tokens::filter");
+Filters::bind("content_get_inital", "Tokens::filter");

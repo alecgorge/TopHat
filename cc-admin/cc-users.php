@@ -150,7 +150,7 @@ class Users {
 		session_start();
 		self::refChecks();
 
-		Hooks::bind('post_login', 'Users::loginHandle');
+		Users::loginHandle();
 		self::$isValid = Users::checkSession();
 		if(!self::$isValid) {
 			Users::checkCookie();

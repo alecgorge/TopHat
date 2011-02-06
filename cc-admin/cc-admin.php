@@ -261,7 +261,6 @@ class Admin {
 		AdminSidebar::cache();
 
 		//self::$handle->buildMenu();
-		self::$handle->includeDesign();
 	}
 
 	/**
@@ -291,8 +290,13 @@ class Admin {
 		return $_GET['page'] == $page;
 	}
 
+	public static function doIncludeDesign () {
+		self::$handle->includeDesign();
+	}
+
 }
 Hooks::bind('admin_logout', 'Admin::logout', 100);
-Hooks::bind('system_complete', 'Admin::bootstrap', 10);
+Hooks::bind('system_complete', 'Admin::bootstrap');
+Hooks::bind('system_complete', 'Admin::doIncludeDesign', 100);
 
 ?>

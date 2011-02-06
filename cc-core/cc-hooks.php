@@ -137,7 +137,7 @@ class Hooks {
 		}
 	}
 }
-Hooks::bind('system_complete', 'Hooks::setupPostHandles');
+Hooks::bind('system_ready', 'Hooks::setupPostHandles');
 
 /**
  * Wrapper for Hooks::execute().

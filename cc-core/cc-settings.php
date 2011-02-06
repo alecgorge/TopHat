@@ -6,7 +6,7 @@ class Settings {
 	/**
 	 * @var array An associative array of all the settings stored.
 	 */
-	private static $settings = array();
+	public static $settings = array();
 	/**
 	 * @var array The raw information loaded from the database.
 	 */
@@ -32,11 +32,14 @@ class Settings {
 		$v = filter('cc_settings_set', $v);
 
 		$isUpdate = array_key_exists($k, self::$settings[$package]);
-		
-		self::$settings[$package][$key] = $v;
+
+		if($isUpdate) {
+			self::$settings[$package][$k]['value'] = $v;
+			self::$settings[$package][$k]['last_modified'] = time();
+		}
 
 		if($isUpdate && !$local) {
-			DB::update('settings', array('data','package', 'name', 'last_modified'), array(serialize($v), $package, $k, time()), array('settings_id = ?', self::$settings[$package][$key]['id']));
+			DB::update('settings', array('data','package', 'name', 'last_modified'), array(serialize($v), $package, $k, time()), array('settings_id = ?', self::$settings[$package][$k]['id']));
 		}
 		elseif(!$local) {
 			DB::insert('settings', array('package','name','data', 'last_modified'), array($package, $k, serialize($v), time()));
@@ -85,7 +88,12 @@ class Settings {
 	 * @param bool If this is true, it returns the value instead of the array.
 	 * @return mixed Returns the value assigned to $k or null if the key doesn't exist.
 	 */
-	public static function get($package, $k, $ret = false) {
+	public static function get($package, $k = null, $ret = false) {
+		if(is_string($package) && is_null($k)) {
+			$ret = (is_bool($k) ? $k : true);
+			list($package, $k) = explode(".", $package);
+		}
+
 		$r = null;
 
 		if(array_key_exists($package, self::$settings)) {

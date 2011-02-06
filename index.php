@@ -36,7 +36,7 @@ or implied, of Ramblingwood, LLC.
 define('CC_START', microtime(true));
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
-error_reporting(E_ALL + E_STRICT & ~E_NOTICE);
+//error_reporting(E_ALL + E_STRICT & ~E_NOTICE);
 header('Content-Type: text/html; charset=utf-8');
 
 if(!defined('CC_IS_ADMIN')) {

@@ -37,13 +37,13 @@ define('CC_IS_ADMIN', true);
 
 require_once '../cc-config.php';
 
-require_once 'cc-admin-include.php';
-
 // include hooking capabilites
 require_once CC_CORE.'cc-hooks.php';
 
 // include include manager
 require_once CC_CORE.'cc-includes.php';
+
+cc_core_include('cc-urlmap.php');
 
 // fix the $_GET variable
 cc_core_include('cc-functions.php');
@@ -62,6 +62,7 @@ cc_core_include('cc-icons.php');
 cc_core_include('cc-image.php');
 
 cc_core_include('cc-uploadify.php');
+cc_core_include('cc-tokenizer.php');
 
 // utf-8 utils
 cc_core_include('cc-utf8.php');

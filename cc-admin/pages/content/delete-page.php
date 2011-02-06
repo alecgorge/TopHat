@@ -1,7 +1,7 @@
 <?php
 
 if($_GET['page'] == 'content/delete-page' && is_numeric($_GET['id'])) {
-	$type = Content::getType($_GET['content_id']);
+	$type = Content::getType($_GET['id']);
 	$res = Node::action('delete', $type, array($_GET['id']));
 
 	if($res !== false) {

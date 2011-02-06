@@ -33,6 +33,7 @@ class CKEditorPlugin implements NewEditor {
 			array('Styles','Format','Font','FontSize'),
 			array('TextColor','BGColor'),
 		);
+		self::$handles[$name]->config['filebrowserBrowseUrl'] = '/php/canyoncms/plugins/filebrowser/kfm-1.4.7/';
 		return self::$handles[$name]->editor($name, $initContents);
    	}
 }
