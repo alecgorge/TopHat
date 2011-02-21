@@ -16,10 +16,10 @@
 */
 function utf8_to_ascii($str, $unknown = '?') {
 
-	# The database for transliteration stored here
+	// The database for transliteration stored here
 	static $UTF8_TO_ASCII = array();
 
-	# Variable lookups faster than accessing constants
+	// Variable lookups faster than accessing constants
 	$UTF8_TO_ASCII_DB = UTF8_TO_ASCII_DB;
 
 	if ( strlen($str) == 0 ) { return ''; }
@@ -27,11 +27,11 @@ function utf8_to_ascii($str, $unknown = '?') {
 	$len = strlen($str);
 	$i = 0;
 
-	# Use an output buffer to copy the transliterated string
-	# This is done for performance vs. string concatenation - on my system, drops
-	# the average request time for the example from ~0.46ms to 0.41ms
-	# See http://phplens.com/lens/php-book/optimizing-debugging-php.php
-	# Section  "High Return Code Optimizations"
+	// Use an output buffer to copy the transliterated string
+	// This is done for performance vs. string concatenation - on my system, drops
+	// the average request time for the example from ~0.46ms to 0.41ms
+	// See http://phplens.com/lens/php-book/optimizing-debugging-php.php
+	// Section  "High Return Code Optimizations"
 	ob_start();
 
 	while ( $i < $len ) {
@@ -41,9 +41,9 @@ function utf8_to_ascii($str, $unknown = '?') {
 
 		$ord0 = ord($str{$i});
 
-		# Much nested if /else - PHP fn calls expensive, no block scope...
+		// Much nested if /else - PHP fn calls expensive, no block scope...
 
-		# 1 byte - ASCII
+		// 1 byte - ASCII
 		if ( $ord0 >= 0 && $ord0 <= 127 ) {
 
 			$ord = $ord0;
@@ -51,7 +51,7 @@ function utf8_to_ascii($str, $unknown = '?') {
 
 		} else {
 
-			# 2 bytes
+			// 2 bytes
 			$ord1 = ord($str{$i+1});
 
 			if ( $ord0 >= 192 && $ord0 <= 223 ) {
@@ -61,7 +61,7 @@ function utf8_to_ascii($str, $unknown = '?') {
 
 			} else {
 
-				# 3 bytes
+				// 3 bytes
 				$ord2 = ord($str{$i+2});
 
 				if ( $ord0 >= 224 && $ord0 <= 239 ) {
@@ -71,7 +71,7 @@ function utf8_to_ascii($str, $unknown = '?') {
 
 				} else {
 
-					# 4 bytes
+					// 4 bytes
 					$ord3 = ord($str{$i+3});
 
 					if ($ord0>=240 && $ord0<=247) {
@@ -96,14 +96,14 @@ function utf8_to_ascii($str, $unknown = '?') {
 
 		$bank = $ord >> 8;
 
-		# If we haven't used anything from this bank before, need to load it...
+		// If we haven't used anything from this bank before, need to load it...
 		if ( !array_key_exists($bank, $UTF8_TO_ASCII) ) {
 
 			$bankfile = UTF8_TO_ASCII_DB. '/'. sprintf("x%02x",$bank).'.php';
 
 			if ( file_exists($bankfile) ) {
 
-				# Load the appropriate database
+				// Load the appropriate database
 				if ( !include  $bankfile ) {
 					ob_end_clean();
 					trigger_error("utf8_to_ascii: unable to load $bankfile");
@@ -111,7 +111,7 @@ function utf8_to_ascii($str, $unknown = '?') {
 
 			} else {
 
-				# Some banks are deliberately empty
+				// Some banks are deliberately empty
 				$UTF8_TO_ASCII[$bank] = array();
 
 			}
@@ -144,19 +144,30 @@ function utf8_to_ascii($str, $unknown = '?') {
  * A few utilites to work with UTF-8 strings. Very useful for localization/internationalization/compatibility
  */
 class UTF8 {
+	private static $transliterator = null;
+
 	/**
 	 * Converts a non UTF-8 string into a UTF-8 string.
 	 *
+	 * Now the same as removeInvalidUTF8, just here for BC reasons.
+	 *
+	 * @static
 	 * @param string $str A non UTF-8 String
 	 * @return string The UTF-8 string.
 	 */
 	public static function convertToUTF8($str) {
-		if( mb_detect_encoding($str,"UTF-8, ISO-8859-1, GBK")!="UTF-8" ) {
-			return  iconv("gbk","utf-8",$str);
-		}
-		else {
-			return $str;
-		}
+		return self::removeInvalidUTF8($str);
+	}
+
+	/**
+	 * Converts the string to UTF-8 and removes invalid UTF-8 characters.
+	 *
+	 * @static
+	 * @param string $str The input string.
+	 * @return string $str with all invalid UTF-8 characters removed.
+	 */
+	public static function removeInvalidUTF8 ($str) {
+		return iconv(mb_detect_encoding($str), "UTF-8//IGNORE", $str);
 	}
 
 	/**
@@ -164,6 +175,7 @@ class UTF8 {
 	 *
 	 * For example: baño baño baño becomes bano-bano-bano
 	 *
+	 * @static
 	 * @param string $string The "unclean" input.
 	 * @return string The nice slug!
 	 */
@@ -174,9 +186,7 @@ class UTF8 {
 		// backups are good
 		$orig_string = $string;
 
-		$string = filter('utf8_slugify_before', $string);
-
-		$string = utf8_to_ascii($string);
+		$string = self::transliterate(filter('utf8_slugify_before', $string));
 
 		// strip all remaning non slug-safe chars (A-z 0-9 - _)
 		$string = preg_replace("/[^a-zA-Z0-9-_]/", "-", $string);
@@ -189,12 +199,25 @@ class UTF8 {
 
 		// whoa, we don't want an empty slug!
 		if(empty($string)) {
-			// we will just base64_encode the slug and remove the '=' I guess. Any better ideas?
-			$string = trim(base64_encode($orig_string), '=');
+			// we will just base64_encode the slug I guess. Any better ideas?
+			$string = rawurlencode(base64_encode($orig_string), '=');
 	   	}
 
 		// done!
 		return filter('utf8_slugify_after', $string);
+	}
+
+	/**
+	 * Transliterates (strips accents) text.
+	 *
+	 * For example. ë becomes e.
+	 *
+	 * @static
+	 * @param  $str The input string.
+	 * @return string The transliterated string.
+	 */
+	public static function transliterate ($string) {
+		return utf8_to_ascii($string);
 	}
 
 	/**
