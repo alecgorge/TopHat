@@ -1,7 +1,4 @@
 <?php
-function cc_admin_include ($file) {
-	require_once CC_ADMIN.$file;
-}
 
 function array_remove_empty($arr) {
 	foreach($arr as $k => $v) {

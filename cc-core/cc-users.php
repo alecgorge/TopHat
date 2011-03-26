@@ -125,18 +125,32 @@ class Users {
 		}
 		$_SESSION['last_ip'] = $current_ip;
 
-		$smt = Database::select('users', array('value'), array('name = ? AND type = ?', $uname, 'user'));
-		$row = $smt->fetch(PDO::FETCH_ASSOC);
-		self::$currUser = new User($row);
-
-		// correct password
-		if($pword === $row['value']) {
+		$v = self::validate($uname, $pword, true);
+		if($v) {
+			self::$currUser = $v;
 			return true;
 		}
-
-		// wrong password
 		return false;
    	}
+
+	/**
+	 * Test if a login is correct.
+	 *
+	 * @static
+	 * @param  $username The username to test.
+	 * @param  $password The password to test.
+	 * @return bool|User If the login is successful, the new user instance is returned; otherwise false is returned.
+	 */
+	public static function validate ($username, $password, $alreadyHashed = false) {
+		$pword = $alreadyHashed ? $password : hash('whirlpool', $password);
+
+		$smt = Database::select('users', array('value'), array('name = ? AND type = ?', $username, 'user'));
+		$row = $smt->fetch(PDO::FETCH_ASSOC);
+		if($pword === $row['value']) {
+			return new User($row);
+		}
+		return false;
+	}
 
 	public static function refChecks () {
 		// we do not want people have links sent to them that delete pages/users/groups
@@ -184,7 +198,7 @@ class Users {
 		return self::$currUser;
 	}
 }
-Hooks::bind('system_before_admin_loaded', 'Users::bootstrap');
+Hooks::bind('system_after_content_load', 'Users::bootstrap');
 
 /**
  * Logs the user out and redirects them to the home page.
@@ -197,6 +211,9 @@ function cc_logout () {
 }
 
 class User {
+	/**
+	 * @var array An associative array that is the columns and values of the DB.
+	 */
 	private $data;
 	public function  __construct($name) {
 		if(is_string($name)) {

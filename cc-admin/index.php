@@ -110,9 +110,9 @@ plugin('system_ready');
 
 cc_core_include('cc-content.php');
 
-plugin('system_after_content_load');
+cc_core_include('cc-users.php');
 
-cc_admin_include('cc-users.php');
+plugin('system_after_content_load');
 
 cc_admin_include('cc-admin-sidebar.php');
 
@@ -124,4 +124,3 @@ cc_admin_include('cc-admin.php');
 // let some things run (pulling settings, etc) before we go on to pull the page info
 plugin('system_complete');
 
-?>

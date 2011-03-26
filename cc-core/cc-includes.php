@@ -6,9 +6,11 @@
  * @return string The full path to the included file.
  */
 function cc_core_include ($file) {
-	plugin('core_include', array($file));
-	$file = filter('core_include', CC_CORE.$file);
-	require_once $file;
+	foreach((array)$file as $f) {
+		plugin('core_include', array($f));
+		$f = filter('core_include', CC_CORE.$f);
+		require_once $f;
+	}
 	return $file;
 }
 
@@ -25,4 +27,7 @@ function cc_theme_include ($theme) {
 		require_once $file;
 	}
 }
-?>
+
+function cc_admin_include ($file) {
+	require_once CC_ADMIN.$file;
+}

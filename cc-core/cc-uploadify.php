@@ -109,6 +109,24 @@ class Uploads {
 		return filter('uploads_all_files', $r);
 	}
 
+	public static function getFilesArray ($folder = false, $pattern = false) {
+		return self::fillFileNodes(new DirectoryIterator(self::$absPath.($folder ? $folder : "")), $pattern);
+	}
+
+	private static function fillFileNodes(DirectoryIterator $dir, $pattern = false) {
+		$data = array();
+		foreach($dir as $node) {
+			if ($node->isDir() && !$node->isDot()) {
+				$data[$node->getPathname().DIRECTORY_SEPARATOR] = self::fillFileNodes(new DirectoryIterator($node->getPathname()));
+			} else if ($node-> isFile()) {
+				if(!$pattern || preg_match($pattern, $node->getFilename())) {
+					$data[] = $node->getPathname();
+				}
+			}
+		}
+		return $data;
+	}
+
 	/**
 	 * Returns an array of the absolute path to all the folders in the given folder matching the given pattern.
 	 *
@@ -190,7 +208,7 @@ class Uploads {
 	 * @return string The relative path (from CC_ROOT) to the file.
 	 */
 	public static function unbase ($file) {
-		return mb_substr($file, mb_strlen(CC_ROOT));
+		return mb_substr($file, strlen(utf8_decode(CC_ROOT)));
 	}
 }
 
