@@ -15,10 +15,10 @@ class Themes {
 	}
 
 	private static function checkThemes () {
-		$g = glob(CC_ROOT.CC_THEMES.'*/theme.ini');
+		$g = glob(CC_ROOT.CC_THEMES.'*/theme.json');
 		foreach($g as $v) {
 		    $parts = explode('/', str_replace('\\', '/', $v));
-			$ini = parse_ini_file($v);
+			$ini = (array)json_decode(file_get_contents($v));
 		    $themes[$parts[count($parts)-2]] = $ini;
 		}
 		self::$themes = $themes;
@@ -69,9 +69,9 @@ class Theme {
 		$this->folder = $name;
 
 		if($this->validate()) {
-			$this->config_path = CC_ROOT.CC_THEMES.$this->getFolderName().'/theme.ini';
-			$this->absolute_path = CC_ROOT.CC_THEMES.$this->getFolderName().'/';
-			$this->public_path = CC_PUB_ROOT.CC_THEMES.$this->getFolderName().'/';
+			$this->config_path = '/'.ltrim(CC_ROOT.CC_THEMES.$this->getFolderName().'/theme.json', '/');
+			$this->absolute_path = '/'.ltrim(CC_ROOT.CC_THEMES.$this->getFolderName().'/', '/');
+			$this->public_path = '/'.ltrim(CC_PUB_ROOT.CC_THEMES.$this->getFolderName().'/', '/');
 			if($this->hasConfig()) {
 				$this->getConfig();
 			}
@@ -81,7 +81,8 @@ class Theme {
 					'version' => 'unknown',
 					'author' => 'unknown',
 					'description' => 'none',
-					'interface' => false
+					'interface' => false,
+					'interfaceName' => false
 				);
 				$this->name = $name;
 			}
@@ -108,13 +109,12 @@ class Theme {
 
 	public function getConfig () {
 		if(empty($this->config)) {
-			$this->config = parse_ini_file($this->getConfigPath());
-
+			$this->config = (array)json_decode(file_get_contents($this->getConfigPath()));
 			foreach($this->config as $k => $v) {
-				$this->config[$k] = trim($v, "'");
+				$this->config[$k] = $v;
 			}
 			
-			if(array_key_exists('interface', $this->config)) {
+			if(!empty($this->config['interface'])) {
 				if(!file_exists($this->getAbsolutePath().$this->config['interface'])) {
 					die("Interface for ".$this->config['name']." doesn't exist (".$this->getAbsolutePath().$this->config['interface'].")");
 				}
@@ -126,6 +126,16 @@ class Theme {
 			$this->name = $this->config['name'];
 		}
 		return $this->config;
+	}
+
+	public function hasInterfaceName () {
+		$config = $this->getConfig();
+		return !empty($config['interfaceName']);
+	}
+
+	public function getInterfaceName () {
+		$config = $this->getConfig();
+		return $config['interfaceName'];
 	}
 
 	public function getVersion () {

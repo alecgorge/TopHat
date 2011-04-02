@@ -267,14 +267,16 @@ class Admin {
 	 * A wrapper for Admin->registerPage
 	 */
 	public static function registerPage () {
-		return call_user_func_array(array(self::$handle, '_registerPage'), func_get_args());
+		$args = func_get_args();
+		return call_user_func_array(array(self::$handle, '_registerPage'), $args);
 	}
 
 	/**
 	 * A wrapper for Admin->registerSubpage
 	 */
 	public static function registerSubpage () {
-		return call_user_func_array(array(self::$handle, '_registerSubpage'), func_get_args());
+		$args = func_get_args();
+		return call_user_func_array(array(self::$handle, '_registerSubpage'), $args);
 	}
 
 	/**

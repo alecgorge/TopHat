@@ -15,7 +15,7 @@ class Uploader {
 	 * @param string $uploadButtonText The text to display on the upload button. Default is false.
 	 * @param string $uploadifyOptions Options to pass to Uploadify in the form of a PHP associative array. See the options section of this page for details: http://www.uploadify.com/documentation/ .
 	 */
-	public function  __construct($name, $callback, $uploadButtonText = false, $uploadifyOptions = array()) {
+	public function  __construct($name, $callback = false, $uploadButtonText = false, $uploadifyOptions = array()) {
 		$this->name = $name;
 		$this->callback = $callback;
 		$this->id = abs(crc32(microtime(true)));
@@ -38,6 +38,9 @@ class Uploader {
 		$js = <<<EOT
 $(function () {
 	$('#{$this->id}_button').uploadify({$js_options});
+	$('#{$this->id}_upload_box button').click(function () {
+		$('#{$this->id}_button').uploadifyUpload();
+	});
 });
 EOT;
 		queue_js_string($js);
@@ -50,7 +53,7 @@ EOT;
 	 */
 	public function createHTML () {
 		$upload_box = <<<EOT
-<div class="cc_upload_box">
+<div class="cc_upload_box" id="{$this->id}_upload_box">
 	<div class="cc_upload_box_queue" id="{$this->id}_queue"></div>
 	<div class="cc_upload_box_buttons">
 		<button class="cc_upload_button">{$this->text}</button>
@@ -63,8 +66,123 @@ EOT;
 		return $upload_box;
 	}
 
+	public function getID () {
+		return $this->id;
+	}
+
+	public function getName () {
+		return $this->name;
+	}
+
 	public function runCallback () {
-		call_user_func($this->callback, $_FILES[$this->name]);
+		if(is_callable($this->callback)) {
+			call_user_func($this->callback, $_FILES[$this->name]);
+		}
+	}
+}
+
+class UploadHandler {
+	private $post_field;
+	private $callbacks;
+
+	public function __construct($src, $default_callbacks = array()) {
+		if($src instanceof Uploader) {
+			$this->post_field = $src->getName();
+		}
+		elseif(is_string($src)) {
+			$this->post_field = $name;
+		}
+
+		$this->callbacks = (array)$default_callbacks;
+
+		if(array_key_exists($this->post_field, $_FILES)) {
+			Hooks::bind('system_ready', array($this, 'runCallbacks'));
+		}
+	}
+
+	public function addCallback($callback) {
+		$this->callbacks[] = $callbacks;
+	}
+
+	private function runCallbacks() {
+		$data = $_FILES[$this->post_field];
+		foreach((array)$callbacks as $c) {
+			if(is_callable($c)) {
+				call_user_func_array($c, $data);
+			}
+		}
+	}
+}
+
+class DefaultUploadHandler extends UploadHandler {
+	const FILTER_CALLBACK = 2;
+	const ERROR_CALLBACK = 3;
+	const UPLOAD_DIRECTORY = 4;
+	const SUCCESS_CALLBACK = 5;
+	const FINISHED_CALLBACK = 6;
+
+	private $behaviours = array(
+		self::FILTER_CALLBACK => false,
+		self::ERROR_CALLBACK => false,
+		self::SUCCESS_CALLBACK => false
+	);
+
+
+	public function __construct($src, $behaviours) {
+		parent::__construct($src, array(
+			array(
+				$this,
+				'handleUpload'
+			)
+		));
+
+		$this->behaviours[self::UPLOAD_DIRECTORY] = CC_ROOT.CC_UPLOADS;
+
+		$this->behaviours = $this->behaviours + $behaviours;
+
+		$this->addCallback(array($this, 'handleUpload'));
+	}
+
+	public function handleUpload ($files) {
+		foreach((array)$files as $file) {
+			$name = basename($file['name']);
+			$size = $file['size'];
+			$tmpname = $file['tmp_name'];
+			$err = $file['error'];
+
+			if($err === 0) {
+				$file_good = true;
+				if(is_callable($this->behaviours[self::FILTER_CALLBACK])) {
+					$file_good = call_user_func_array($this->behaviours[self::FILTER_CALLBACK], array($name, $size, $this->behaviours));
+				}
+				
+				if($file_good === false) {
+					continue;
+				}
+
+				$destPath = $this->behaviours[self::UPLOAD_DIRECTORY].$name;
+
+				if(is_string($file_good)) {
+					$destPath = $this->behaviours[self::UPLOAD_DIRECTORY].$file_good;
+				}
+
+				// don't use move_uploaded_file becuase this way we can get around the size limit set by hosts
+				// not safemode compatible, but who cares?
+				if(rename($tmpname, $destPath)) {
+					if(is_callable($this->behaviours[self::SUCCESS_CALLBACK])) {
+						call_user_func_array($this->behaviours[self::SUCCESS_CALLBACK], array($destPath));
+					}
+				}
+			}
+			else {
+				if(is_callable($this->behaviours[self::ERROR_CALLBACK])) {
+					call_user_func_array($this->behaviours[self::ERROR_CALLBACK], array($file, $this->behaviours));
+				}
+			}
+		}
+		if(is_callable($this->behaviours[self::FINISHED_CALLBACK])) {
+			call_user_func_array($this->behaviours[self::FINISHED_CALLBACK], array($file, $this->behaviours));
+		}
 	}
 }
 

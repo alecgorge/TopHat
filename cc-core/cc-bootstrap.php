@@ -58,6 +58,8 @@ cc_core_include('cc-i18n.php');
 
 cc_core_include('cc-editors.php');
 
+cc_core_include('cc-users.php');
+
 // setup plugin architecture
 cc_core_include('cc-plugins.php');
 

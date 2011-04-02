@@ -106,11 +106,11 @@ cc_core_include('cc-i18n.php');
 // setup plugin architecture
 cc_core_include('cc-plugins.php');
 
+cc_core_include('cc-users.php');
+
 plugin('system_ready');
 
 cc_core_include('cc-content.php');
-
-cc_core_include('cc-users.php');
 
 plugin('system_after_content_load');
 

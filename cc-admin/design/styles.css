@@ -197,13 +197,15 @@ h2 {
 }
 
 fieldset {
-	border:1px #ddd dashed;
+	border:1px #ddd solid;
 	padding: 5px 10px;
+	-moz-border-radius:7px;
+	-webkit-border-radius:7px;
 	background: white;
 }
 
 legend {
-	color: #bbb;
+	color: #777;
 	padding: 0 5px;
 }
 

@@ -48,12 +48,12 @@ function cc_find_cc_pub_root () {
 	}
 	return $path;
 }
-define('CC_PUB_ROOT', cc_find_cc_pub_root());
+define('CC_PUB_ROOT', trim(cc_find_cc_pub_root(), '/').'/');
 
 /**
  * This is the public path to the current file
  */
-define('CC_PUB', rtrim($_SERVER['REQUEST_URI'], '/').'/');
+define('CC_PUB', trim($_SERVER['REQUEST_URI'], '/').'/');
 
 /**
  * The location of required CanyonCMS files like the bootstrapper. Should contain trailing slash. Default: CC_ROOT.'core/'
@@ -63,12 +63,12 @@ define('CC_CORE', CC_ROOT.'cc-core/');
 /**
  * The public location of the admin panel. If this is changed then the url needed to access the admin panel changes. Should contain trailing slash. Default: CC_PUB_ROOT.'admin/'
  */
-define('CC_PUB_ADMIN', CC_PUB_ROOT.$admin_path);
+define('CC_PUB_ADMIN', trim(CC_PUB_ROOT.$admin_path, '/').'/');
 
 /**
  * The location of the admin panel relative to CC_ROOT. If this is changed then the url needed to access the admin panel changes. Should contain trailing slash. Default: CC_ROOT.'admin/'.
  */
-define('CC_ADMIN', CC_ROOT.$admin_path);
+define('CC_ADMIN', trim(CC_ROOT.$admin_path, '/').'/');
 /**
  * The location of the folder that contains the uploads and themes directory. Should contain trailing slash. Default: CC_ROOT.'content/'
  */

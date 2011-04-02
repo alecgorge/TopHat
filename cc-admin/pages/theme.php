@@ -1,21 +1,33 @@
 <?php
 
 class ThemeInterface {
+	private static $interface;
+
+	public static function register ($c) {
+		self::$interface = $c;
+	}
+
 	public static function sysReady () {
 		if(Themes::getCurrentTheme()->hasInterface()) {
-			Admin::registerPage('theme-settings', __('admin', 'theme-settings'), 'ThemeInterface::displayInterface', 2);
+			if(Themes::getCurrentTheme()->hasInterfaceName()) {
+				$name = Themes::getCurrentTheme()->getInterfaceName();
+			}
+			Admin::registerPage('theme-settings', $name ? $name : __('admin', 'theme-settings'), 'ThemeInterface::displayInterface', 2);
 		}
 	}
 
 	public static function displayInterface () {
-		ob_start();
-
-		include Themes::getCurrentTheme()->getInterface();
-
-		$contents = ob_get_contents();
-		ob_end_clean();
-		return $contents;
+		if(is_callable(self::$interface)) {
+			return call_user_func(self::$interface);
+		}
+		else {
+			return self::$interface;
+		}
 	}
 
 }
-Hooks::bind('system_ready', ThemeInterface::sysReady());
+ThemeInterface::sysReady();
+
+if(Themes::getCurrentTheme()->hasInterface()) {
+	require Themes::getCurrentTheme()->getInterface();
+}
