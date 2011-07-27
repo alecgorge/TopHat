@@ -54,7 +54,7 @@ class Form {
 			$action = $_SERVER['REQUEST_URI'];
 		}
 
-        $str = "\n<form action=\"$action\" method=\"$method\"";
+        $str = "\n<form action=\"$action\" method=\"$method\" class=\"cc-form\"";
 
 		// only add non-null attributes
         if ( !is_null($id) ) {

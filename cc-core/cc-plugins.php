@@ -253,7 +253,7 @@ class Plugin {
 	public function bootstrap ($callback = null) {
 		if($callback === null) {
 			if(is_callable($this->bootstrap)) {
-				Plugins::addBooted(&$this);
+				Plugins::addBooted($this);
 				call_user_func($this->bootstrap);
 			}
 		}
@@ -287,7 +287,7 @@ class Plugin {
 			$this->link = $link;
 		}
 
-		Plugins::add(&$this);
+		Plugins::add($this);
 	}
 
 	/**

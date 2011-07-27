@@ -22,7 +22,7 @@ class Hooks {
 	 * @return bool True if hook is previously unused. False if the hook has been set previously.
 	 */
 	public static function register ($hook) {
-		if(self::hookExists($hook)) {
+		if(!self::hookExists($hook)) {
 			$hooks = &self::getAllHooks();
 			$hooks[] = $hook;
 			return true;
@@ -169,7 +169,7 @@ class Filters extends Hooks {
 	 * @return bool True if hook is previously unused. False if the hook has been set previously.
 	 */
 	public static function register ($hook) {
-		if(self::hookExists($hook)) {
+		if(!self::hookExists($hook)) {
 			$hooks = &self::getAllHooks();
 			$hooks[] = $hook;
 			return true;

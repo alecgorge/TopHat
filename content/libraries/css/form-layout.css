@@ -1,62 +1,67 @@
-fieldset {
+.cc-form fieldset {
 	padding:15px;
 	border:1px #ddd solid;
-	margin-bottom:15px; }
+	margin-bottom:15px; 
+	-moz-border-radius:7px;
+	-webkit-border-radius:7px;
+	border-radius:7px;
+	
+	}
 
-label {
+.cc-form label {
 	width:20%;
 	text-align:right;
 	display:block;
 	float:left;
-	padding:12px 5px;
-	color:#777;
-	font-style:italic; }
+	padding:14px 5px 10px;
+	color:#444;
+ }
 
-input.input-text, select, input.input-password {
+.cc-form input.input-text, .cc-form select, .cc-form input.input-password {
 	padding:3px;
 	border:1px #aaa solid;
 	color:#333;
 	margin:0;
 	-moz-border-radius:4px;
 	-webkit-border-radius:4px;
-	width:250px;
-	background:#f5f5f5; }
+	border-radius:4px;
+	width:250px; }
 
 
-textarea {
+.cc-form textarea {
 	padding:3px;
 	border:1px #aaa solid;
 	color:#333;
 	width:100%;
 	margin:0 0 0 1px; }
 
-input.input-text.hover, select.hover, input.input-text:hover, select:hover, input.input-password:hover {
+.cc-form input.input-text.hover, .cc-form select.hover, .cc-form input.input-text:hover, .cc-form select:hover, .cc-form input.input-password:hover {
 	border-color:#999;
-	background:#e5e5e5; }
+	}
 
-input.input-submit:hover, button.hover { color:#000; }
+.cc-form input.input-submit:hover, .cc-form button.hover { color:#000; }
 
-input.input-submit, button {width: auto;padding:5px 8px;}
+.cc-form input.input-submit, .cc-form button {width: auto;padding:5px 8px;}
 
-input.focus, select.focus, input.text:focus, select:focus {
+.cc-form input.focus, .cc-form select.focus, .cc-form input.text:focus, .cc-form select:focus {
 	border-color:#777;
 	background:white; }
 
-input.input-checkbox {
+.cc-form input.input-checkbox {
 	width:auto;
 	margin:5px 7px; }
 
-.form-row {
+.cc-form .form-row {
 	clear:both;
 	border-bottom:1px #dedede solid; }
 
-	.form-row span {
+	.cc-form .form-row span {
 		padding:10px 5px;
 		display:block;
 		float:left;
 		width:76%; }
 
-.form-row:nth-of-type(1) {
+.cc-form .form-row:nth-of-type(1) {
 	border:0;
 }
 

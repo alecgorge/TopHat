@@ -11,13 +11,15 @@ class URLMap {
 	}
 
 	public static function process () {
-		$url_parts = explode("/", rtrim($_GET['q'], "/")."/");
+		$q = array_key_exists('q', $_GET) ? $_GET['q'] : "";
+
+		$url_parts = explode("/", rtrim($q, "/")."/");
 
 		ksort(self::$map);
 		foreach(self::$map as $weight => $arr) {
 			foreach($arr as $url => $callback) {
 				if($url == "*") {
-					call_user_func($callback, $_GET['q']);
+					call_user_func($callback, $q);
 					return;
 				}
 				$parts = array_remove_empty(explode("/", ltrim($url, "/")));

@@ -313,6 +313,6 @@ else if(extension_loaded('gd')) {
 	Image::$gd = true;
 }
 else {
-	throw new Exception(__('admin', 'no-gd-imagick'));
+	throw new Exception('no-gd-imagick');
 }
 //phpinfo();

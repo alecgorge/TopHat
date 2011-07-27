@@ -1,8 +1,12 @@
 * { margin:0; padding:0; }
 
 body {
-	font:0.7em Helvetica, Arial, sans-serif;
+	font:100% Helvetica, Arial, sans-serif;
 	background: #f3f3f3;
+}
+
+body #header, body #wrapper, body #login-wrapper {
+	font-size:0.75em;
 }
 
 #header {
@@ -196,41 +200,6 @@ h2 {
 	margin-bottom:17px;
 }
 
-fieldset {
-	border:1px #ddd solid;
-	padding: 5px 10px;
-	-moz-border-radius:7px;
-	-webkit-border-radius:7px;
-	background: white;
-}
-
-legend {
-	color: #777;
-	padding: 0 5px;
-}
-
-label {
-	color:#666;
-	font-style: normal;
-	padding:14px 5px;
-	width: 24%;
-}
-
-.form-row span {
-	width: 72%;
-}
-
-select {
-	padding: 2px;
-	width:258px;
-}
-
-input.large {
-	width: 400px;
-	font-size: 1.5em;
-	padding: 4px;
-}
-
 .form-row.textarea label, .form-row.textarea span, .form-row-struct.editor label {
 	width: 98%;
 	float:none;
@@ -242,10 +211,6 @@ input.large {
 .form-row.textarea label {
 	padding: 5px 0 0px 0;
 	font-size: 1.2em;
-}
-
-input.input-password {
-	padding: 2px;
 }
 
 input.input-text, input.input-password, select, textarea {

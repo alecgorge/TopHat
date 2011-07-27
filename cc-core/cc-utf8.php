@@ -227,9 +227,10 @@ class UTF8 {
 	 * @return <type>
 	 */
 	public static function htmlentities($content) {
-		$oUnicodeReplace = new unicode_replace_entities();
+		return $content; //htmlentities($content, ENT_QUOTES, "UTF-8");
+		/*$oUnicodeReplace = new unicode_replace_entities();
 		$content = $oUnicodeReplace->UTF8entities($content);
-		return $content;
+		return $content;*/
 	}
 }
 

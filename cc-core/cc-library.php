@@ -13,10 +13,10 @@ class Library {
 	
 	public static $shelf;
 	
-	public static function load ($library, $overload_importance = null) {
+	public static function doLoad ($library, $overload_importance = null) {
 		if(is_array($library)) {
 			foreach($library as $v) {
-				self::load($v);
+				self::doLoad($v);
 			}
 		}
 		else {
@@ -31,7 +31,7 @@ class Library {
 				$deps = self::$shelf[$library]['depends_on'];
 				if(!empty($deps)) {
 				    foreach($deps as $dep) {
-					self::load($dep, self::$shelf[$library]['importance']);
+					self::doLoad($dep, self::$shelf[$library]['importance']);
 				    }
 				}
 
@@ -65,7 +65,7 @@ class Library {
 			self::$queue[$type] = array();
 		}
 		
-		if(!is_array(self::$queue[$type][$importance])) {
+		if(!array_key_exists($importance, self::$queue[$type]) || !is_array(self::$queue[$type][$importance])) {
 			self::$queue[$type][$importance] = array();
 		}
 		
@@ -73,7 +73,7 @@ class Library {
 	}
 	
 	public static function register ($type, $name, $file, $importance = 0, $depends_on = array()) {
-		if(is_array(self::$shelf[$name])) {
+		if(array_key_exists($name, (array)self::$shelf) && is_array(self::$shelf[$name])) {
 			trigger_error("Library $name already exists!");
 			return;
 		}
@@ -92,14 +92,29 @@ class Library {
 
 			$info = filter('library_library_info', $info);
 
-			$info['js_file'] = (array)$info['js_file'];
-			array_walk($info['js_file'], 'Library::prependPATH', $dir);
+			if(array_key_exists('js_file', $info)) {
+				$info['js_file'] = (array)$info['js_file'];
+				array_walk($info['js_file'], 'Library::prependPATH', $dir);
+			}
+			else {
+				$info['js_file'] = array();
+			}
 
-			$info['css_file'] = (array)$info['css_file'];
-			array_walk($info['css_file'], 'Library::prependPATH', $dir);
+			if(array_key_exists('css_file', $info)) {
+				$info['css_file'] = (array)$info['css_file'];
+				array_walk($info['css_file'], 'Library::prependPATH', $dir);
+			}
+			else {
+				$info['css_file'] = array();
+			}
 
-			$info['php_file'] = (array)$info['php_file'];
-			array_walk($info['php_file'], 'Library::prependPATH', $dir);
+			if(array_key_exists('php_file', $info)) {
+				$info['php_file'] = (array)$info['php_file'];
+				array_walk($info['php_file'], 'Library::prependPATH', $dir);
+			}
+			else {
+				$info['php_file'] = array();
+			}
 
 
 			$info['file'] = array(
@@ -108,7 +123,12 @@ class Library {
 				'php' => $info['php_file']
 			);
 
-			$info['depends_on'] = (array) $info['depends_on'];
+			if(array_key_exists('depends_on', $info)) {
+				$info['depends_on'] = (array)$info['depends_on'];
+			}
+			else {
+				$info['depends_on'] = array();
+			}
 
 			self::register($info['type'], $info['name'], $info['file'], $info['importance'], $info['depends_on']);
 		}
@@ -126,7 +146,7 @@ class JS extends Library {
 		self::queueFile('js-string', $string, $importance);
 	}
 	public static function load () {
-		$sortedFiles = (array)Library::$queue['js'];
+		$sortedFiles = array_key_exists('js', Library::$queue) ? Library::$queue['js'] : array();
 		if(empty($sortedFiles)) {
 			return;
 		}
@@ -165,7 +185,8 @@ class CSS extends Library {
 			return;
 		}
 		ksort($sortedFiles);
-		
+
+		$r = "";
 		foreach($sortedFiles as $imp => $files) {
 			foreach($files as $file) {
 				$r .= sprintf("\n".'<link rel="stylesheet" type="text/css" href="%s" />', $file);
@@ -176,7 +197,7 @@ class CSS extends Library {
 	}
 }
 function load_library ($library) {
-	Library::load($library);
+	Library::doLoad($library);
 }
 function queue_js ($file, $importance = 0) {
 	JS::queue($file, $importance);

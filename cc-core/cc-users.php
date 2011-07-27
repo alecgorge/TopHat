@@ -60,6 +60,8 @@ class Users {
 	 */
 	public static function unpackCookie() {
 		// cookie is in format (# of = at end)(base64 of json uname and password assoc)
+		if(!array_key_exists('ln', $_COOKIE)) return false;
+		
 		$str = gzinflate(base64_decode($_COOKIE['ln']));
 
 		// no sense going further
@@ -106,6 +108,8 @@ class Users {
 	 */
 	public static function checkSession () {
 		// session is in format (# of = at end)|(base64 of json uname and password assoc)
+		if(!array_key_exists('uname', $_SESSION) || !array_key_exists('pword', $_SESSION) || !array_key_exists('last_ip', $_SESSION)) return false;
+
 		$uname = $_SESSION['uname'];
 		$pword = $_SESSION['pword'];
 		$last_ip = $_SESSION['last_ip'];
@@ -154,9 +158,11 @@ class Users {
 
 	public static function refChecks () {
 		// we do not want people have links sent to them that delete pages/users/groups
-		$ref = parse_url($_SERVER['HTTP_REFERER']);
-		if($ref['host'] !== NULL && $ref['host'] !== $_SERVER['HTTP_HOST']) {
-			cc_logout();
+		if(array_key_exists('HTTP_REFERER', $_SERVER)) {
+			$ref = parse_url($_SERVER['HTTP_REFERER']);
+			if($ref['host'] !== NULL && $ref['host'] !== $_SERVER['HTTP_HOST']) {
+				cc_logout();
+			}
 		}
 	}
 
