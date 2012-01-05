@@ -5,7 +5,7 @@ Admin::registerPage('settings', __('admin', 'settings'), 'SettingsPage::display'
 
 class SettingsPage {
 	public static function display () {
-		$r .= sprintf("<h2>%s</h2>", __('admin', 'settings'));
+        $r = "";
 		if($_POST['cc_form'] == 'settings') {
 			$name_lookup = array();
 
@@ -95,6 +95,6 @@ class SettingsPage {
 			$form->addSubmit('', 'save-settings', __('admin', 'save'));
 		$form->endFieldset();
 
-		return $r.$form->endAndGetHTML();
+		return array(__('admin', 'settings'), $r.$form->endAndGetHTML());
 	}
 }

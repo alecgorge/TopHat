@@ -38,12 +38,12 @@ class PluginAdminPage {
 
 		$arr = array();
 
-		$r .= sprintf("<h2>%s</h2>
+		$r = sprintf("
 			<table id='plugins-table' cellspacing='0' cellpadding='0'>
 				<thead>
 					<th>%s</th><th>%s</th><th class='en-di-col'> </th>
 				</thead>
-				<tbody>", __('admin', 'plugins'), __('admin', 'plugin-name'), __('admin', 'plugin-desc'));
+				<tbody>", __('admin', 'plugin-name'), __('admin', 'plugin-desc'));
 
 		foreach(Plugins::getBootedInfo() as $val) {
 			$arr[] = array(array($val['name'], $val['dir'], $val['name'], $val['desc'], $val['author'], $val['version']), true);
@@ -76,7 +76,7 @@ class PluginAdminPage {
 		}
 		$r .= "</tbody></table>";
 
-		return $r;
+		return array(__('admin', 'plugins'),$r);
 	}
 	public static function getMore () {
 		return sprintf("<a href='%s' class='action'>%s%s</a>", 'http://canyoncms.com/plugins/', icon('plugin_add'), __('admin', 'get-more-plugins'));

@@ -2,7 +2,7 @@
 
 Admin::registerSubpage('content', 'edit-page', __('admin', 'edit-page'), 'EditPage::display');
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::viewAll', -10);
-//AdminSidebar::registerForPage('content/edit-page', 'EditPage::fileUploadBlock');
+AdminSidebar::registerForPage('content/edit-page', 'EditPage::fileUploadBlock');
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::viewPage', -10);
 AdminSidebar::registerForPage('content/edit-page', 'EditPage::pageInfoBlock', -1);
 
@@ -26,7 +26,7 @@ class EditPage {
 		    i18n::restore();
 			cc_redirect(Admin::link('content'));
 
-			return $r;
+			return array('Error', $r);
 		}
 
 		$pageInfo = Database::select('content', '*', array('content_id = ?', $id));
@@ -89,9 +89,9 @@ EOT;
 
 		$r .= sprintf("<h3>%s</h3>%s%s", __('upload-files'), sprintf($uploadedFiles, __('uploaded-files'), $files), $uploader->createHTML());
 
-		return $r;
+        i18n::restore();
 
-		i18n::restore();
+		return $r;
 	}
 
 	public static function handleUpload ($file) {

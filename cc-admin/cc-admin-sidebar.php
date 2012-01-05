@@ -71,6 +71,15 @@ class AdminSidebar {
 		$r = self::get();
 		echo $r;
 	}
+
+    /**
+     *
+     * @static
+     * @return int The number of registered sidebar items for the current page.
+     */
+    public static function count () {
+        return count(self::$registered);
+    }
 }
 
 ?>

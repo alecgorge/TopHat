@@ -23,15 +23,15 @@ class Form {
 	 *
 	 * @param string $name The legend for the fieldset.
 	 */
-	public function startFieldset($name) {
-		$this->form .= "\n<fieldset>\n\t<legend>$name</legend>\n";
+	public function startFieldset($name, $attr_ar = array()) {
+		$this->form .= "\n<fieldset ". $this->addAttributes( $attr_ar ) . ">\n\t<h4 class=\"fieldset-legend\">$name</h4>\n\t<div class=\"fieldset-gutter\">\n";
 	}
 
 	/**
 	 * Closes a field set.
 	 */
 	public function endFieldset() {
-		$this->form .= "\n</fieldset>";
+		$this->form .= "\n\t</div>\n</fieldset>";
 	}
 
 	/**
@@ -136,7 +136,7 @@ class Form {
 	 * @return boolean True.
 	 */
     public function addInput($label, $type, $name, $value = '', $attr_ar = array() ) {
-		$this->addLabelFor($name, $label);
+		$this->addLabelFor($name, $label, array('class' => 'for-'.$type));
 
 		if(is_array($attr_ar) && array_key_exists('class', $attr_ar)) {
 			$attr_ar['class'] .= " input-$type";
@@ -145,11 +145,11 @@ class Form {
 			$attr_ar['class'] .= "input-$type";
 		}
 
-        $str = "\n<span><input type=\"$type\" name=\"$name\" value=\"$value\"";
+        $str = "\n<input type=\"$type\" name=\"$name\" id=\"$name\" value=\"$value\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
-        $str .= " /></span>\n</div>";
+        $str .= " />\n</div>";
 
 		$this->form .= $str;
 		return true;
@@ -172,11 +172,11 @@ class Form {
 			$value = $label;
 		}
 
-        $str = "\n<div class='form-row form-row-last'>\n<label for=\"$name\">$label</label>"."\n<span><input type=\"$type\" name=\"$name\" class='input-submit' value=\"$value\"";
+        $str = "\n<div class='form-row form-row-last'>\n<label for=\"$name\">$label</label>"."\n<input type=\"$type\" name=\"$name\" class='input-submit' value=\"$value\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
-        $str .= " /></span>\n</div>";
+        $str .= " />\n</div>";
 
 		$this->form .= $str;
 		return true;
@@ -196,11 +196,11 @@ class Form {
 	 */
     public function addTextarea($label, $name, $rows = 4, $cols = 30, $value = '', $attr_ar = array() ) {
 		$this->addLabelFor($name, $label, array('class' => 'textarea'));
-        $str = "\n<span><textarea name=\"$name\" rows=\"$rows\" cols=\"$cols\"";
+        $str = "\n<textarea name=\"$name\" rows=\"$rows\" cols=\"$cols\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
-        $str .= ">$value</textarea></span>\n</div>";
+        $str .= ">$value</textarea>\n</div>";
 
 		$this->form .= $str;
 		return true;
@@ -224,14 +224,7 @@ EOT;
 
     // for attribute refers to id of associated form element
     public function addLabelFor($forID, $text, $attr_ar = array() ) {
-		$attr_ar['class'] .= ' form-row';
-
-        $str = "\n<div ";
-        if ($attr_ar) {
-            $str .= $this->addAttributes( $attr_ar) ;
-        }
-
-		$str .= ">\n<label for=\"{$forID}\"";
+        $str = "\n<div " . $this->addAttributes(array('class' => 'form-row')) . ">\n<label for=\"{$forID}\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
@@ -255,7 +248,7 @@ EOT;
     public function addSelectList($label, $name, $option_list, $bVal = true, $selected_value = NULL, $header = NULL, $attr_ar = array() ) {
 		$this->addLabelFor($name, $label);
 
-        $str = "\n<span><select name=\"$name\"";
+        $str = "\n<select name=\"$name\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
@@ -270,7 +263,7 @@ EOT;
             }
             $str .= ">$text</option>\n";
         }
-        $str .= "</select></span>\n</div>";
+        $str .= "</select>\n</div>";
 
 		$this->form .= $str;
 		return true;

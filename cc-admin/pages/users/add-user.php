@@ -4,6 +4,7 @@ Admin::registerSubpage('users', 'add-user', __('admin', 'add-user'), 'AddUserPag
 
 class AddUserPage {
 	public static function display () {
+        $messages = "";
 		if($_POST['cc_form'] === 'add-user') {
 			$username = $_POST['username'];
 			$password = $_POST['password'];
@@ -36,7 +37,6 @@ class AddUserPage {
 			}
 		}
 
-		$r = sprintf("<h2>%s</h2>\n",__('admin', 'add-user'));
 		$form = new Form('self', 'post', 'add-user');
 
 		$groups = Users::allGroups();
@@ -60,7 +60,7 @@ class AddUserPage {
 
 		$form = $form->endAndGetHTML();
 
-		return $r.$messages.$form;
+		return array(__('admin', 'add-user'), $messages.$form);
 	}
 	public static function get ($x) {
 	    if(array_key_exists($x, $_POST)) return $_POST[$x];

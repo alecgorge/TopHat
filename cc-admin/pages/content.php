@@ -51,8 +51,7 @@ class ContentPage {
 		$delete_link = '"<a href=\"'.Admin::link('content/delete-page').'&id=%3$s\" class=\"delete-page-link\">'.__('admin', 'delete-page').'</a>"';
 		$delete_link2 = '"<a href=\"'.Admin::link('content/delete-page').'&id=%4$s\" class=\"delete-page-link\">'.__('admin', 'delete-page').'</a>"';
 
-		$r .= "<h2>".__("admin", "content-management")."</h2>";
-		$r .= "<p class='page-intro'>".__('admin', 'content-intro')."</p>\n<div id='outbox'></div><div id='tree'></div>";
+		$r = "<p class='page-intro'>".__('admin', 'content-intro')."</p>\n<div id='outbox'></div><div id='tree'></div>";
 
 		$count = Content::countNavItems();
 
@@ -117,7 +116,7 @@ EOT
 	   	//print_r(json_decode($json_nav));
 		//echo("<pre>".."</pre>");
 
-		return $r;
+		return array(__("admin", "content-management"), $r);
    	}
 
 	public static function createContent () {

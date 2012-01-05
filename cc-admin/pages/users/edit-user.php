@@ -11,9 +11,10 @@ class EditUserPage {
 		    i18n::restore();
 			cc_redirect(Admin::link('users'));
 
-			return $r;
+			return 'redirected.';
 		}
-		
+
+        $messages = "";
 		if($_POST['cc_form'] === 'edit-user') {
 			$username = $_POST['name'];
 			$password = $_POST['password'];
@@ -78,7 +79,6 @@ class EditUserPage {
 
 		self::$row = $result->fetch(PDO::FETCH_ASSOC);
 
-		$r = sprintf("<h2>%s</h2>\n",__('admin', 'edit-user'));
 		$form = new Form('self', 'post', 'edit-user');
 
 		$groups = Users::allGroups();
@@ -102,7 +102,7 @@ class EditUserPage {
 
 		$form = $form->endAndGetHTML();
 
-		return $r.$messages.$form;
+		return array(sprintf("%s: %s", __('admin', 'edit-user'), self::get('name')), $messages.$form);
 	}
 	public static function get ($x) {
 	    if(array_key_exists($x, $_POST)) return $_POST[$x];

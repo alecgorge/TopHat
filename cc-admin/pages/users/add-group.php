@@ -4,6 +4,7 @@ Admin::registerSubpage('users', 'add-group', __('admin', 'add-group'), 'AddGroup
 
 class AddGroupPage {
 	public static function display () {
+        $messages = "";
 		if($_POST['cc_form'] === 'add-group') {
 			$group = $_POST['group'];
 
@@ -29,7 +30,6 @@ class AddGroupPage {
 			}
 		}
 
-		$r = sprintf("<h2>%s</h2>\n",__('admin', 'add-group'));
 		$form = new Form('self', 'post', 'add-group');
 
 		$form->startFieldset(__("admin", 'group-information'));
@@ -52,7 +52,7 @@ class AddGroupPage {
 
 		$form = $form->endAndGetHTML();
 
-		return $r.$messages.$form;
+		return array(__('admin', 'add-group'), $messages.$form);
 	}
 	public static function get ($x) {
 	    if(array_key_exists($x, $_POST)) return $_POST[$x];

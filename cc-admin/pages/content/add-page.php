@@ -21,7 +21,7 @@ class CreatePage {
 			$form->addSelectList(__('admin', 'content-type'), 'type', $opt_list, true, 'page');
 			$form->addSubmit('', 'continue', __('admin', 'continue'));
 
-			return $form->endAndGetHTML();
+			return array(__('admin', 'add-page'), $form->endAndGetHTML());
 		}
 		else {
 			if($_POST['continue'] == __('admin', 'continue')) {

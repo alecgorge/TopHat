@@ -123,6 +123,7 @@ class ExternalLinkNodeType extends NodeType implements NodeActions {
 	public static function create_display() {
 	    i18n::set('external-link-nodetype');
 
+        $message = "";
 	    if($_POST['cc_form'] == 'create_external_link') {
 			$id				= $_GET['id'];
 			$weight			= self::get('weight');
@@ -158,7 +159,7 @@ class ExternalLinkNodeType extends NodeType implements NodeActions {
 			}
 	    }
 
-	    $r .= sprintf("<h2>%s</h2>%s", __('create-external-link'), $message);
+	    $r = $message;
 
 		$form = new Form('self', 'post', 'create_external_link');
 
@@ -171,7 +172,7 @@ class ExternalLinkNodeType extends NodeType implements NodeActions {
 
 		i18n::restore();
 
-		return $r.$form->endAndGetHTML();
+		return array(__('external-link-nodetype', 'create-external-link'), $form->endAndGetHTML());
 
 	}
 }

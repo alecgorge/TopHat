@@ -50,11 +50,12 @@ class i18n {
 	 * This will take the locale and attempt to load a translation from CC_TRANSLATIONS with the same name. If none is found en_US is loaded.
 	 */
 	private function loadValid () {
-		$include = CC_ROOT.CC_TRANSLATIONS.$this->getLocale().'.php';
-		if(!file_exists($include)) {
-			$include = CC_ROOT.CC_TRANSLATIONS.'en_US.php';
+		foreach(glob(CC_ROOT.CC_TRANSLATIONS.'*.php') as $include) {
+			if(!file_exists($include)) {
+				$include = CC_ROOT.CC_TRANSLATIONS.'en_US.php';
+			}
+			require_once $include;
 		}
-		require_once $include;
 	}
 
 	/**
@@ -96,13 +97,17 @@ class i18n {
 
 		//var_dump(func_get_args());
 		if(!array_key_exists($key, (array)$this->translations[$locale][$section])) {
+			if($local != 'en_US') {
+				return $this->translateFromKey($section, $key, 'en_US');
+			}
 			trigger_error("'$key' doesn't exist in the translation for '$locale' in the section '$section'.");
 			return null;
 		}
 
 		
 		if(func_num_args() > 3 || (func_num_args() > 2 && $locale === 'DEFAULT')) {
-			return filter('translated_value', call_user_func_array('sprintf', array_merge(array($this->translations[$locale][$section][$key]), array_slice(func_get_args(), 3))));
+			$args = func_get_args();
+			return filter('translated_value', call_user_func_array('sprintf', array_merge(array($this->translations[$locale][$section][$key]), array_slice($args, 3))));
 		}
 
 		return filter('translated_value', $this->translations[$locale][$section][$key]);

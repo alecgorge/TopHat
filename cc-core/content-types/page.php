@@ -99,34 +99,29 @@ class PageNode extends NodeType implements NodeActions {
 			//Hooks::bind('post_edit_page', 'EditPage::handlePost');
 	    }
 
-	    $r .= sprintf("<h2>%s</h2>%s", __('edit-page'), $message);
+	    $r = $message;
 
-		//var_dump(self::$row);
-		$themeList = Themes::getThemeList();
-		foreach($themeList as $k=>$v) {
-			$tl[$k] = $v['name'];
-		}
+		$tl = $themeList = array_subkeys(Themes::getThemeList(), 'name');
 		$tl['-1'] = 'Default Theme';
 		ksort($tl);
-
 
 		$form = new Form('self', 'post', 'edit_page');
 
 		$form->addHidden('settings', serialize(self::get('settings')));
 
-		$form->startFieldset(__('page-info'));
+		$form->startFieldset(__('page-info'), array('id' => 'page_info_f'));
 			$form->addInput(__('page-title'), 'text', 'title', self::get('title'), array('class' => 'large'));
 			$form->addHidden('content_type', self::get('type'));
 			$form->addSelectList(__('theme-override'), 'theme', $tl, true, self::get('theme'));
 			$form->addSelectList(__('parent'), 'parent_id', self::buildParentOptions(), true, self::get('parent_id'));
-			$form->addInput(__('weight'), 'text', 'weight', self::get('weight'));
 		$form->endFieldset();
 
 		plugin('admin_edit_custom_fields', array(&$form));
 
-		$form->startFieldset(__('menu-settings'));
+		$form->startFieldset(__('menu-settings'), array('id' => 'menu_settings_f'));
 			$form->addInput(__('menu-title'), 'text', 'menutitle', self::get('menutitle'));
 			$form->addInput(__('slug'), 'text', 'slug', self::get('slug'));
+            $form->addInput(__('weight'), 'text', 'weight', self::get('weight'));
 		$form->endFieldset();
 
 		plugin('admin_edit_custom_fields2', array(&$form));
@@ -141,9 +136,11 @@ class PageNode extends NodeType implements NodeActions {
 			$form->addSubmit('', 'save', __('save'));
 		$form->endFieldset();
 
+        $page_title = __('edit-page');
+
 		i18n::restore();
 
-		return $r.$form->endAndGetHTML();
+		return array($page_title, $r.$form->endAndGetHTML());
 	}
 
 	public static function create_display() {
@@ -193,49 +190,47 @@ class PageNode extends NodeType implements NodeActions {
 			//Hooks::bind('post_edit_page', 'EditPage::handlePost');
 	    }
 
-	    $r .= sprintf("<h2>%s</h2>%s", __('add-page'), $message);
+	    $r = $message;
 
-		$themeList = Themes::getThemeList();
+		$themeList = array_subkeys(Themes::getThemeList(), 'name');
 		$themeList['-1'] = 'Default Theme';
 		ksort($themeList);
-
-
-		//echo "<pre>"; var_dump(self::buildParentOptions(1)); echo "</pre>";
 
 		$form = new Form('self', 'post', 'create_page');
 
 		$form->addHidden('settings', 'a:0:{}');
 
-		$form->startFieldset(__('page-info'));
+        $form->startFieldset(__('page-info'), array('id' => 'page_info_f'));
 			$form->addInput(__('page-title'), 'text', 'title', self::get('title'), array('class' => 'large'));
 			$form->addHidden('content_type', self::get('type'));
 			$form->addSelectList(__('theme-override'), 'theme', $themeList);
 			$form->addSelectList(__('parent'), 'parent_id', self::buildParentOptions(),true,  $_POST['parent_id'] ? $_POST['parent_id'] : '0');
-			$form->addInput(__('weight'), 'text', 'weight',  $_POST['weight'] ? $_POST['weight'] : '0');
 		$form->endFieldset();
 
 		plugin('admin_create_custom_fields', array(&$form));
 
-		$form->startFieldset(__('menu-settings'));
+        $form->startFieldset(__('menu-settings'), array('id' => 'menu_settings_f'));
 			$form->addInput(__('menu-title'), 'text', 'menutitle', self::get('menutitle'));
 			$form->addInput(__('slug'), 'text', 'slug', self::get('slug'));
+            $form->addInput(__('weight'), 'text', 'weight',  $_POST['weight'] ? $_POST['weight'] : '0');
 		$form->endFieldset();
 
 		plugin('admin_create_custom_fields2', array(&$form));
 
 		$form->startFieldset(__('content'));
-			$form->addEditor('', 'content_area', self::get('content_area'));
+			$content = self::get('content_area');
+			$form->addEditor('<p></p>', 'content_area', empty($content) ? "<p></p>" : $content);
 		$form->endFieldset();
 
 		plugin('admin_create_custom_fields3', array(&$form));
 
 		$form->startFieldset(__('save'));
-			$form->addSubmit(__('save'), 'save');
+			$form->addSubmit('', 'save',__('save'));
 		$form->endFieldset();
 
 		i18n::restore();
 
-		return $r.$form->endAndGetHTML();
+		return array(__('admin', 'add-page'), $r.$form->endAndGetHTML());
 
 	}
 }

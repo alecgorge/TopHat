@@ -124,6 +124,7 @@ i18n::register('en_US', 'admin', array(
 	'uploaded-files' => 'Uploaded Files',
 	'is-not-writable' => 'is not writable!',
 	'no-gd-imagick' => 'Neither GD or Imagick is installed!',
-	'remember-me' => 'Remember me'
+	'remember-me' => 'Remember me',
+    'actions' => 'Actions'
 ));
 ?>

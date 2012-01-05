@@ -23,7 +23,7 @@ $(function () {
 		var conf = confirm('Are you sure you want to delete this page and all of its children?');
 		if(conf) {
 			var self = $(this);
-			$('#status').text('Processing...').load(self.attr('href'), function() {
+			$('#status').text('Processing...').show().load(self.attr('href'), function() {
 				self.parent().parent().parent().slideUp(function () {
 					self.remove();
 				});
@@ -159,7 +159,7 @@ $(function () {
 		// remove all these words from the string before urlifying
 		s = downcode(s);
 		// if downcode doesn't hit, the char will be stripped here
-		s = s.replace(/[^-\w\s]/g, '');  // remove unneeded chars
+		s = s.replace(/[^-\w\s]/g, '-');  // remove unneeded chars
 		s = s.replace(/^\s+|\s+$/g, ''); // trim leading/trailing spaces
 		s = s.replace(/[-\s]+/g, '-');   // convert spaces to hyphens
 		s = s.toLowerCase();             // convert to lowercase
@@ -167,14 +167,16 @@ $(function () {
 		return s;// trim to first num_chars chars
 	}
 
-	var $obj = $("form input[name=slug]");
-	$('form input[name=menutitle]').keyup(function () {
-		$obj.val(URLify($(this).val()));
-	});
+    var $obj = $("form input[name=slug]")
+        , $menutitle = $("form input[name=menutitle]")
+        , $title = $("form input[name=title]");
+   	$menutitle.keyup(function () {
+   		$obj.val(URLify($(this).val()));
+   	});
 
 	$('td.actions a.delete-link').click(function () {
 		var self = $(this);
-		$('#status').text('Processing...').load($(this).attr('href'), function () {
+		$('#status').text('Processing...').show().load($(this).attr('href'), function () {
 			self.parents('tr').slideUp().remove();
 		});
 

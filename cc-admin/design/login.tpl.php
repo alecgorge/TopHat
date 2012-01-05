@@ -11,7 +11,7 @@
 		load_js();
 		?>
 	</head>
-	<body>
+	<body class="login">
 		<div id="login-wrapper">
 			<h2><?php _e('login_cc'); ?></h2>
 			<?php

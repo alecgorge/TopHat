@@ -61,7 +61,7 @@ class Admin {
 		return self::$content;
 	}
 
-	public static function title () {
+	public static function pageTitle () {
 		$current = self::$handle->getCurrentItem();
 		return $current['title'];
 	}
@@ -137,11 +137,11 @@ class Admin {
 					$sub_title = $sub_content['title'];
 					$sub_callback = $sub_content['callback'];
 
-					$sub_html .= sprintf("\t\t\t<li class='%s'><a href='%s' title='Admin Page: %s'>%3\$s</a></li>\n", (self::isPage($slug.'/'.$sub_slug) ? ' current' : ''), $this->makeUrl($slug.'/'.$sub_slug), $sub_title);
+					$sub_html .= sprintf("\t\t\t<li class='%s'><a href='%s'>%3\$s</a></li>\n", (self::isPage($slug.'/'.$sub_slug) ? ' current' : ''), $this->makeUrl($slug.'/'.$sub_slug), $sub_title);
 				}
 				$sub_html .= "\t\t</ul>";
 			}
-			$html .= sprintf("\n\t<li%s><a href='%s' title='Admin Page: %s'>%s</a>%s\n\t</li>", (self::isPage($slug) ? ' class="current"' : ''), $this->makeUrl($slug), $title, $title, $sub_html);
+			$html .= sprintf("\n\t<li%s><a href='%s'>%s</a>%s\n\t</li>", (self::isPage($slug) ? ' class="current"' : ''), $this->makeUrl($slug), $title, $sub_html);
 			unset($sub_html);
 
        	}
@@ -150,6 +150,10 @@ class Admin {
 
 		return $html;
 	}
+
+    public static function bodyClasses() {
+        if(AdminSidebar::count() == 0) return "no-sidebar";
+    }
 
 	public function makeUrl ($slug) {
 		return filter('admin-makeurl', CC_PUB_ADMIN.'?page='.$slug);

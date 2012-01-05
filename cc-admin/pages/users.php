@@ -7,8 +7,6 @@ AdminSidebar::registerForPage(array('users','users/add-group', 'users/edit-group
 
 class UsersPage {
 	public static function display () {
-		$r .= sprintf("<h2>%s</h2>", __('admin', 'user-management'));
-
 		$users = Database::select('users', '*', array('type = ?', 'user'), array('name', 'ASC'));
 		$groups = Database::select('users', '*', array('type = ?', 'group'), array('name', 'ASC'));
 		$groups_array = array();
@@ -35,9 +33,9 @@ class UsersPage {
 					.icon('user_delete', Admin::link('users/delete', array('id' => $value['users_id'], 'type' => 'user')), false, array('class' => 'delete-link')),
 			));
 		}
-		$r .= "<h3>".__('admin', 'users')."</h3>".$users_table->html()."<h3>".__('admin', 'groups')."</h3>".$groups_table;
+		$r = "<h3>".__('admin', 'users')."</h3>".$users_table->html()."<h3>".__('admin', 'groups')."</h3>".$groups_table;
 
-		return $r;
+		return array(__('admin', 'user-management'), $r);
 	}
 
 	public static function addUser () {

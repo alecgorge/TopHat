@@ -57,6 +57,6 @@ class GroupPage {
 		$p_form->addHTML($p_table->html());
 		$p_form->addHTML(sprintf('<input type="submit" name="%s" value="%s" class="input-submit"/>', 'save-permissions', __('admin', 'save-changes')));
 
-		return sprintf('<h2>%s: %s</h2>%s', __('admin', 'edit-group'), $g->getName(), $message).$p_form->html();
+		return array(sprintf('%s: %s', __('admin', 'edit-group'), $g->getName()), $message.$p_form->html());
 	}
 }

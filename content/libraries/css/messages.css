@@ -1,9 +1,7 @@
 .message {
 	margin: 7px 0 14px;
-	border: 1px transparent solid;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
+    border:0;
+	border-bottom: 3px transparent solid;
 }
 .message p {
 	padding:10px;

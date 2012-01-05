@@ -1,20 +1,33 @@
 .cc-form fieldset {
-	padding:15px;
-	border:1px #ddd solid;
-	margin-bottom:15px; 
-	-moz-border-radius:7px;
-	-webkit-border-radius:7px;
-	border-radius:7px;
-	
-	}
+	padding:0;
+    background:#f9f9f9;
+    border:0;
+	border-bottom:3px #ddd solid;
+	margin-bottom:15px;
+    clear:both;
+}
+
+.cc-form h4.fieldset-legend {
+    background: #666;
+    color:white;
+    padding:7px 15px;
+}
+
+.cc-form .fieldset-gutter {
+    padding:15px;
+}
+
+.cc-form legend {
+    padding: 4px;
+    display: block;
+    margin-top:-10px;
+}
 
 .cc-form label {
-	width:20%;
-	text-align:right;
 	display:block;
-	float:left;
-	padding:14px 5px 10px;
-	color:#444;
+	color:#222;
+    margin: 0;
+    padding: 0 0 5px;
  }
 
 .cc-form input.input-text, .cc-form select, .cc-form input.input-password {
@@ -22,10 +35,14 @@
 	border:1px #aaa solid;
 	color:#333;
 	margin:0;
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	border-radius:4px;
-	width:250px; }
+	min-width:250px;
+    max-width: 30%;
+    min-height: 18px;
+}
+
+.cc-form label.for-checkbox {
+    display:inline;
+}
 
 
 .cc-form textarea {
@@ -49,20 +66,21 @@
 
 .cc-form input.input-checkbox {
 	width:auto;
-	margin:5px 7px; }
+	margin:0 7px;
+    position: relative;
+    top: 3px;
+}
 
 .cc-form .form-row {
 	clear:both;
-	border-bottom:1px #dedede solid; }
-
-	.cc-form .form-row span {
-		padding:10px 5px;
-		display:block;
-		float:left;
-		width:76%; }
+    padding-top: 15px;
+    margin-top: 15px;
+	border-top:1px #ccc solid; }
 
 .cc-form .form-row:nth-of-type(1) {
 	border:0;
+    margin: 0;
+    padding: 0;
 }
 
 .cke_dialog label {width:auto;text-align:left;float: none;display:inline;}
