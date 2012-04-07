@@ -1,0 +1,148 @@
+body {
+	font: 79%/175% "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color:#444;
+	padding:0;
+	margin:0;
+	background:#F2F299 url('res/img/header-bg.png') repeat-x top left;
+}
+
+#wrapper {
+	width:982px;
+	margin:auto;
+}
+
+#wrapper #header h1 {
+	width:793px;
+	height:163px;
+	margin:auto;
+	text-indent:-999em;
+	background:transparent url('res/img/logo.png') no-repeat top left;
+}
+
+#navigation {
+	min-height:73px;
+	background:transparent url('res/img/nav-bg.png') no-repeat top center;
+}
+
+#navigation #ul-navigation {
+	margin:0;
+	padding:0 22px;
+	list-style:none;
+}
+
+#navigation #ul-navigation li {
+	display:inline;
+	position:relative;
+	float:left;
+}
+
+#navigation #ul-navigation li a {
+	display:block;
+	float:left;
+	padding:30px 30px 20px 30px;
+	font-size:150%;
+	color:#333;
+	text-decoration:none;
+	height:23px;
+}
+
+#navigation #ul-navigation li a:hover, #navigation #ul-navigation li.selected a, #navigation #ul-navigation li:hover a {
+	background:transparent url('res/img/navhover-bg.png') repeat-x top left;
+	color:white;
+}
+
+#navigation #ul-navigation .ul-sub-navigation {
+	position:absolute;
+	z-index:999;
+	top:71px;
+	left:0;
+	margin:0;
+	padding:0;
+	width:200px;
+	display:none;
+}
+
+#navigation #ul-navigation li:hover .ul-sub-navigation {
+	display:block;
+}
+
+#navigation #ul-navigation .ul-sub-navigation li {
+	display:bllock;
+	float:none;
+}
+
+#navigation #ul-navigation .ul-sub-navigation li a {
+	display:block;
+	float:none;
+	padding:10px 0 10px 30px;
+	font-size:120%;
+	background:#545454;
+}
+
+#navigation #ul-navigation .ul-sub-navigation li a:hover {
+	background:#333;
+}
+
+#content {
+	background:transparent url('res/img/content-bg.png') repeat-y top center;
+	padding:0 11px;
+}
+
+#content .gutter {
+	padding:25px 20px;
+	padding-bottom:0;
+}
+
+#content .gutter *:first-child {
+	margin-top:0;
+	padding-top:0;
+}
+
+#content h2 {
+	font-size:300%;
+	font-weight:normal;
+	letter-spacing:-1px;
+	margin-bottom:0;
+	padding-bottom:25px;
+}
+
+#footer {
+	background:transparent url('res/img/footer-bg.png') no-repeat bottom center;
+	color:gray;
+	text-align:right;
+}
+
+#footer .gutter {
+	padding:0px 30px 30px;
+}
+
+#footer .gutter *:last-child {
+	margin-bottom:0;
+	padding-bottom:0;
+}
+
+p {
+	margin:0;
+	padding:7px 0;
+}
+
+.clear {
+	clear:both;
+}
+
+
+img {
+	margin: 10px;
+}
+
+img.float-left {
+	margin-left: 0;
+}
+
+img.float-right {
+	margin-right: 0;
+}
+
+img.no-top-margin {
+	margin-top:0;
+}

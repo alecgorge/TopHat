@@ -50,13 +50,10 @@ class AddUserPage {
 			$form->addInput(__('admin', 'confirm-password'), 'password', 'confirm-password');
 			$form->addSelectList(__('admin', 'group'), 'group', $groups, true, self::get('group'));
 			plugin('admin_add_user_custom_fields', array(&$form));
+			$form->addSubmit('', 'add-user', __('admin', 'add-user'));
 		$form->endFieldset();
 
 		plugin('admin_add_user_custom_fieldset', array(&$form));
-
-		$form->startFieldset(__('admin', 'save'));
-			$form->addSubmit('', 'add-user', __('admin', 'add-user'));
-		$form->endFieldset();
 
 		$form = $form->endAndGetHTML();
 

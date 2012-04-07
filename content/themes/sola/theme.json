@@ -1,0 +1,8 @@
+{
+	"name"			: "Sol Na Baia",
+	"version"		: "1.4",
+	"description"	: "Blue, yellow and white.",
+	"author"		: "Ramblingwood",
+	"interface"		: false,
+	"interfaceName"	: "Photos"
+}

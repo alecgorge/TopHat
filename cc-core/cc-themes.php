@@ -15,7 +15,7 @@ class Themes {
 	}
 
 	private static function checkThemes () {
-		$g = glob(CC_ROOT.CC_THEMES.'*/theme.json');
+		$g = glob(TH_ROOT.TH_THEMES.'*/theme.json');
 		foreach($g as $v) {
 		    $parts = explode('/', str_replace('\\', '/', $v));
 			$ini = (array)json_decode(file_get_contents($v));
@@ -69,9 +69,9 @@ class Theme {
 		$this->folder = $name;
 
 		if($this->validate()) {
-			$this->config_path = '/'.ltrim(CC_ROOT.CC_THEMES.$this->getFolderName().'/theme.json', '/');
-			$this->absolute_path = '/'.ltrim(CC_ROOT.CC_THEMES.$this->getFolderName().'/', '/');
-			$this->public_path = '/'.ltrim(CC_PUB_ROOT.CC_THEMES.$this->getFolderName().'/', '/');
+			$this->config_path = '/'.ltrim(TH_ROOT.TH_THEMES.$this->getFolderName().'/theme.json', '/');
+			$this->absolute_path = '/'.ltrim(TH_ROOT.TH_THEMES.$this->getFolderName().'/', '/');
+			$this->public_path = '/'.ltrim(TH_PUB_ROOT.TH_THEMES.$this->getFolderName().'/', '/');
 			if($this->hasConfig()) {
 				$this->getConfig();
 			}
@@ -90,7 +90,7 @@ class Theme {
 	}
 
 	public function validate () {
-		if(is_dir(CC_ROOT.CC_THEMES.$this->getFolderName().'/') && file_exists(CC_ROOT.CC_THEMES.$this->getFolderName().'/index.tpl.php')) {
+		if(is_dir(TH_ROOT.TH_THEMES.$this->getFolderName().'/') && file_exists(TH_ROOT.TH_THEMES.$this->getFolderName().'/index.tpl.php')) {
 			return true;
 		}
 		else {

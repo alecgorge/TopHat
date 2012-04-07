@@ -61,12 +61,12 @@ class Tokens {
 	public static function registerDefaults () {
 		Tokens::register(array(
 			"theme_dir" => Themes::$curr_theme->getPublicPath(),
-			"public_root" => CC_PUB_ROOT,
-			"root" => CC_ROOT,
-			"public_content_dir" => CC_PUB_ROOT.CC_CONTENT,
-			"content_dir" => CC_ROOT.CC_CONTENT,
-			"uploads_dir" => CC_ROOT.CC_UPLOADS,
-			"public_uploads_dir" => CC_PUB_ROOT.CC_UPLOADS
+			"public_root" => TH_PUB_ROOT,
+			"root" => TH_ROOT,
+			"public_content_dir" => TH_PUB_ROOT.TH_CONTENT,
+			"content_dir" => TH_ROOT.TH_CONTENT,
+			"uploads_dir" => TH_ROOT.TH_UPLOADS,
+			"public_uploads_dir" => TH_PUB_ROOT.TH_UPLOADS
 		));
 	}
 

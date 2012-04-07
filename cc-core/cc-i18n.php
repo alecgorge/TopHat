@@ -28,7 +28,7 @@ class i18n {
 	/**
 	 * Constructor for i18n.
 	 *
-	 * This will take the locale and attempt to load a translation from CC_TRANSLATIONS with the same name. If none is found en_US is loaded.
+	 * This will take the locale and attempt to load a translation from TH_TRANSLATIONS with the same name. If none is found en_US is loaded.
 	 *
 	 * @param string $locale A valid locale.
 	 */
@@ -47,12 +47,12 @@ class i18n {
 	}
 
 	/**
-	 * This will take the locale and attempt to load a translation from CC_TRANSLATIONS with the same name. If none is found en_US is loaded.
+	 * This will take the locale and attempt to load a translation from TH_TRANSLATIONS with the same name. If none is found en_US is loaded.
 	 */
 	private function loadValid () {
-		foreach(glob(CC_ROOT.CC_TRANSLATIONS.'*.php') as $include) {
+		foreach(glob(TH_ROOT.TH_TRANSLATIONS.'*.php') as $include) {
 			if(!file_exists($include)) {
-				$include = CC_ROOT.CC_TRANSLATIONS.'en_US.php';
+				$include = TH_ROOT.TH_TRANSLATIONS.'en_US.php';
 			}
 			require_once $include;
 		}

@@ -28,16 +28,17 @@ i18n::register('en_US', 'icons', array(
 ));
 
 i18n::register('en_US', 'admin', array(
-	'CanyonCMS Admin' => 'CanyonCMS Admin',
+	'TopHat Admin' => 'TopHat Admin',
 	'settings-saved' => 'Your settings were saved!',
 	'yes' => 'Yes',
 	'no' => 'No',
-	'login_cc' => 'Login to CanyonCMS',
+	'login_cc' => 'Login to TopHat',
 	'content-type-page' => 'Page',
 	'powered-by' => 'powered by %s',
 	'edit-page' => 'Edit Page',
+	'view-page' => 'View Page',
 	'delete-page' => 'Delete Page',
-	'content-intro' => 'You can rearrange pages by simple clicking and dragging their names into a new location and pressing the "Save Order" button.',
+	'content-intro' => 'You can rearrange pages by simply clicking and dragging their names into a new location and pressing the "Save Order" button.',
 	'page-reorder-success' => 'The pages were successfully reordered.',
 	'page-reorder-failure' => 'The pages failed to be reordered.',
 	'page-name' => 'Page Name',
@@ -79,9 +80,10 @@ i18n::register('en_US', 'admin', array(
 	'view-all-pages' => 'View All Pages',
 	'page-creation-successful' => 'Page created successfully!',
 	'blank-error' => 'Don\'t leave fields blank!',
-	'page-delete-success' => 'Page was deleted successfully!',
+	'page-delete-success' => 'That bit of content was deleted successfully!',
 	'page-creation-failed' => 'Page creation failed (DB error)!',
 	'view-page-on-site' => 'View Publicly Available Page',
+	'view-pub-site' => 'View publicly available website',
 	'settings' => 'Settings',
 	'user-management' => 'User Management',
 	'users' => 'Users',
@@ -125,6 +127,9 @@ i18n::register('en_US', 'admin', array(
 	'is-not-writable' => 'is not writable!',
 	'no-gd-imagick' => 'Neither GD or Imagick is installed!',
 	'remember-me' => 'Remember me',
-    'actions' => 'Actions'
+    'actions' => 'Actions',
+	'delete-specific' => "Delete '%s'",
+	'edit-specific' => "Edit '%s'",
+	'delete-confirm' => "Are you sure you want to delete this?"
 ));
 ?>

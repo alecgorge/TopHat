@@ -91,7 +91,7 @@ class SettingsPage {
 			$form->endFieldset();
 		}
 
-		$form->startFieldset(__('admin', 'save'));
+		$form->startFieldset('');
 			$form->addSubmit('', 'save-settings', __('admin', 'save'));
 		$form->endFieldset();
 

@@ -84,7 +84,7 @@ class Library {
 	}
 	
 	public static function bootstrap () {
-		$inis = glob(CC_ROOT.CC_CONTENT.'libraries/*/*.ini');
+		$inis = glob(TH_ROOT.TH_CONTENT.'libraries/*/*.ini');
 		foreach($inis as $ini) {
 			$info = parse_ini_file($ini);
 			$dir = explode('/', dirname($ini));
@@ -135,7 +135,7 @@ class Library {
 	}
 
 	public static function prependPATH (&$x, $key, $dir) {
-		$x = CC_PUB_ROOT.CC_CONTENT.'libraries/'.$dir.$x;
+		$x = TH_PUB_ROOT.TH_CONTENT.'libraries/'.$dir.$x;
 	}
 }
 class JS extends Library {

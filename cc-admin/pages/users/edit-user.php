@@ -92,13 +92,10 @@ class EditUserPage {
 			$form->addInput(__('admin', 'confirm-password'), 'password', 'confirm-password');
 			$form->addSelectList(__('admin', 'group'), 'group', $groups, true, self::get('group'));
 			plugin('admin_edit_user_custom_fields', array(&$form));
+			$form->addSubmit('', 'edit-user', __('admin', 'edit-user'));
 		$form->endFieldset();
 
 		plugin('admin_edit_user_custom_fieldset', array(&$form));
-
-		$form->startFieldset(__('admin', 'save'));
-			$form->addSubmit('', 'edit-user', __('admin', 'edit-user'));
-		$form->endFieldset();
 
 		$form = $form->endAndGetHTML();
 

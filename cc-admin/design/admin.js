@@ -1,24 +1,6 @@
 $(function () {
-	$('.nsw-item-row a').live('click', function (e) {
-		return;
-		//e.cancelBubble is supported by IE - this will kill the bubbling process.
-		e.cancelBubble = true;
-		e.returnValue = false;
-
-		//e.stopPropagation works only in Firefox.
-		if (e.stopPropagation) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
-	});
 	$('#nav .admin-submenu .current').parents('li').addClass('current');
 	$('.message-error').fadeOut(300).fadeIn(400);
-	$("input, textarea").focus(function() {
-		// only select if the text has not changed
-		if(this.value == this.defaultValue) {
-			this.select();
-		}
-	});
 	$('a.delete-page-link').live('click', function () {
 		var conf = confirm('Are you sure you want to delete this page and all of its children?');
 		if(conf) {
@@ -32,6 +14,11 @@ $(function () {
 		}
 		return false;
 	});
+
+	$('[rel=tooltip]').tooltip({
+		placement: 'bottom'
+	});
+
 	var LATIN_MAP = {
 		'À': 'A', 'Á': 'A', 'Â': 'A', 'Ã': 'A', 'Ä': 'A', 'Å': 'A', 'Æ': 'AE', 'Ç':
 		'C', 'È': 'E', 'É': 'E', 'Ê': 'E', 'Ë': 'E', 'Ì': 'I', 'Í': 'I', 'Î': 'I',

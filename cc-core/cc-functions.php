@@ -36,8 +36,8 @@ function array_subkeys ($haystack, $needle, $recursive = false) {
  * @return string
  */
 function get_css ($what_css) {
-	if(file_exists(CC_ROOT.CC_CONTENT.'css/'.$what_css.'.css')) {
-		return CC_PUB_ROOT.CC_CONTENT.'css/'.$what_css.'.css';
+	if(file_exists(TH_ROOT.TH_CONTENT.'css/'.$what_css.'.css')) {
+		return TH_PUB_ROOT.TH_CONTENT.'css/'.$what_css.'.css';
 	}
 }
 

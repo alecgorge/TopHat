@@ -42,13 +42,10 @@ class AddGroupPage {
 
 			$form->addSelectList(__('admin', 'inherit-permissions'), 'parent', $groups);
 			plugin('admin_add_group_custom_fields', array(&$form));
+			$form->addSubmit('', 'add-group', __('admin', 'add-group'));
 		$form->endFieldset();
 
 		plugin('admin_add_group_custom_fieldset', array(&$form));
-
-		$form->startFieldset(__('admin', 'save'));
-			$form->addSubmit('', 'add-group', __('admin', 'add-group'));
-		$form->endFieldset();
 
 		$form = $form->endAndGetHTML();
 

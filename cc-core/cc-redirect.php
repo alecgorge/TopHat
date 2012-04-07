@@ -7,7 +7,7 @@
  * cc_redirect('cc-admin/', true);</code>
  *
  * @param string $url The path to redirect to.
- * @param bool $relative Whether or not to redirect relative to CC_CORE
+ * @param bool $relative Whether or not to redirect relative to TH_CORE
  * @return null This method will never return anything.
  */
 function cc_redirect ($url, $relative = false) {
@@ -18,7 +18,7 @@ function cc_redirect ($url, $relative = false) {
 	if($continue === false) return;
 
 	if($relative) {
-		header(sprintf('location: %s', CC_PUB_ROOT.$url));
+		header(sprintf('location: %s', TH_PUB_ROOT.$url));
 	}
 	
 	header(sprintf('location: %s', $url));

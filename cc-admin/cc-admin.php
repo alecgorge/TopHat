@@ -125,28 +125,54 @@ class Admin {
 
 		// first level menu items
 		foreach($menu as $slug => $contents) {
+			if(!$contents['visible']) continue;
+
 			$title = $contents['title'];
 			$callback = $contents['callback'];
 			$children = $contents['children'];
 			uasort($children, array($this, 'sortMenu'));
 
 			// deal with children
-			if(!empty($children)) {
-				$sub_html = "\n\t\t<ul class='admin-submenu'>\n";
+			$hasChildren = !empty($children);
+
+			if($hasChildren) {
+				$sub_html = "\n\t\t<ul class='dropdown-menu'>\n";
 				foreach($children as $sub_slug => $sub_content) {
 					$sub_title = $sub_content['title'];
 					$sub_callback = $sub_content['callback'];
 
-					$sub_html .= sprintf("\t\t\t<li class='%s'><a href='%s'>%3\$s</a></li>\n", (self::isPage($slug.'/'.$sub_slug) ? ' current' : ''), $this->makeUrl($slug.'/'.$sub_slug), $sub_title);
+					$sub_html .= sprintf("\t\t\t<li class='%s'><a href='%s'>%3\$s</a></li>\n",
+											(self::isPage($slug.'/'.$sub_slug) ? ' active' : ''),
+											$this->makeUrl($slug.'/'.$sub_slug),
+											$sub_title);
 				}
 				$sub_html .= "\t\t</ul>";
 			}
-			$html .= sprintf("\n\t<li%s><a href='%s'>%s</a>%s\n\t</li>", (self::isPage($slug) ? ' class="current"' : ''), $this->makeUrl($slug), $title, $sub_html);
+
+			$link = '<a href="'. $this->makeUrl($slug) .'"';
+
+			if($hasChildren) {
+				$link .= "class='dropdown-toggle' data-toggle='dropdown'";
+			}
+
+			$link .= '>' . $title;
+
+			if($hasChildren) {
+				$link .= ' <b class="caret"></b>';
+			}
+
+			$link .= '</a>';
+
+			$html .= sprintf("\n\t<li class='%s%s'>%s%s\n\t</li>",
+									(self::isPage($slug) ? 'active' : ''),
+									(!empty($children) ? ' dropdown' : ''),
+									$link,
+									$sub_html);
 			unset($sub_html);
 
        	}
 
-		$html = "<ul>".$html."\n</ul>\n";
+		$html = "<ul class='nav'>".$html."\n</ul>\n";
 
 		return $html;
 	}
@@ -156,7 +182,7 @@ class Admin {
     }
 
 	public function makeUrl ($slug) {
-		return filter('admin-makeurl', CC_PUB_ADMIN.'?page='.$slug);
+		return filter('admin-makeurl', TH_PUB_ADMIN.'?page='.$slug);
    	}
 
 	public static function link ($slug, $args = array(), $attr = array()) {
@@ -169,20 +195,20 @@ class Admin {
 	}
 
 	public function includeDesign () {
-		require CC_ADMIN.'design/index.tpl.php';
+		require TH_ADMIN.'design/index.tpl.php';
    	}
 
 	public function includeLogin () {
-		require CC_ADMIN.'design/login.tpl.php';
+		require TH_ADMIN.'design/login.tpl.php';
    	}
 
 	private function includeBasePages () {
-		$pages = glob(CC_ADMIN.'pages/*.php');
+		$pages = glob(TH_ADMIN.'pages/*.php');
 		foreach($pages as $page) {
 			include $page;
 		}
 
-		$subPages = glob(CC_ADMIN.'pages/*/*.php');
+		$subPages = glob(TH_ADMIN.'pages/*/*.php');
 		foreach($subPages as $page) {
 			include $page;
 		}
@@ -196,7 +222,7 @@ class Admin {
 	 * @param callback $callback
 	 * @param int $weight
 	 */
-	public function _registerPage ($unique_slug, $menutitle, $callback, $weight = 0) {
+	public function _registerPage ($unique_slug, $menutitle, $callback, $weight = 0, $showInMenu = true) {
 		if(array_key_exists($unique_slug, $this->plugin_menu)) {
 			trigger_error("Admin menu item '$unique_slug' already exists, overwriting previous handle.", E_USER_WARNING);
 		}
@@ -205,7 +231,8 @@ class Admin {
 			'title' => $menutitle,
 			'callback' => $callback,
 			'weight' => $weight,
-			'children' => array()
+			'children' => array(),
+			'visible' => $showInMenu
 		);
 		return true;
 	}
@@ -288,7 +315,7 @@ class Admin {
 	 */
 	public static function logout () {
 		Users::logout();
-		cc_redirect(CC_PUB_ROOT);
+		cc_redirect(TH_PUB_ROOT);
 		exit();
    	}
 

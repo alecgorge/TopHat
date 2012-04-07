@@ -27,8 +27,8 @@ authors and should not be interpreted as representing official policies, either 
 or implied, of Ramblingwood, LLC.
 
     +-----------------------------------------+
-	|  CanyonCMS v0.1.0a - 5/2/2010           |
-	|  http://canyoncms.com                   |
+	|  TopHat v0.1.0a - 5/2/2010           |
+	|  http://TopHat.com                   |
 	+-----------------------------------------+
 
 
@@ -39,10 +39,10 @@ define('CC_IS_ADMIN', true);
 require_once '../cc-config.php';
 
 // include hooking capabilites
-require_once CC_CORE.'cc-hooks.php';
+require_once TH_CORE.'cc-hooks.php';
 
 // include include manager
-require_once CC_CORE.'cc-includes.php';
+require_once TH_CORE.'cc-includes.php';
 
 cc_core_include('cc-urlmap.php');
 

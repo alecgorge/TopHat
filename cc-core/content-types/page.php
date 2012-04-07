@@ -132,9 +132,7 @@ class PageNode extends NodeType implements NodeActions {
 
 		plugin('admin_edit_custom_fields3', array(&$form));
 
-		$form->startFieldset(__('save'));
-			$form->addSubmit('', 'save', __('save'));
-		$form->endFieldset();
+		$form->addSubmit('', 'save', __('save'));
 
         $page_title = __('edit-page');
 
@@ -224,9 +222,7 @@ class PageNode extends NodeType implements NodeActions {
 
 		plugin('admin_create_custom_fields3', array(&$form));
 
-		$form->startFieldset(__('save'));
-			$form->addSubmit('', 'save',__('save'));
-		$form->endFieldset();
+		$form->addSubmit('', 'save',__('save'));
 
 		i18n::restore();
 

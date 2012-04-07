@@ -18,7 +18,20 @@ class UsersPage {
 			$group_array[$value['users_id']] = $value['name'];
 			$groups_table->addRow(array(
 				$value['name'],
-				icon('group_edit', Admin::link('users/edit-group', array('id' => $value['users_id']))).icon('group_delete', Admin::link('users/delete', array('id' => $value['users_id'], 'type' => 'group')), false, array('class' => 'delete-link'))
+				icon('group_edit', Admin::link('users/edit-group', array(
+					'id' => $value['users_id']
+				)), false, array(
+					'rel' => 'tooltip',
+					'title' => StringUtils::escapeForHTMLAttr(sprintf(__('admin', 'edit-specific'), $value['name']))
+				))
+				.icon('group_delete', Admin::link('users/delete', array(
+					'id' => $value['users_id'],
+					'type' => 'group'
+				)), false, array(
+					'class' => 'delete-link',
+					'rel' => 'tooltip',
+					'title' => StringUtils::escapeForHTMLAttr(sprintf(__('admin', 'delete-specific'), $value['name']))
+				))
 			));
 		}
 		$groups_table = $groups_table->html();
@@ -29,8 +42,20 @@ class UsersPage {
 			$users_table->addRow(array(
 				$value['name'],
 				$group_array[$value['group']],
-				icon('user_edit', Admin::link('users/edit-user', array('id' => $value['users_id'])))
-					.icon('user_delete', Admin::link('users/delete', array('id' => $value['users_id'], 'type' => 'user')), false, array('class' => 'delete-link')),
+				icon('user_edit', Admin::link('users/edit-user', array(
+					'id' => $value['users_id']
+				)), false, array(
+					'rel' => 'tooltip',
+					'title' => StringUtils::escapeForHTMLAttr(sprintf(__('admin', 'edit-specific'), $value['name']))
+				))
+				.icon('user_delete', Admin::link('users/delete', array(
+					'id' => $value['users_id'],
+					'type' => 'user'
+				)), false, array(
+					'class' => 'delete-link',
+					'rel' => 'tooltip',
+					'title' => StringUtils::escapeForHTMLAttr(sprintf(__('admin', 'delete-specific'), $value['name']))
+				)),
 			));
 		}
 		$r = "<h3>".__('admin', 'users')."</h3>".$users_table->html()."<h3>".__('admin', 'groups')."</h3>".$groups_table;

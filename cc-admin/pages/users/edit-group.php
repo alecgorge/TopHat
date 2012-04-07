@@ -55,7 +55,7 @@ class GroupPage {
 			}
 			$p_form->addHidden('previous', urlencode(serialize($previous)));
 		$p_form->addHTML($p_table->html());
-		$p_form->addHTML(sprintf('<input type="submit" name="%s" value="%s" class="input-submit"/>', 'save-permissions', __('admin', 'save-changes')));
+		$p_form->addSubmit('', 'save-permissions', __('admin', 'save-changes'));
 
 		return array(sprintf('%s: %s', __('admin', 'edit-group'), $g->getName()), $message.$p_form->html());
 	}

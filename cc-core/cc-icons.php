@@ -1,9 +1,9 @@
 <?php
 
 function icon ($slug, $link = false, $showText = false, $attr = array()) {
-	$icon_dir = CC_PUB_ADMIN.'design/icons/';
+	$icon_dir = TH_PUB_ADMIN.'design/icons/';
 	$icon = $icon_dir.$slug.'.png';
-	$icon_file = CC_ADMIN.'design/icons/'.$slug.'.png';
+	$icon_file = TH_ADMIN.'design/icons/'.$slug.'.png';
 
 	if(is_array($attr) && !empty($attr)) {
 		$x = '';
@@ -29,10 +29,10 @@ function icon ($slug, $link = false, $showText = false, $attr = array()) {
 }
 
 function icon_url ($slug) {
-	$icon_dir = CC_PUB_ADMIN.'design/icons/';
+	$icon_dir = TH_PUB_ADMIN.'design/icons/';
 	$icon = $icon_dir.$slug.'.png';
 
-	$icon_file = CC_ADMIN.'design/icons/'.$slug.'.png';
+	$icon_file = TH_ADMIN.'design/icons/'.$slug.'.png';
 
 	if(file_exists($icon_file)) {
 		return $icon;

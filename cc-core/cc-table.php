@@ -16,9 +16,9 @@ class Table {
 	 * @param int $cellpadding Padding in each cell.
 	 * @param int $cellspacing "Margin" around each cell.
 	 */
-	public function  __construct ($id = '', $rowClasses = array(), $attr = array(), $cellpadding = 0, $cellspacing = 0) {
+	public function  __construct ($id = '', $rowClasses = array(), $attr = array(), $cellpadding = 0, $cellspacing = 0, $type = 'table-striped') {
 		$this->rowClasses = $rowClasses;
-		$this->start = sprintf('<table id="%s" cellpadding="%s" cellspacing="%s" %s>'."\n", $id, $cellpadding, $cellspacing, $this->attr($attr));
+		$this->start = sprintf('<table id="%s" cellpadding="%s" cellspacing="%s" class="table %s" %s>'."\n", $id, $cellpadding, $cellspacing, $type, $this->attr($attr));
 	}
 
 	public function attr ($attr) {

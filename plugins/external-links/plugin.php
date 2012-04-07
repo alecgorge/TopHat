@@ -183,5 +183,5 @@ i18n::register('en_US', 'external-link-plugin', array(
 	'form-label' => 'Hide page from menu'
 ));
 
-ExternalLinkPlugin::$plugin = new Plugin(__('external-link-plugin', 'title'), 'CanyonCMS Team' , __('external-link-plugin', 'desc'), '1.0');
+ExternalLinkPlugin::$plugin = new Plugin(__('external-link-plugin', 'title'), 'TopHat Team' , __('external-link-plugin', 'desc'), '1.0');
 ExternalLinkPlugin::$plugin->bootstrap('ExternalLinkPlugin::bootstrap');

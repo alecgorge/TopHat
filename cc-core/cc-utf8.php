@@ -232,7 +232,17 @@ class UTF8 {
 		$content = $oUnicodeReplace->UTF8entities($content);
 		return $content;*/
 	}
+
+	public static function escapeForHTMLAttr($val) {
+		return htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
+	}
+
+	public static function escapeForHTML($text) {
+		return self::escapeForHTMLAttr($text);
+	}
 }
+
+class StringUtils extends UTF8 {}
 
 
 if(!function_exists('mb_str_replace')) {

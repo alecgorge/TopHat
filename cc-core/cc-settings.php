@@ -1,6 +1,6 @@
 <?php
 /**
- * A simple class used to store the settings for CanyonCMS. Contains a combination of CC_CONFIG file and db loaded ones.
+ * A simple class used to store the settings for TopHat. Contains a combination of CC_CONFIG file and db loaded ones.
  */
 class Settings {
 	/**

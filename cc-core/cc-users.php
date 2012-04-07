@@ -33,7 +33,7 @@ class Users {
 			$_SESSION['last_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
 			if(self::checkSession()) {
-				//var_dump(CC_PUB_ADMIN);exit();
+				//var_dump(TH_PUB_ADMIN);exit();
 				if($_POST['cc_login_remember'] == "yes") {
 					$host = $_SERVER['HTTP_HOST'];
 					if(substr($host,0,4) == "www.") {
@@ -41,7 +41,7 @@ class Users {
 					}
 					setcookie('ln', self::packCookie(), time()+60*60*24*30*12);
 				}
-				cc_redirect(CC_PUB_ADMIN, true);
+				cc_redirect(TH_PUB_ADMIN, true);
            	}
 			else {
 				Filters::bind('post_output_login', 'Users::outputError');
@@ -148,7 +148,7 @@ class Users {
 	public static function validate ($username, $password, $alreadyHashed = false) {
 		$pword = $alreadyHashed ? $password : hash('whirlpool', $password);
 
-		$smt = Database::select('users', array('value'), array('name = ? AND type = ?', $username, 'user'));
+		$smt = Database::select('users', '*', array('name = ? AND type = ?', $username, 'user'));
 		$row = $smt->fetch(PDO::FETCH_ASSOC);
 		if($pword === $row['value']) {
 			return new User($row);
@@ -200,6 +200,10 @@ class Users {
 		return $r;
 	}
 
+	/**
+	 * @static
+	 * @return User The currently logged in user
+	 */
 	public static function currentUser () {
 		return self::$currUser;
 	}

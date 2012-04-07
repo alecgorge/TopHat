@@ -61,8 +61,7 @@ class EditPage {
 			'multi' => true
 		));
 
-		load_library('jquery-tools');
-		queue_js_string("$(function(){\$('.view-uploads').overlay({
+		queue_js_string("/*$(function(){\$('.view-uploads').overlay({
 	mask: {
 		color: '#000',
 		loadSpeed: 200,
@@ -70,7 +69,7 @@ class EditPage {
 	},
 
 	closeOnClick: true
-});});");
+});});*/");
 
 		$uploadedButton =  sprintf("<a href='#' class='action view-uploads' rel='#cc_uploaded_overlay'>%s%s</a>", icon('folder_picture'), __('admin', 'view-all-files'));
 

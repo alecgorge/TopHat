@@ -1,7 +1,7 @@
 {
-	"name"			: "CanyonCMS Default Theme",
+	"name"			: "TopHat Default Theme",
 	"version"		: "0.1.0a",
 	"description"	: "I don't know yet!",
-	"author"		: "CanyonCMS Core Team",
+	"author"		: "TopHat Core Team",
 	"interface"		: "interface.php"
 }

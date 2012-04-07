@@ -29,9 +29,9 @@ class Uploader {
 		load_library('uploadify');
 		$js_options = json_encode(array_merge($this->options, array(
 			'queueID' => $this->id."_queue",
-			'uploader' => CC_PUB_ROOT.CC_CONTENT.'libraries/js/uploadify/uploadify.swf',
-			'cancelImg' => CC_PUB_ROOT.CC_CONTENT.'libraries/js/uploadify/cancel.png',
-			'script' => CC_PUB_ROOT,
+			'uploader' => TH_PUB_ROOT.TH_CONTENT.'libraries/js/uploadify/uploadify.swf',
+			'cancelImg' => TH_PUB_ROOT.TH_CONTENT.'libraries/js/uploadify/cancel.png',
+			'script' => TH_PUB_ROOT,
 			'displayData' => 'both'
 		)));
 
@@ -136,7 +136,7 @@ class DefaultUploadHandler extends UploadHandler {
 			)
 		));
 
-		$this->behaviours[self::UPLOAD_DIRECTORY] = CC_ROOT.CC_UPLOADS;
+		$this->behaviours[self::UPLOAD_DIRECTORY] = TH_ROOT.TH_UPLOADS;
 
 		$this->behaviours = $this->behaviours + $behaviours;
 
@@ -194,7 +194,7 @@ class Uploads {
 	public static $absPath;
 
 	public static function bootstrap () {
-		self::$absPath = CC_ROOT.CC_UPLOADS;
+		self::$absPath = TH_ROOT.TH_UPLOADS;
 		self::testWritable(self::$absPath);
 	}
 
@@ -208,7 +208,7 @@ class Uploads {
 	/**
 	 * Returns an array of the absolute path to all the files in the given folder matching the given pattern.
 	 *
-	 * @param string $folder A sub folder of CC_UPLOADS. For example "test/". Default is false.
+	 * @param string $folder A sub folder of TH_UPLOADS. For example "test/". Default is false.
 	 * @param string $pattern A PCRE that files must match.
 	 * @return array An array of the files matching the given parameters.
 	 */
@@ -248,7 +248,7 @@ class Uploads {
 	/**
 	 * Returns an array of the absolute path to all the folders in the given folder matching the given pattern.
 	 *
-	 * @param string $folder A sub folder of CC_UPLOADS. For example "test/". Default is false.
+	 * @param string $folder A sub folder of TH_UPLOADS. For example "test/". Default is false.
 	 * @param string $pattern A PCRE that folders must match.
 	 * @return array An array of folders matching the given parameters.
 	 */
@@ -283,7 +283,7 @@ class Uploads {
 	 * Adds a file to the uploads directory. Useful
 	 *
 	 * @param string $src The path to the file that will be added the the uploads directory.
-	 * @param string $dest The path relative to CC_ROOT.CC_UPLOADS to place the file.
+	 * @param string $dest The path relative to TH_ROOT.TH_UPLOADS to place the file.
 	 * @param boolean $move Defaults to true. If false, the file will be copied instead of being moved.
 	 * @return Uploads Returns the static reference to Uploads.
 	 */
@@ -302,7 +302,7 @@ class Uploads {
 	 * Creates a folder with proper permissions.
 	 *
 	 * @param string $name Name of the folder without the trailing slash.
-	 * @param string $folder Name of the folder to create $name in. Relative to CC_CORE.CC_CONTENT
+	 * @param string $folder Name of the folder to create $name in. Relative to TH_CORE.TH_CONTENT
 	 * @return mixed The absolute path to the folder if creation was successful, otherwise false.
 	 */
 	public static function createFolder ($name, $folder = false) {
@@ -320,13 +320,13 @@ class Uploads {
 	}
 
 	/**
-	 * Makes files relative to CC_ROOT instead of being the absolute path. Useful to find the public link: CC_PUB_ROOT."/".Uploads::unbase("/var/www/content/uploads/test.jpg").
+	 * Makes files relative to TH_ROOT instead of being the absolute path. Useful to find the public link: TH_PUB_ROOT."/".Uploads::unbase("/var/www/content/uploads/test.jpg").
 	 *
 	 * @param string $file
-	 * @return string The relative path (from CC_ROOT) to the file.
+	 * @return string The relative path (from TH_ROOT) to the file.
 	 */
 	public static function unbase ($file) {
-		return mb_substr($file, strlen(utf8_decode(CC_ROOT)));
+		return mb_substr($file, strlen(utf8_decode(TH_ROOT)));
 	}
 }
 

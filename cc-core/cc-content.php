@@ -230,7 +230,7 @@ class Content {
 		}
 
 		$defaults = array(
-						'root' => "\n<ul id='ul-navigation'>\n%s\n</ul>\n",
+						'root' => "\n<ul class='ul-navigation'>\n%s\n</ul>\n",
 						'child' => "\n<ul class='ul-sub-navigation'>\n%s\n</ul>\n",
 						'item' => "\n\t<li><a href='%2\$s' title='%1\$s'>%1\$s</a></li>",
 						'itemSelected' => "\n\t<li class='selected'><a href='%2\$s' title='%1\$s'>%1\$s</a></li>",
@@ -409,7 +409,7 @@ class Content {
 
 		$e404t = filter('content_404title', '404 Error: Page Not Found');
 		$e404mt = filter('content_404menutitle', 'Page Not Found');
-		$e404c = filter('content_404content', 'Page not found. Return to the <a href="'.CC_PUB_ROOT.'">homepage</a>.');
+		$e404c = filter('content_404content', 'Page not found. Return to the <a href="'.TH_PUB_ROOT.'">homepage</a>.');
 
 		self::setTitle($e404t);
 		self::setContent($e404c);
@@ -719,7 +719,7 @@ abstract class NodeType {
 		}
 		$r .= Content::url($id);
 
-		return filter('node_url', CC_PUB_ROOT.$r);
+		return filter('node_url', TH_PUB_ROOT.$r);
 	}
 
 	public function link () {

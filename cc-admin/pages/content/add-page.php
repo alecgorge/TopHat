@@ -8,10 +8,10 @@ class CreatePage {
 	public static $row = array();
 
 	public static function display () {
-		$type = (array_key_exists('type', $_GET) ? $_GET['type'] : $_POST['type']);
+		$type = $_GET['type'];
 		$types = Content::contentTypes();
 
-		if(array_key_exists($type, $types) === false) {
+		if(array_key_exists($type, $types) === false && array_key_exists($_POST['type'], $types) === false) {
 			$opt_list = array();
 			foreach($types as $single_type => $class) {
 				$opt_list[$single_type] = call_user_func($class.'::name');
@@ -23,9 +23,12 @@ class CreatePage {
 
 			return array(__('admin', 'add-page'), $form->endAndGetHTML());
 		}
-		else {
-			if($_POST['continue'] == __('admin', 'continue')) {
+		if(!$type && $_POST['type']) {
+			if(array_key_exists('continue', $_POST)) {
 				cc_redirect(Admin::link($_GET['page'], array('type' => $_POST['type'])));
+			}
+			else {
+				return;
 			}
 		}
 

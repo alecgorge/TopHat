@@ -1,6 +1,6 @@
 <?php
 /**
- * Timers in CanyonCMS aren't guaranteed to be run at the specified time (whether that is 1
+ * Timers in TopHat aren't guaranteed to be run at the specified time (whether that is 1
  * hour in the future, or a specific time). They are guaranteed to not be run BEFORE the 
  * specified time, but it will run on the first page load AFTER the time.
  * 

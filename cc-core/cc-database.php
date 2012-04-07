@@ -9,7 +9,7 @@ class Database {
 	/**
 	 * Returns the PDOObject handle
 	 *
-	 * @returns PDOOBject The handle to the CanyonCMS database.
+	 * @returns PDOOBject The handle to the TopHat database.
 	 */
 	public static function getHandle () {
 		return self::$handle;
@@ -38,7 +38,7 @@ class Database {
 
 
 	/**
-	 * Perform a select query on the CanyonCMS database.
+	 * Perform a select query on the TopHat database.
 	 *
 	 * This will perform a select query on $table (the table prefix is automatically prefixed) and returns the specified $cols where $where is true. The arguments in $where are automatically escaped properly. Example:
 	 * <code>
@@ -99,7 +99,7 @@ class Database {
 			$limit = '';
 		}
 
-		$sql = trim(sprintf($sql, $cols, CC_DB_PREFIX, $table, $where, $order, $limit));
+		$sql = trim(sprintf($sql, $cols, TH_DB_PREFIX, $table, $where, $order, $limit));
 
 		$time = microtime(true) - $start;
 		self::$totalTime += $time;
@@ -123,7 +123,7 @@ class Database {
 	}
 
 	/**
-	 * Perform a insert query on the CanyonCMS database.
+	 * Perform a insert query on the TopHat database.
 	 *
 	 * This will perform a insert query on $table (the table prefix is automatically prefixed) and returns the number of affected rows.
 	 * <code>
@@ -156,7 +156,7 @@ class Database {
 			$values = array_fill(0, count($binds), '?');
 		}
 
-		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $keys, implode(',',$values)));
+		$sql = trim(sprintf($sql, TH_DB_PREFIX, $table, $keys, implode(',',$values)));
 		self::$totalTime += $time;
 
 		Log::add('DB Query: (time: '.$time.') '.$sql);
@@ -178,7 +178,7 @@ class Database {
 	}
 
 	/**
-	 * Perform a delete query on the CanyonCMS database.
+	 * Perform a delete query on the TopHat database.
 	 *
 	 * This will perform a delete query on $table (the table prefix is automatically prefixed) and returns the number of affected rows.
 	 * <code>
@@ -211,7 +211,7 @@ class Database {
 		if(!is_null($limit)) {
 			$limit = " LIMIT ".$limit;
 		}
-		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $where, $limit));
+		$sql = trim(sprintf($sql, TH_DB_PREFIX, $table, $where, $limit));
 		self::$totalTime += $time;
 
 		Log::add('DB Query: (time: '.$time.') '.$sql);
@@ -233,7 +233,7 @@ class Database {
 	}
 
 	/**
-	 * Perform a update query on the CanyonCMS database.
+	 * Perform a update query on the TopHat database.
 	 *
 	 * This will perform a update query on $table (the table prefix is automatically prefixed) and returns the number of affected rows.
 	 * <code>
@@ -289,7 +289,7 @@ class Database {
 			$limit = '';
 		}
 		
-		$sql = trim(sprintf($sql, CC_DB_PREFIX, $table, $set, $where));
+		$sql = trim(sprintf($sql, TH_DB_PREFIX, $table, $set, $where));
 
 		self::$totalTime += $time;
 
@@ -320,7 +320,7 @@ try {
 
 	// create the pdo object
 	DB::setHandle(new PDO($database, $db_username, $db_password));
-	define('CC_DB_PREFIX', $db_prefix);
+	define('TH_DB_PREFIX', $db_prefix);
 
 	// remove now unused vars
 	unset($database);

@@ -4,8 +4,8 @@
 		<title><?php _e('login_cc'); ?></title>
 
 		<?php
-		load_library(array('form-layout', 'messages'));
-		queue_css(CC_PUB_ADMIN.'design/styles.css');
+		load_library(array('bootstrap-css', 'jquery'));
+		queue_css(TH_PUB_ADMIN.'design/styles.css');
 
 		load_css();
 		load_js();
@@ -16,7 +16,7 @@
 			<h2><?php _e('login_cc'); ?></h2>
 			<?php
 			$form = new Form('self', 'post', 'login');
-				$form->startFieldset(__('Login'));
+				$form->startFieldset('');
 					$form->addInput(__("Username"), 'text', 'cc_login_uname');
 					$form->addInput(__("Password"), 'password', 'cc_login_passwd');
 					$form->addInput(__("remember-me"), 'checkbox', 'cc_login_remember', 'yes');

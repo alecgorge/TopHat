@@ -37,6 +37,6 @@ i18n::register('en_US', 'hide-nav-plugin', array(
 	'desc' => 'Allows you to hide certain items from displaying on the menu.',
 	'form-label' => 'Hide page from menu'
 ));
-HideNavPlugin::$plugin = new Plugin(__('hide-nav-plugin', 'title'), 'CanyonCMS Team' , __('hide-nav-plugin', 'desc'), '1.0');
+HideNavPlugin::$plugin = new Plugin(__('hide-nav-plugin', 'title'), 'TopHat Team' , __('hide-nav-plugin', 'desc'), '1.0');
 HideNavPlugin::$plugin->bootstrap('HideNavPlugin::bootstrap');
 

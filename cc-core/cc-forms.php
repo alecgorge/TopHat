@@ -24,14 +24,14 @@ class Form {
 	 * @param string $name The legend for the fieldset.
 	 */
 	public function startFieldset($name, $attr_ar = array()) {
-		$this->form .= "\n<fieldset ". $this->addAttributes( $attr_ar ) . ">\n\t<h4 class=\"fieldset-legend\">$name</h4>\n\t<div class=\"fieldset-gutter\">\n";
+		$this->form .= "\n<fieldset ". $this->addAttributes( $attr_ar ) . ">\n\t<legend>$name</legend>\n\t";
 	}
 
 	/**
 	 * Closes a field set.
 	 */
 	public function endFieldset() {
-		$this->form .= "\n\t</div>\n</fieldset>";
+		$this->form .= "\n\t</fieldset>";
 	}
 
 	/**
@@ -49,12 +49,12 @@ class Form {
 	 * @param string $id Unique id to be assigned to the form element's id attribute (optional)
 	 * @param array $attr_ar Associative array of additional attributes (optional)
 	 */
-	public function __construct ($action = '#', $method = 'post', $id = NULL, $attr_ar = array()) {
+	public function __construct ($action = '#', $method = 'post', $id = NULL, $attr_ar = array(), $type = 'form-horizontal') {
 		if($action === 'self') {
 			$action = $_SERVER['REQUEST_URI'];
 		}
 
-        $str = "\n<form action=\"$action\" method=\"$method\" class=\"cc-form\"";
+        $str = "\n<form action=\"$action\" method=\"$method\" class=\"cc-form $type\"";
 
 		// only add non-null attributes
         if ( !is_null($id) ) {
@@ -145,11 +145,11 @@ class Form {
 			$attr_ar['class'] .= "input-$type";
 		}
 
-        $str = "\n<input type=\"$type\" name=\"$name\" id=\"$name\" value=\"$value\"";
+        $str = "\n<div class='controls'><input type=\"$type\" name=\"$name\" id=\"$name\" value=\"$value\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
-        $str .= " />\n</div>";
+        $str .= " /></div>\n</div>";
 
 		$this->form .= $str;
 		return true;
@@ -172,11 +172,11 @@ class Form {
 			$value = $label;
 		}
 
-        $str = "\n<div class='form-row form-row-last'>\n<label for=\"$name\">$label</label>"."\n<input type=\"$type\" name=\"$name\" class='input-submit' value=\"$value\"";
+        $str = "\n<div class='form-actions'><button type=\"$type\" name=\"$name\" class='btn btn-primary' ";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
-        $str .= " />\n</div>";
+        $str .= ">$value</button>\n</div>";
 
 		$this->form .= $str;
 		return true;
@@ -196,11 +196,11 @@ class Form {
 	 */
     public function addTextarea($label, $name, $rows = 4, $cols = 30, $value = '', $attr_ar = array() ) {
 		$this->addLabelFor($name, $label, array('class' => 'textarea'));
-        $str = "\n<textarea name=\"$name\" rows=\"$rows\" cols=\"$cols\"";
+        $str = "\n<div class='controls'><textarea name=\"$name\" rows=\"$rows\" cols=\"$cols\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
-        $str .= ">$value</textarea>\n</div>";
+        $str .= ">$value</textarea></div>\n</div>";
 
 		$this->form .= $str;
 		return true;
@@ -208,8 +208,8 @@ class Form {
 	
 	public function addEditor($label, $name, $initalContents = '') {
 		$r = <<<EOT
-	<div class="form-row-struct editor">
-		<label for="%s">%s</label>
+	<div class="control-group editor">
+		<label class='control-label' for="%s">%s</label>
 		%s
 	</div>
 EOT;
@@ -224,7 +224,7 @@ EOT;
 
     // for attribute refers to id of associated form element
     public function addLabelFor($forID, $text, $attr_ar = array() ) {
-        $str = "\n<div " . $this->addAttributes(array('class' => 'form-row')) . ">\n<label for=\"{$forID}\"";
+        $str = "\n<div " . $this->addAttributes(array('class' => 'control-group')) . ">\n<label for=\"{$forID}\" class='control-label' ";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
@@ -248,7 +248,7 @@ EOT;
     public function addSelectList($label, $name, $option_list, $bVal = true, $selected_value = NULL, $header = NULL, $attr_ar = array() ) {
 		$this->addLabelFor($name, $label);
 
-        $str = "\n<select name=\"$name\"";
+        $str = "\n<div class='controls'><select name=\"$name\"";
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }
@@ -263,7 +263,7 @@ EOT;
             }
             $str .= ">$text</option>\n";
         }
-        $str .= "</select>\n</div>";
+        $str .= "</select></div>\n</div>";
 
 		$this->form .= $str;
 		return true;

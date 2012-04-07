@@ -27,8 +27,8 @@ authors and should not be interpreted as representing official policies, either 
 or implied, of Ramblingwood, LLC.
 
         +-----------------------------------------+
-	|  CanyonCMS v0.1.0a - 5/24/2010          |
-	|  http://canyoncms.com                   |
+	|  TopHat v0.1.0a - 5/24/2010          |
+	|  http://TopHat.com                   |
 	+-----------------------------------------+
 
 
@@ -43,7 +43,7 @@ if(!defined('CC_IS_ADMIN')) {
 }
 
 /**
- * This is the location of the CanyonCMS configuration file. It can be relative or absolute. It can be above the word viewable directory. Default: './config.php'
+ * This is the location of the TopHat configuration file. It can be relative or absolute. It can be above the word viewable directory. Default: './config.php'
  */
 define('CC_CONFIG', 'cc-config.php');
 
@@ -51,4 +51,4 @@ define('CC_CONFIG', 'cc-config.php');
 require CC_CONFIG;
 
 /* Off we go! */
-require CC_CORE.'cc-bootstrap.php';
+require TH_CORE.'cc-bootstrap.php';

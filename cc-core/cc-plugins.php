@@ -74,11 +74,11 @@ class Plugins {
 	 * It finds the list of active plugins from the database and compares them to the available plugins.
 	 */
 	public static function bootstrap () {
-		$files = glob(CC_ROOT.CC_PLUGINS.'*/plugin.php');
+		$files = glob(TH_ROOT.TH_PLUGINS.'*/plugin.php');
 		foreach($files as $file) {
 			require_once $file;
 			// $plugin is a full path, we don't want that.
-			$plugin = explode(CC_ROOT.CC_PLUGINS, $file, 2);
+			$plugin = explode(TH_ROOT.TH_PLUGINS, $file, 2);
 			$plugin = explode('/plugin.php', $plugin[1]);
 			$possiblePlugins[] = $plugin[0];
 		}
@@ -122,10 +122,10 @@ class Plugins {
 	 */
 	public static function getPluginList () {
 		return self::$pInfo[1];
-		$glob = glob(CC_ROOT.CC_PLUGINS.'*/plugin.php');
+		$glob = glob(TH_ROOT.TH_PLUGINS.'*/plugin.php');
 		foreach($glob as $plugin) {
 			// $plugin is a full path, we don't want that.
-			$plugin = explode(CC_ROOT.CC_PLUGINS, $plugin, 2);
+			$plugin = explode(TH_ROOT.TH_PLUGINS, $plugin, 2);
 			$plugin = explode('/plugin.php', $plugin[1]);
 			$r[] = $plugin[0];
 		}
@@ -139,7 +139,7 @@ class Plugins {
 	 * @return bool Is the plugin valid?
 	 */
 	public static function validate($name) {
-		return file_exists(CC_PLUGINS.$name.'/plugin.php');
+		return file_exists(TH_PLUGINS.$name.'/plugin.php');
 	}
 }
 // Plugins::bootstrap();
@@ -179,7 +179,7 @@ class RegisteredPlugin {
 		$this->name = $folder_name;
 		$this->active = $active;
 		$this->options = $options;
-		$this->pluginFile = CC_ROOT.CC_PLUGINS.$this->name.'/plugin.php';
+		$this->pluginFile = TH_ROOT.TH_PLUGINS.$this->name.'/plugin.php';
 	}
 
 	/**
@@ -242,7 +242,7 @@ class Plugin {
 	 */
 	public $slug;
 	/**
-	 * @var string The folder the plugin is in under CC_PLUGINS
+	 * @var string The folder the plugin is in under TH_PLUGINS
 	 */
 	public $dir;
 
@@ -347,14 +347,14 @@ class Plugin {
 	 * @return string The publicly accessible absolute path to the plugin's directory.
 	 */
 	public function pluginPublicDir () {
-		return CC_PUB_ROOT.CC_PLUGINS.$this->dir;
+		return TH_PUB_ROOT.TH_PLUGINS.$this->dir;
 	}
 
 	/**
 	 * @return string The absolute path to the plugin's directory in the filesystem.
 	 */
 	public function pluginDir () {
-		return CC_ROOT.CC_PLUGINS.$this->dir;
+		return TH_ROOT.TH_PLUGINS.$this->dir;
 	}
 }
 ?>

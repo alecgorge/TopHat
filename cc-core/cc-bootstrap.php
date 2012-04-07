@@ -1,9 +1,9 @@
 <?php
 // include hooking capabilites
-require CC_CORE.'cc-hooks.php';
+require TH_CORE.'cc-hooks.php';
 
 // include include manager
-require CC_CORE.'cc-includes.php';
+require TH_CORE.'cc-includes.php';
 
 cc_core_include('cc-urlmap.php');
 
@@ -81,7 +81,7 @@ cc_theme_include(Content::getTheme());
 
 plugin('system_complete');
 
-if(CC_DEBUG)
+if(TH_DEBUG)
 register_shutdown_function(function () {
 	$time = microtime(true) - CC_START;
 	$dbTime = Database::$totalTime;

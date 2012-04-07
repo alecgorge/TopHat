@@ -15,10 +15,10 @@ class FileBrowser {
 			cc_redirect(self::$plugin->pluginPublicDir()."browser/");
 		}
 		else {
-			cc_redirect(CC_PUB_ROOT);
+			cc_redirect(TH_PUB_ROOT);
 		}
 	}
 }
 
-FileBrowser::$plugin = new Plugin('File Browser', 'CanyonCMS Team', 'Allows you to manage the files on your server.', '1.0');
+FileBrowser::$plugin = new Plugin('File Browser', 'TopHat Team', 'Allows you to manage the files on your server.', '1.0');
 FileBrowser::$plugin->bootstrap('FileBrowser::bootstrap');
