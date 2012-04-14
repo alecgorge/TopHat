@@ -2,7 +2,7 @@
 
 class Database {
 	/**
-	 * @var PDOObject The handle to the database.
+	 * @var PDO The PDO handle to the database.
 	 */
 	private static $handle;
 
@@ -20,6 +20,7 @@ class Database {
 	 */
 	public static function setHandle ($handle) {
 		self::$handle = $handle;
+		self::$handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
 	public static $totalTime = 0;
@@ -100,27 +101,27 @@ class Database {
 		}
 
 		$sql = trim(sprintf($sql, $cols, TH_DB_PREFIX, $table, $where, $order, $limit));
-
-		$time = microtime(true) - $start;
-		self::$totalTime += $time;
-
-		Log::add('DB Query: (time: '.$time.') '.$sql);
 		$smt = self::getHandle()->prepare($sql);
 
 		if(!$smt) {
-			print_r(self::getHandle()->errorInfo());
+			self::logQuery(microtime(true) - $start, $sql);
+
+			throw new Exception(self::getHandle()->errorInfo());
 			return false;
 		}
 
 		if($smt->execute($prepare)) {
+			self::logQuery(microtime(true) - $start, $sql);
+
 			return $smt;
 		}
-		else {
-			echo '<h1>DB Error:</h1>';
-			print_r(self::getHandle()->errorInfo());
-			die();
-		}
 	}
+
+	private static function logQuery($time, $sql) {
+		Log::add('DB Query: (time: '.$time.') '.$sql);
+		self::$totalTime += $time;
+	}
+
 
 	/**
 	 * Perform a insert query on the TopHat database.
@@ -141,7 +142,6 @@ class Database {
 	 */
 	public static function insert ($table, $cols, $values = null) {
 		$start = microtime(true);
-		$prepare = array();
 
 		$sql = "INSERT INTO `%s%s` (%s) VALUES (%s)";
 
@@ -157,23 +157,19 @@ class Database {
 		}
 
 		$sql = trim(sprintf($sql, TH_DB_PREFIX, $table, $keys, implode(',',$values)));
-		self::$totalTime += $time;
-
-		Log::add('DB Query: (time: '.$time.') '.$sql);
 		$smt = self::getHandle()->prepare($sql);
 
 		if(!$smt) {
-			print_r(self::getHandle()->errorInfo());
+			self::logQuery(microtime(true) - $start, $sql);
+
+			throw new Exception(self::getHandle()->errorInfo());
 			return false;
 		}
 
 		if($smt->execute($binds)) {
+			self::logQuery(microtime(true) - $start, $sql);
+
 			return $smt->rowCount();
-		}
-		else {
-			echo '<h1>DB Error:</h1>';
-			print_r(self::getHandle()->errorInfo());
-			die();
 		}
 	}
 
@@ -211,24 +207,20 @@ class Database {
 		if(!is_null($limit)) {
 			$limit = " LIMIT ".$limit;
 		}
+
 		$sql = trim(sprintf($sql, TH_DB_PREFIX, $table, $where, $limit));
-		self::$totalTime += $time;
-
-		Log::add('DB Query: (time: '.$time.') '.$sql);
-
 		$smt = self::getHandle()->prepare($sql);
 
 		if(!$smt) {
-			print_r(self::getHandle()->errorInfo());
+			self::logQuery(microtime(true) - $start, $sql);
+
+			throw new Exception(self::getHandle()->errorInfo());
 			return false;
 		}
+
 		if($smt->execute($prepare)) {
+			self::logQuery(microtime(true) - $start, $sql);
 			return $smt->rowCount();
-		}
-		else {
-			echo '<h1>DB Error:</h1>';
-			print_r(self::getHandle()->errorInfo());
-			die();
 		}
 	}
 
@@ -250,12 +242,13 @@ class Database {
 	 * @param array $where An array where the first item is one or more comparision statements. Question marks (?) can optionally be used for binding. Then the second item and beyond are the values for the binds. These binds are automatically escaped for security. Example: array('`col1' > ? AND `col2` < ?', '12', '24');
 	 * @return int The number of rows affected.
 	 */
-	public static function update ($table, $cols, $values = null, $where) {
+	public static function update ($table, $cols, $values = null, $where, $limit = -1) {
 		$start = microtime(true);
 		$prepare = array();
 
 		$sql = "UPDATE `%s%s` SET%s %s";
 
+		$set = "";
 		if(!is_array($values)) {
 			foreach($cols as $key => $value) {
 				$set .= " `$key` = ?,";
@@ -290,26 +283,20 @@ class Database {
 		}
 		
 		$sql = trim(sprintf($sql, TH_DB_PREFIX, $table, $set, $where));
-
-		self::$totalTime += $time;
-
-		Log::add('DB Query: (time: '.$time.') '.$sql);
 		$smt = self::getHandle()->prepare($sql);
 		
 		if(!$smt) {
-			print_r(self::getHandle()->errorInfo());
-			debug_print_backtrace();
+			self::logQuery(microtime(true) - $start, $sql);
+
+			throw new Exception(self::getHandle()->errorInfo());
 			return false;
 		}
 
 
 		if($smt->execute(array_merge($binds,$prepare))) {
+			self::logQuery(microtime(true) - $start, $sql);
+
 			return $smt->rowCount();
-		}
-		else {
-			echo '<h1>DB Error:</h1>';
-			print_r(self::getHandle()->errorInfo());
-			die();
 		}
 	}
 }

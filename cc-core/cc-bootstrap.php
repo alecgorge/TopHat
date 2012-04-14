@@ -85,7 +85,7 @@ if(TH_DEBUG)
 register_shutdown_function(function () {
 	$time = microtime(true) - CC_START;
 	$dbTime = Database::$totalTime;
-	echo "<p>Took: ".round($time, 4)." seconds or ".round($time*1000, 3)." miliseconds (DB: ".round($dbTime*1000000,4) ." microseconds ".round($dbTime/$time, 6)."%).</p>";
+	echo "<p>Took: ".round($time, 4)." seconds or ".round($time*1000, 3)." milliseconds (DB: ".round($dbTime*1000, 4) ." milliseconds ".round($dbTime/$time, 6)."%).</p>";
 	echo "<pre>";
 	print_r(Log::getLog());
 	echo "</pre>";
